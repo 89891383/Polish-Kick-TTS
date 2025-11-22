@@ -6,7 +6,7 @@
     <title>Polish Kick TTS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,15 +15,15 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
-            color: #e0e6ed;
+            font-family: 'Inter', sans-serif;
+            background: #0e0e10;
+            color: #efeff1;
             line-height: 1.6;
             min-height: 100vh;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 40px 20px;
         }
@@ -31,10 +31,11 @@
         header {
             text-align: center;
             margin-bottom: 50px;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 40px;
+            background: #18181b;
+            border-radius: 12px;
+            border: 2px solid #53fc18;
+            box-shadow: 0 0 30px rgba(83, 252, 24, 0.1);
         }
 
         .logo {
@@ -46,94 +47,165 @@
         }
 
         h1 {
-            font-size: 2.5em;
-            font-weight: 600;
-            color: #ffffff;
+            font-size: 2.8em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #53fc18 0%, #3dd80a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin: 0;
+            letter-spacing: -0.5px;
         }
 
         .subtitle {
-            font-size: 1em;
-            font-weight: 300;
-            color: #9ca3af;
-            margin-top: 8px;
+            font-size: 1.1em;
+            font-weight: 400;
+            color: #adadb8;
+            margin-top: 10px;
         }
 
         .section {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 30px;
+            background: #18181b;
+            padding: 35px;
             border-radius: 12px;
             margin-bottom: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid #2d2d35;
         }
 
         h2 {
-            color: #ffffff;
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            font-weight: 500;
+            color: #53fc18;
+            font-size: 1.6em;
+            margin-bottom: 25px;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 12px;
+            letter-spacing: -0.3px;
         }
 
         h3 {
-            color: #d1d5db;
-            font-size: 1.1em;
-            margin: 20px 0 12px 0;
-            font-weight: 500;
+            color: #efeff1;
+            font-size: 1.15em;
+            margin: 25px 0 15px 0;
+            font-weight: 600;
         }
 
         .generator {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 35px;
+            background: #1f1f23;
+            padding: 40px;
             border-radius: 12px;
             margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid #53fc18;
+            box-shadow: 0 0 20px rgba(83, 252, 24, 0.08);
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 28px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 400;
-            color: #d1d5db;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #efeff1;
             font-size: 0.95em;
         }
 
-        input[type="text"], input[type="number"], select {
+        input[type="text"], input[type="number"], input[type="range"], select {
             width: 100%;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 14px 16px;
+            background: #0e0e10;
+            border: 2px solid #2d2d35;
             border-radius: 8px;
-            color: #ffffff;
-            font-family: 'Poppins', sans-serif;
+            color: #efeff1;
+            font-family: 'Inter', sans-serif;
             font-size: 0.95em;
             transition: all 0.2s ease;
         }
 
+        select {
+            cursor: pointer;
+        }
+
+        select option {
+            background: #18181b;
+            color: #efeff1;
+            padding: 12px;
+        }
+
         input:focus, select:focus {
             outline: none;
-            border-color: rgba(96, 165, 250, 0.5);
-            background: rgba(255, 255, 255, 0.08);
+            border-color: #53fc18;
+            box-shadow: 0 0 0 3px rgba(83, 252, 24, 0.1);
+        }
+
+        input:hover, select:hover {
+            border-color: #53fc18;
+        }
+
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .range-container input[type="range"] {
+            flex: 1;
+        }
+
+        .range-value {
+            min-width: 60px;
+            text-align: center;
+            background: rgba(83, 252, 24, 0.1);
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: #53fc18;
+            font-weight: 600;
+            border: 1px solid #53fc18;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            background: #2d2d35;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #53fc18;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(83, 252, 24, 0.5);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #53fc18;
+            cursor: pointer;
+            border-radius: 50%;
+            border: none;
+            box-shadow: 0 0 5px rgba(83, 252, 24, 0.5);
         }
 
         .checkbox-group {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 12px;
             margin-top: 12px;
         }
 
         .checkbox-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #0e0e10;
+            border: 2px solid #2d2d35;
             border-radius: 8px;
-            padding: 12px 14px;
+            padding: 14px 16px;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
@@ -142,56 +214,62 @@
         }
 
         .checkbox-item:hover {
-            border-color: rgba(96, 165, 250, 0.4);
-            background: rgba(255, 255, 255, 0.06);
+            border-color: #53fc18;
+            background: rgba(83, 252, 24, 0.05);
         }
 
         .checkbox-item input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             cursor: pointer;
-            accent-color: #60a5fa;
+            accent-color: #53fc18;
         }
 
         .checkbox-item label {
             margin: 0;
             cursor: pointer;
             flex: 1;
-            color: #e0e6ed;
+            color: #efeff1;
             font-size: 0.9em;
         }
 
         .checkbox-item.checked {
-            border-color: rgba(96, 165, 250, 0.5);
-            background: rgba(96, 165, 250, 0.08);
+            border-color: #53fc18;
+            background: rgba(83, 252, 24, 0.08);
         }
 
         button {
-            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-            color: white;
+            background: linear-gradient(135deg, #53fc18 0%, #3dd80a 100%);
+            color: #0e0e10;
             border: none;
-            padding: 14px 28px;
+            padding: 16px 32px;
             border-radius: 8px;
             cursor: pointer;
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.95em;
-            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            font-size: 1em;
+            font-weight: 600;
             transition: all 0.2s ease;
             width: 100%;
             margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 16px rgba(96, 165, 250, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(83, 252, 24, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
         }
 
         .result {
-            background: rgba(96, 165, 250, 0.08);
-            padding: 20px;
+            background: rgba(83, 252, 24, 0.08);
+            padding: 25px;
             border-radius: 8px;
-            margin-top: 20px;
-            border: 1px solid rgba(96, 165, 250, 0.3);
+            margin-top: 25px;
+            border: 2px solid #53fc18;
             display: none;
         }
 
@@ -200,64 +278,68 @@
         }
 
         .url-display {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 14px;
-            border-radius: 6px;
+            background: #0e0e10;
+            padding: 16px;
+            border-radius: 8px;
             word-break: break-all;
-            color: #60a5fa;
+            color: #53fc18;
             font-family: 'Courier New', monospace;
             font-size: 0.9em;
-            margin: 12px 0;
+            margin: 15px 0;
+            border: 1px solid #2d2d35;
         }
 
         .copy-btn {
-            background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
+            background: linear-gradient(135deg, #53fc18 0%, #3dd80a 100%);
             margin-top: 10px;
         }
 
         .copy-btn:hover {
-            box-shadow: 0 4px 16px rgba(52, 211, 153, 0.3);
+            box-shadow: 0 8px 25px rgba(83, 252, 24, 0.4);
         }
 
         code {
-            background: rgba(255, 255, 255, 0.08);
-            padding: 3px 8px;
-            border-radius: 4px;
-            color: #60a5fa;
+            background: #0e0e10;
+            padding: 4px 10px;
+            border-radius: 6px;
+            color: #53fc18;
             font-family: 'Courier New', monospace;
             font-size: 0.9em;
+            border: 1px solid #2d2d35;
         }
 
         .voice-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 12px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
         }
 
         .voice-card {
-            background: rgba(255, 255, 255, 0.04);
-            padding: 16px;
+            background: #0e0e10;
+            padding: 20px;
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 2px solid #2d2d35;
             text-align: center;
             transition: all 0.2s ease;
         }
 
         .voice-card:hover {
-            border-color: rgba(96, 165, 250, 0.4);
-            transform: translateY(-2px);
+            border-color: #53fc18;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(83, 252, 24, 0.2);
         }
 
         .voice-name {
-            font-weight: 500;
-            color: #ffffff;
+            font-weight: 600;
+            color: #53fc18;
             margin-bottom: 5px;
+            font-size: 1.1em;
         }
 
         .voice-type {
             font-size: 0.85em;
-            color: #9ca3af;
+            color: #adadb8;
         }
 
         ul {
@@ -266,16 +348,16 @@
         }
 
         ul li {
-            padding: 6px 0;
-            padding-left: 20px;
+            padding: 8px 0;
+            padding-left: 25px;
             position: relative;
-            color: #d1d5db;
+            color: #efeff1;
             font-size: 0.95em;
         }
 
         ul li:before {
-            content: "•";
-            color: #60a5fa;
+            content: "▸";
+            color: #53fc18;
             position: absolute;
             left: 0;
             font-weight: bold;
@@ -283,21 +365,34 @@
         }
 
         .info-box {
-            background: rgba(96, 165, 250, 0.08);
-            border-left: 3px solid #60a5fa;
-            padding: 12px 16px;
-            margin: 12px 0;
+            background: rgba(83, 252, 24, 0.08);
+            border-left: 4px solid #53fc18;
+            padding: 15px 18px;
+            margin: 15px 0;
             border-radius: 6px;
             font-size: 0.9em;
         }
 
         .info-box strong {
-            color: #60a5fa;
+            color: #53fc18;
+        }
+
+        .warning-box {
+            background: rgba(255, 165, 0, 0.08);
+            border-left: 4px solid #ffa500;
+            padding: 15px 18px;
+            margin: 15px 0;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        .warning-box strong {
+            color: #ffa500;
         }
 
         svg {
-            width: 32px;
-            height: 32px;
+            width: 35px;
+            height: 35px;
         }
 
         @media (max-width: 768px) {
@@ -310,7 +405,7 @@
             }
 
             .section, .generator {
-                padding: 20px;
+                padding: 25px 20px;
             }
 
             .checkbox-group {
@@ -324,28 +419,28 @@
         <header>
             <div class="logo">
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C10.9 2 10 2.9 10 4V12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12V4C14 2.9 13.1 2 12 2Z" fill="#60a5fa"/>
-                    <path d="M19 10C19 6.1 15.9 3 12 3C8.1 3 5 6.1 5 10H7C7 7.2 9.2 5 12 5C14.8 5 17 7.2 17 10H19Z" fill="#60a5fa" opacity="0.6"/>
-                    <path d="M12 16C8.1 16 5 12.9 5 9H7C7 11.8 9.2 14 12 14C14.8 14 17 11.8 17 9H19C19 12.9 15.9 16 12 16Z" fill="#60a5fa" opacity="0.6"/>
-                    <path d="M11 16H13V22H11V16Z" fill="#60a5fa"/>
-                    <path d="M8 22H16V20H8V22Z" fill="#60a5fa"/>
+                    <path d="M12 2C10.9 2 10 2.9 10 4V12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12V4C14 2.9 13.1 2 12 2Z" fill="#53fc18"/>
+                    <path d="M19 10C19 6.1 15.9 3 12 3C8.1 3 5 6.1 5 10H7C7 7.2 9.2 5 12 5C14.8 5 17 7.2 17 10H19Z" fill="#53fc18" opacity="0.6"/>
+                    <path d="M12 16C8.1 16 5 12.9 5 9H7C7 11.8 9.2 14 12 14C14.8 14 17 11.8 17 9H19C19 12.9 15.9 16 12 16Z" fill="#53fc18" opacity="0.6"/>
+                    <path d="M11 16H13V22H11V16Z" fill="#53fc18"/>
+                    <path d="M8 22H16V20H8V22Z" fill="#53fc18"/>
                 </svg>
                 <h1>Polish Kick TTS</h1>
             </div>
-            <p class="subtitle">System Text-to-Speech dla streamów Kick.com</p>
+            <p class="subtitle">System Text-to-Speech dla polskich streamerów Kick.com</p>
         </header>
 
         <div class="generator">
             <h2>
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22.7 19L13.6 9.9C14.5 7.6 14 4.9 12.1 3C9.6 0.5 5.6 0.5 3.1 3C0.6 5.5 0.6 9.5 3.1 12C5 13.9 7.7 14.4 10 13.5L13 16.5V19H15V17L17 19L15 21L16.4 22.4L18 20.8L19.6 22.4L21 21L19.4 19.4L21 17.8L19.6 16.4L17.6 18.4L19.7 19ZM5.2 10.9C3.5 9.2 3.5 6.6 5.2 4.9C6.9 3.2 9.5 3.2 11.2 4.9C12.9 6.6 12.9 9.2 11.2 10.9C9.5 12.6 6.9 12.6 5.2 10.9Z" fill="#60a5fa"/>
+                    <path d="M22.7 19L13.6 9.9C14.5 7.6 14 4.9 12.1 3C9.6 0.5 5.6 0.5 3.1 3C0.6 5.5 0.6 9.5 3.1 12C5 13.9 7.7 14.4 10 13.5L13 16.5V19H15V17L17 19L15 21L16.4 22.4L18 20.8L19.6 22.4L21 21L19.4 19.4L21 17.8L19.6 16.4L17.6 18.4L19.7 19ZM5.2 10.9C3.5 9.2 3.5 6.6 5.2 4.9C6.9 3.2 9.5 3.2 11.2 4.9C12.9 6.6 12.9 9.2 11.2 10.9C9.5 12.6 6.9 12.6 5.2 10.9Z" fill="#53fc18"/>
                 </svg>
                 Generator Linku TTS
             </h2>
             
             <div class="form-group">
                 <label for="channel">Nazwa Kanału (wymagane)</label>
-                <input type="text" id="channel" placeholder="np. anon_x64" required>
+                <input type="text" id="channel" placeholder="np. twoj_nick" required>
             </div>
 
             <div class="form-group">
@@ -360,8 +455,36 @@
             </div>
 
             <div class="form-group">
+                <label for="speed">Prędkość mowy: <span id="speed-value">0</span></label>
+                <div class="range-container">
+                    <input type="range" id="speed" min="-3" max="3" value="0" step="1">
+                    <div class="range-value" id="speed-display">0</div>
+                </div>
+                <small style="color: #adadb8; font-size: 0.85em;">Wartości ujemne przyspieszają mowę, dodatnie zwalniają</small>
+            </div>
+
+            <div class="form-group">
                 <label for="volume">Głośność (0-100)</label>
-                <input type="number" id="volume" min="0" max="100" value="50">
+                <input type="number" id="volume" min="0" max="100" value="80">
+            </div>
+
+            <div class="form-group">
+                <label>Opcje Czytania</label>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="readnick" onchange="toggleCheckbox(this)">
+                    <label for="readnick">Czytaj nick użytkownika przed wiadomością</label>
+                </div>
+                <div class="checkbox-item" style="margin-top: 8px;">
+                    <input type="checkbox" id="readlinks" onchange="toggleCheckbox(this)">
+                    <label for="readlinks">Czytaj linki (jako "LINK")</label>
+                </div>
+                <div class="checkbox-item" style="margin-top: 8px;">
+                    <input type="checkbox" id="reademotes" onchange="toggleCheckbox(this)">
+                    <label for="reademotes">Czytaj emotki</label>
+                </div>
+                <small style="color: #adadb8; font-size: 0.85em; display: block; margin-top: 8px;">
+                    Domyślnie linki i emotki są ignorowane. Zaznacz opcje aby je czytać.
+                </small>
             </div>
 
             <div class="form-group">
@@ -374,24 +497,24 @@
                         <input type="checkbox" id="anyone" onchange="toggleCheckbox(this)">
                         <label for="anyone">Każdy</label>
                     </div>
-                    <div class="checkbox-item checked">
-                        <input type="checkbox" id="follower" checked onchange="toggleCheckbox(this)">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="follower" onchange="toggleCheckbox(this)">
                         <label for="follower">Obserwujący</label>
                     </div>
                     <div class="checkbox-item checked">
                         <input type="checkbox" id="moderator" checked onchange="toggleCheckbox(this)">
                         <label for="moderator">Moderator</label>
                     </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="og" onchange="toggleCheckbox(this)">
+                    <div class="checkbox-item checked">
+                        <input type="checkbox" id="og" checked onchange="toggleCheckbox(this)">
                         <label for="og">OG</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="subscriber" onchange="toggleCheckbox(this)">
                         <label for="subscriber">Subskrybent</label>
                     </div>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="vip" onchange="toggleCheckbox(this)">
+                    <div class="checkbox-item checked">
+                        <input type="checkbox" id="vip" checked onchange="toggleCheckbox(this)">
                         <label for="vip">VIP</label>
                     </div>
                 </div>
@@ -399,8 +522,8 @@
 
             <div class="form-group">
                 <label>Format Wiadomości</label>
-                <div class="checkbox-item">
-                    <input type="checkbox" id="pretext" onchange="toggleCheckbox(this)">
+                <div class="checkbox-item checked">
+                    <input type="checkbox" id="pretext" checked onchange="toggleCheckbox(this)">
                     <label for="pretext">Wymagaj "tts" przed wiadomością</label>
                 </div>
             </div>
@@ -417,39 +540,42 @@
         <div class="section">
             <h2>
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19Z" fill="#60a5fa"/>
-                    <path d="M7 17H9V10H7V17ZM11 17H13V7H11V17ZM15 17H17V13H15V17Z" fill="#60a5fa"/>
+                    <path d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19Z" fill="#53fc18"/>
+                    <path d="M7 17H9V10H7V17ZM11 17H13V7H11V17ZM15 17H17V13H15V17Z" fill="#53fc18"/>
                 </svg>
                 Co to jest?
             </h2>
-            <p>Polish Kick TTS to darmowy system Text-to-Speech dla streamerów Kick.com. Gdy użytkownicy wysyłają wiadomości na czacie, będą one automatycznie czytane na głos przy użyciu polskiej syntezy mowy.</p>
+            <p>Polish Kick TTS to system Text-to-Speech dla polskich streamerów Kick.com. Gdy użytkownicy wysyłają wiadomości na czacie, będą one automatycznie czytane na głos przy użyciu polskiej syntezy mowy.</p>
         </div>
 
         <div class="section">
             <h2>
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L2 7V17C2 17 2 22 12 22C22 22 22 17 22 17V7L12 2Z" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                    <path d="M12 11C13.66 11 15 9.66 15 8C15 6.34 13.66 5 12 5C10.34 5 9 6.34 9 8C9 9.66 10.34 11 12 11Z" fill="#60a5fa"/>
-                    <path d="M12 11C9 11 6 12.79 6 15V17H18V15C18 12.79 15 11 12 11Z" fill="#60a5fa" opacity="0.6"/>
+                    <path d="M12 2L2 7V17C2 17 2 22 12 22C22 22 22 17 22 17V7L12 2Z" stroke="#53fc18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    <path d="M12 11C13.66 11 15 9.66 15 8C15 6.34 13.66 5 12 5C10.34 5 9 6.34 9 8C9 9.66 10.34 11 12 11Z" fill="#53fc18"/>
+                    <path d="M12 11C9 11 6 12.79 6 15V17H18V15C18 12.79 15 11 12 11Z" fill="#53fc18" opacity="0.6"/>
                 </svg>
                 Funkcje
             </h2>
             <ul>
                 <li>5 polskich głosów (męskich i żeńskich)</li>
+                <li>Regulacja prędkości mowy od -3 (szybciej) do +3 (wolniej)</li>
+                <li>Opcja czytania nicku użytkownika przed wiadomością</li>
+                <li>Opcjonalne czytanie linków i emotek (domyślnie wyłączone)</li>
                 <li>Szczegółowa kontrola uprawnień (Każdy, Obserwujący, Moderator, OG, Subskrybent, VIP)</li>
                 <li>Opcjonalne wymaganie przedrostka "tts"</li>
                 <li>Kontrola głośności 0-100</li>
                 <li>Automatyczne filtrowanie wiadomości botów</li>
-                <li>Zamiana linków na słowo "LINK"</li>
                 <li>Kolejkowanie wiadomości</li>
+                <li>Komenda !skiptts dla broadcastera do pomijania aktualnego TTS</li>
             </ul>
         </div>
 
         <div class="section">
             <h2>
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="3" fill="#60a5fa"/>
-                    <path d="M19.4 15C19.5 14.7 19.5 14.3 19.4 14L21.5 12.3C21.7 12.1 21.7 11.8 21.6 11.6L19.6 8.4C19.5 8.2 19.2 8.1 19 8.2L16.6 9.2C16.1 8.8 15.6 8.5 15 8.3L14.6 5.7C14.6 5.5 14.4 5.3 14.2 5.3H10.2C10 5.3 9.8 5.5 9.8 5.7L9.4 8.3C8.8 8.5 8.3 8.8 7.8 9.2L5.4 8.2C5.2 8.1 4.9 8.2 4.8 8.4L2.8 11.6C2.7 11.8 2.7 12.1 2.9 12.3L5 14C4.9 14.3 4.9 14.7 5 15L2.9 16.7C2.7 16.9 2.7 17.2 2.8 17.4L4.8 20.6C4.9 20.8 5.2 20.9 5.4 20.8L7.8 19.8C8.3 20.2 8.8 20.5 9.4 20.7L9.8 23.3C9.8 23.5 10 23.7 10.2 23.7H14.2C14.4 23.7 14.6 23.5 14.6 23.3L15 20.7C15.6 20.5 16.1 20.2 16.6 19.8L19 20.8C19.2 20.9 19.5 20.8 19.6 20.6L21.6 17.4C21.7 17.2 21.7 16.9 21.5 16.7L19.4 15Z" fill="#60a5fa" opacity="0.6"/>
+                    <circle cx="12" cy="12" r="3" fill="#53fc18"/>
+                    <path d="M19.4 15C19.5 14.7 19.5 14.3 19.4 14L21.5 12.3C21.7 12.1 21.7 11.8 21.6 11.6L19.6 8.4C19.5 8.2 19.2 8.1 19 8.2L16.6 9.2C16.1 8.8 15.6 8.5 15 8.3L14.6 5.7C14.6 5.5 14.4 5.3 14.2 5.3H10.2C10 5.3 9.8 5.5 9.8 5.7L9.4 8.3C8.8 8.5 8.3 8.8 7.8 9.2L5.4 8.2C5.2 8.1 4.9 8.2 4.8 8.4L2.8 11.6C2.7 11.8 2.7 12.1 2.9 12.3L5 14C4.9 14.3 4.9 14.7 5 15L2.9 16.7C2.7 16.9 2.7 17.2 2.8 17.4L4.8 20.6C4.9 20.8 5.2 20.9 5.4 20.8L7.8 19.8C8.3 20.2 8.8 20.5 9.4 20.7L9.8 23.3C9.8 23.5 10 23.7 10.2 23.7H14.2C14.4 23.7 14.6 23.5 14.6 23.3L15 20.7C15.6 20.5 16.1 20.2 16.6 19.8L19 20.8C19.2 20.9 19.5 20.8 19.6 20.6L21.6 17.4C21.7 17.2 21.7 16.9 21.5 16.7L19.4 15Z" fill="#53fc18" opacity="0.6"/>
                 </svg>
                 Dostępne Głosy
             </h2>
@@ -480,9 +606,23 @@
         <div class="section">
             <h2>
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3.9 12C3.9 10.29 5.29 8.9 7 8.9H11V7H7C4.24 7 2 9.24 2 12C2 14.76 4.24 17 7 17H11V15.1H7C5.29 15.1 3.9 13.71 3.9 12Z" fill="#60a5fa"/>
-                    <path d="M8 13H16V11H8V13Z" fill="#60a5fa"/>
-                    <path d="M17 7H13V8.9H17C18.71 8.9 20.1 10.29 20.1 12C20.1 13.71 18.71 15.1 17 15.1H13V17H17C19.76 17 22 14.76 22 12C22 9.24 19.76 7 17 7Z" fill="#60a5fa"/>
+                    <path d="M11 7h2v2h-2V7zm0 4h2v6h-2v-6z" fill="#53fc18"/>
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" fill="#53fc18" opacity="0.6"/>
+                </svg>
+                Komendy Broadcastera
+            </h2>
+            <div class="warning-box">
+                <strong>!skiptts</strong> - Natychmiastowe pomijanie aktualnie czytanej wiadomości TTS
+            </div>
+            <p>Jako broadcaster możesz użyć komendy <code>!skiptts</code> na czacie, aby zatrzymać i pominąć aktualnie odtwarzane TTS. Jest to przydatne, gdy chcesz szybko przerwać długą lub nieodpowiednią wiadomość.</p>
+        </div>
+
+        <div class="section">
+            <h2>
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.9 12C3.9 10.29 5.29 8.9 7 8.9H11V7H7C4.24 7 2 9.24 2 12C2 14.76 4.24 17 7 17H11V15.1H7C5.29 15.1 3.9 13.71 3.9 12Z" fill="#53fc18"/>
+                    <path d="M8 13H16V11H8V13Z" fill="#53fc18"/>
+                    <path d="M17 7H13V8.9H17C18.71 8.9 20.1 10.29 20.1 12C20.1 13.71 18.71 15.1 17 15.1H13V17H17C19.76 17 22 14.76 22 12C22 9.24 19.76 7 17 7Z" fill="#53fc18"/>
                 </svg>
                 Parametry URL
             </h2>
@@ -494,30 +634,47 @@
             <p>Nazwa głosu: Zosia, Agatka, Danota, Krzysztof, Wojciech</p>
             <p>Domyślnie: Zosia</p>
 
+            <h3><code>speed</code> (opcjonalne)</h3>
+            <p>Prędkość mowy od -3 do 3</p>
+            <p>-3 = najszybciej, 0 = normalna prędkość, 3 = najwolniej</p>
+            <p>Domyślnie: 0</p>
+
             <h3><code>volume</code> (opcjonalne)</h3>
             <p>Poziom głośności od 0 do 100</p>
-            <p>Domyślnie: 50</p>
+            <p>Domyślnie: 80</p>
+
+            <h3><code>readnick</code> (opcjonalne)</h3>
+            <p>Czytaj nick użytkownika przed wiadomością</p>
+            <p>Wartości: on / off (Domyślnie: off)</p>
+
+            <h3><code>readlinks</code> (opcjonalne)</h3>
+            <p>Czytaj linki jako słowo "LINK"</p>
+            <p>Wartości: on / off (Domyślnie: off - linki są ignorowane)</p>
+
+            <h3><code>reademotes</code> (opcjonalne)</h3>
+            <p>Czytaj nazwy emotek</p>
+            <p>Wartości: on / off (Domyślnie: off - emotki są ignorowane)</p>
 
             <h3>Parametry Uprawnień:</h3>
             <ul>
                 <li><code>anyone=on</code> - Pozwól wszystkim</li>
                 <li><code>follower=on</code> - Pozwól obserwującym</li>
                 <li><code>moderator=on</code> - Pozwól moderatorom (domyślnie włączone)</li>
-                <li><code>og=on</code> - Pozwól posiadaczom odznaki OG</li>
+                <li><code>og=on</code> - Pozwól posiadaczom odznaki OG (domyślnie włączone)</li>
                 <li><code>subscriber=on</code> - Pozwól subskrybentom</li>
-                <li><code>vip=on</code> - Pozwól VIP-om</li>
+                <li><code>vip=on</code> - Pozwól VIP-om (domyślnie włączone)</li>
             </ul>
 
             <h3><code>pretext</code> (opcjonalne)</h3>
             <p>Wymagaj "tts" na początku wiadomości</p>
-            <p>Wartości: on / off (Domyślnie: off)</p>
+            <p>Wartości: on / off (Domyślnie: on - wymagane)</p>
         </div>
 
         <div class="section">
             <h2>
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#60a5fa"/>
-                    <path d="M2 17L12 22L22 17V12L12 17L2 12V17Z" fill="#60a5fa" opacity="0.6"/>
+                    <path d="M12 2L2 7L12 12L22 7L12 2Z" fill="#53fc18"/>
+                    <path d="M2 17L12 22L22 17V12L12 17L2 12V17Z" fill="#53fc18" opacity="0.6"/>
                 </svg>
                 Jak Używać
             </h2>
@@ -526,12 +683,20 @@
                 <li>Dodaj go jako Browser Source w OBS/Streamlabs</li>
                 <li>Ustaw wymiary na 800x600 (rozmiar nie ma znaczenia, będzie niewidoczne)</li>
                 <li>Zacznij streamować</li>
-                <li>Autoryzowani użytkownicy mogą teraz wysyłać wiadomości, które będą czytane na głos</li>
+                <li>Autoryzowani użytkownicy mogą teraz wysyłać wiadomości rozpoczynające się od "tts", które będą czytane na głos</li>
+                <li>Używaj <code>!skiptts</code> aby pominąć aktualne TTS</li>
             </ul>
         </div>
     </div>
 
     <script>
+        // Update speed display
+        document.getElementById('speed').addEventListener('input', function() {
+            const value = this.value;
+            document.getElementById('speed-value').textContent = value;
+            document.getElementById('speed-display').textContent = value;
+        });
+
         function toggleCheckbox(checkbox) {
             const parent = checkbox.parentElement;
             if (checkbox.checked) {
@@ -553,7 +718,11 @@
         function generateURL() {
             const channel = document.getElementById('channel').value.trim();
             const voice = document.getElementById('voice').value;
+            const speed = document.getElementById('speed').value;
             const volume = document.getElementById('volume').value;
+            const readnick = document.getElementById('readnick').checked;
+            const readlinks = document.getElementById('readlinks').checked;
+            const reademotes = document.getElementById('reademotes').checked;
             
             const anyone = document.getElementById('anyone').checked;
             const follower = document.getElementById('follower').checked;
@@ -572,7 +741,11 @@
             let url = baseUrl + '?channel=' + encodeURIComponent(channel);
             
             if (voice !== 'Zosia') url += '&voice=' + voice;
-            if (volume !== '50') url += '&volume=' + volume;
+            if (speed !== '0') url += '&speed=' + speed;
+            if (volume !== '80') url += '&volume=' + volume;
+            if (readnick) url += '&readnick=on';
+            if (readlinks) url += '&readlinks=on';
+            if (reademotes) url += '&reademotes=on';
             if (anyone) url += '&anyone=on';
             if (follower) url += '&follower=on';
             if (moderator) url += '&moderator=on';
@@ -614,7 +787,11 @@
             const ttsVoiceLID = selectedVoice.LID;
             const ttsVoiceVID = selectedVoice.VID;
             
-            const volume = parseInt(urlParams.get('volume')) || 50;
+            const volume = parseInt(urlParams.get('volume')) || 80;
+            const speed = parseInt(urlParams.get('speed')) || 0;
+            const readnick = urlParams.get('readnick') === 'on';
+            const readlinks = urlParams.get('readlinks') === 'on';
+            const reademotes = urlParams.get('reademotes') === 'on';
             const anyone = urlParams.get('anyone') === 'on';
             const follower = urlParams.get('follower') === 'on';
             const moderator = urlParams.get('moderator') === 'on';
@@ -623,7 +800,7 @@
             const vip = urlParams.get('vip') === 'on';
             const pretext = urlParams.get('pretext') === 'on';
 
-            console.log('TTS Config:', { kick, voiceName, volume, anyone, follower, moderator, og, subscriber, vip, pretext });
+            console.log('TTS Config:', { kick, voiceName, speed, volume, readnick, readlinks, reademotes, anyone, follower, moderator, og, subscriber, vip, pretext });
 
             const badgesConfig = {
                 'moderator': moderator,
@@ -665,9 +842,17 @@
                 }
             }
 
-            async function playTTS(text, volumeLevel) {
+            async function playTTS(text, volumeLevel, speedValue) {
                 const cleanText = text.replace(/%/g, 'percent');
-                const ttsUrl = 'https://cache-a.oddcast.com/tts/genC.php?EID=' + ttsVoiceEID + '&LID=' + ttsVoiceLID + '&VID=' + ttsVoiceVID + '&TXT=' + encodeURIComponent(cleanText);
+                
+                // Build TTS URL - odwrócona wartość speed
+                let ttsUrl = 'https://cache-a.oddcast.com/tts/genC.php?EID=' + ttsVoiceEID + '&LID=' + ttsVoiceLID + '&VID=' + ttsVoiceVID + '&TXT=' + encodeURIComponent(cleanText);
+                
+                // Odwrócenie wartości: ujemne w UI = dodatnie w API (wolniej), dodatnie w UI = ujemne w API (szybciej)
+                if (speedValue !== 0) {
+                    const reversedSpeed = -speedValue;
+                    ttsUrl += '&FX_TYPE=D&FX_LEVEL=' + reversedSpeed;
+                }
 
                 console.log('Playing TTS:', cleanText);
 
@@ -758,6 +943,7 @@
                     return;
                 }
 
+                // Handle !skiptts command from broadcaster
                 if (isBroadcaster && content.toLowerCase().trim() === '!skiptts') {
                     console.log('Broadcaster skipped TTS');
                     if (audio) {
@@ -768,7 +954,13 @@
                     return;
                 }
 
-                const cleanContent = content.replace(/\b(?:https?|ftp|file):\/\/\S+/gi, 'LINK');
+                // Process links
+                let cleanContent;
+                if (readlinks) {
+                    cleanContent = content.replace(/\b(?:https?|ftp|file):\/\/\S+/gi, 'LINK');
+                } else {
+                    cleanContent = content.replace(/\b(?:https?|ftp|file):\/\/\S+/gi, '');
+                }
 
                 if (content.startsWith('!')) {
                     return;
@@ -789,11 +981,29 @@
                     }
                     
                     textToSpeak = textToSpeak.trim();
-                    textToSpeak = textToSpeak.replace(/\[emote:\d+:(\w+)\]/g, '$1');
-
-                    if (textToSpeak.length > 0) {
-                        await playTTS(textToSpeak, volume);
+                    
+                    // Process emotes
+                    if (reademotes) {
+                        textToSpeak = textToSpeak.replace(/\[emote:\d+:(\w+)\]/g, '$1');
+                    } else {
+                        textToSpeak = textToSpeak.replace(/\[emote:\d+:\w+\]/g, '');
                     }
+
+                    // Clean up extra spaces
+                    textToSpeak = textToSpeak.replace(/\s+/g, ' ').trim();
+
+                    // Skip if message is empty after processing
+                    if (textToSpeak.length === 0) {
+                        console.log('Message empty after processing emotes/links');
+                        return;
+                    }
+
+                    // Add nickname if readnick is enabled
+                    if (readnick) {
+                        textToSpeak = username + ' mówi: ' + textToSpeak;
+                    }
+
+                    await playTTS(textToSpeak, volume, speed);
                 } else {
                     console.log('User ' + username + ' has no permission');
                 }
