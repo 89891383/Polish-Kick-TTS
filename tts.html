@@ -103,6 +103,10 @@
             margin-bottom: 28px;
         }
 
+        .form-group.hidden {
+            display: none;
+        }
+
         label {
             display: block;
             margin-bottom: 10px;
@@ -406,6 +410,16 @@
             margin-top: 5px;
         }
 
+        .voice-badge.google {
+            background: rgba(66, 133, 244, 0.15);
+            color: #4285f4;
+        }
+
+        .voice-badge.microsoft {
+            background: rgba(0, 120, 212, 0.15);
+            color: #0078d4;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2em;
@@ -459,7 +473,7 @@
 
             <div class="form-group">
                 <label for="voice">Głos</label>
-                <select id="voice">
+                <select id="voice" onchange="handleVoiceChange()">
                     <optgroup label="Oddcast TTS">
                         <option value="Zosia">Zosia (Kobieta - Domyślny)</option>
                         <option value="Agatka">Agatka (Kobieta)</option>
@@ -470,16 +484,19 @@
                     <optgroup label="Microsoft TTS">
                         <option value="Adam">Adam (Mężczyzna - Microsoft)</option>
                     </optgroup>
+                    <optgroup label="Google Translate TTS">
+                        <option value="GooglePL">Google Polish (Mężczyzna - Google)</option>
+                    </optgroup>
                 </select>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" id="speed-group">
                 <label for="speed">Prędkość mowy: <span id="speed-value">0</span></label>
                 <div class="range-container">
                     <input type="range" id="speed" min="-3" max="3" value="0" step="1">
                     <div class="range-value" id="speed-display">0</div>
                 </div>
-                <small style="color: #adadb8; font-size: 0.85em;">Wartości ujemne przyspieszają mowę, dodatnie zwalniają</small>
+                <small style="color: #adadb8; font-size: 0.85em;">Wartości ujemne przyspieszają mowę, dodatnie zwalniają.</small>
             </div>
 
             <div class="form-group">
@@ -577,8 +594,8 @@
                 Funkcje
             </h2>
             <ul>
-                <li>6 polskich głosów (męskich i żeńskich) - Oddcast + Microsoft TTS</li>
-                <li>Regulacja prędkości mowy od -3 (szybciej) do +3 (wolniej)</li>
+                <li>7 polskich głosów (męskich i żeńskich) - Oddcast + Microsoft + Google TTS</li>
+                <li>Regulacja prędkości mowy od -3 (szybciej) do +3 (wolniej) - dla Oddcast i Microsoft</li>
                 <li>Opcja czytania nicku użytkownika przed wiadomością</li>
                 <li>Opcjonalne czytanie linków i emotek (domyślnie wyłączone)</li>
                 <li>Szczegółowa kontrola uprawnień (Każdy, Obserwujący, Moderator, OG, Subskrybent, VIP)</li>
@@ -627,7 +644,12 @@
                 <div class="voice-card">
                     <div class="voice-name">Adam</div>
                     <div class="voice-type">Mężczyzna</div>
-                    <div class="voice-badge">Microsoft</div>
+                    <div class="voice-badge microsoft">Microsoft</div>
+                </div>
+                <div class="voice-card">
+                    <div class="voice-name">Google Polish</div>
+                    <div class="voice-type">Mężczyzna</div>
+                    <div class="voice-badge google">Google</div>
                 </div>
             </div>
         </div>
@@ -660,13 +682,14 @@
             <p>Nazwa Twojego kanału Kick.com</p>
 
             <h3><code>voice</code> (opcjonalne)</h3>
-            <p>Nazwa głosu: Zosia, Agatka, Danota, Krzysztof, Wojciech, Adam</p>
+            <p>Nazwa głosu: Zosia, Agatka, Danota, Krzysztof, Wojciech, Adam, GooglePL</p>
             <p>Domyślnie: Zosia</p>
 
             <h3><code>speed</code> (opcjonalne)</h3>
-            <p>Prędkość mowy od -3 do 3</p>
+            <p>Prędkość mowy od -3 do 3 (tylko dla Oddcast i Microsoft)</p>
             <p>-3 = najszybciej, 0 = normalna prędkość, 3 = najwolniej</p>
             <p>Domyślnie: 0</p>
+            <p><em>Uwaga: Parametr speed jest ignorowany dla głosu Google TTS</em></p>
 
             <h3><code>volume</code> (opcjonalne)</h3>
             <p>Poziom głośności od 0 do 100</p>
@@ -719,6 +742,22 @@
     </div>
 
     <script>
+        // Handle voice change to show/hide speed option
+        function handleVoiceChange() {
+            const voice = document.getElementById('voice').value;
+            const speedGroup = document.getElementById('speed-group');
+            
+            if (voice === 'GooglePL') {
+                speedGroup.classList.add('hidden');
+                // Reset speed to 0 when Google is selected
+                document.getElementById('speed').value = '0';
+                document.getElementById('speed-value').textContent = '0';
+                document.getElementById('speed-display').textContent = '0';
+            } else {
+                speedGroup.classList.remove('hidden');
+            }
+        }
+
         // Update speed display
         document.getElementById('speed').addEventListener('input', function() {
             const value = this.value;
@@ -770,7 +809,8 @@
             let url = baseUrl + '?channel=' + encodeURIComponent(channel);
             
             if (voice !== 'Zosia') url += '&voice=' + voice;
-            if (speed !== '0') url += '&speed=' + speed;
+            // Only add speed parameter if not Google TTS
+            if (speed !== '0' && voice !== 'GooglePL') url += '&speed=' + speed;
             if (volume !== '80') url += '&volume=' + volume;
             if (readnick) url += '&readnick=on';
             if (readlinks) url += '&readlinks=on';
@@ -808,14 +848,16 @@
                 'Krzysztof': { EID: '2', LID: '14', VID: '2', type: 'oddcast' },
                 'Wojciech': { EID: '7', LID: '14', VID: '2', type: 'oddcast' },
                 'Zosia': { EID: '2', LID: '14', VID: '1', type: 'oddcast' },
-                'Adam': { name: 'Microsoft Adam - Polish (Poland)', type: 'webspeech' }
+                'Adam': { name: 'Microsoft Adam - Polish (Poland)', type: 'webspeech' },
+                'GooglePL': { lang: 'pl', type: 'google' }
             };
 
             const voiceName = urlParams.get('voice') || 'Zosia';
             const selectedVoice = voices[voiceName] || voices['Zosia'];
             
             const volume = parseInt(urlParams.get('volume')) || 80;
-            const speed = parseInt(urlParams.get('speed')) || 0;
+            // For Google TTS, always use 0 (ignored anyway)
+            const speed = selectedVoice.type === 'google' ? 0 : (parseInt(urlParams.get('speed')) || 0);
             const readnick = urlParams.get('readnick') === 'on';
             const readlinks = urlParams.get('readlinks') === 'on';
             const reademotes = urlParams.get('reademotes') === 'on';
@@ -844,7 +886,7 @@
             ];
 
             // ===============================================
-            // NOWY SYSTEM KOLEJKOWANIA WIADOMOŚCI
+            // SYSTEM KOLEJKOWANIA WIADOMOŚCI
             // ===============================================
             const messageQueue = [];
             let isProcessingQueue = false;
@@ -852,12 +894,97 @@
             let speechSynthesis = window.speechSynthesis;
             let currentUtterance = null;
 
+            // Funkcja do dzielenia tekstu na fragmenty (dla Google TTS - limit 200 znaków)
+            function splitTextIntoChunks(text, maxLength = 200) {
+                const chunks = [];
+                const sentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text];
+                
+                let currentChunk = '';
+                
+                for (const sentence of sentences) {
+                    if (currentChunk.length + sentence.length <= maxLength) {
+                        currentChunk += sentence;
+                    } else {
+                        if (currentChunk) {
+                            chunks.push(currentChunk.trim());
+                        }
+                        
+                        // Jeśli pojedyncze zdanie jest dłuższe niż limit, podziel po słowach
+                        if (sentence.length > maxLength) {
+                            const words = sentence.split(' ');
+                            currentChunk = '';
+                            
+                            for (const word of words) {
+                                if (currentChunk.length + word.length + 1 <= maxLength) {
+                                    currentChunk += (currentChunk ? ' ' : '') + word;
+                                } else {
+                                    if (currentChunk) {
+                                        chunks.push(currentChunk.trim());
+                                    }
+                                    currentChunk = word;
+                                }
+                            }
+                        } else {
+                            currentChunk = sentence;
+                        }
+                    }
+                }
+                
+                if (currentChunk) {
+                    chunks.push(currentChunk.trim());
+                }
+                
+                return chunks.length > 0 ? chunks : [text];
+            }
+
+            // Funkcja do odtwarzania Google TTS (bez opcji prędkości)
+            async function playGoogleTTS(text, volumeLevel) {
+                const chunks = splitTextIntoChunks(text, 200);
+                console.log('Google TTS - chunks:', chunks.length);
+                
+                for (const chunk of chunks) {
+                    const encodedText = encodeURIComponent(chunk);
+                    const ttsUrl = `https://corsproxy.io/?url=https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=pl&q=${encodedText}`;
+                    
+                    console.log('Playing Google TTS chunk:', chunk.substring(0, 50) + '...');
+                    
+                    await new Promise((resolve, reject) => {
+                        audio = new Audio(ttsUrl);
+                        audio.volume = volumeLevel / 100;
+                        
+                        audio.addEventListener('ended', function() {
+                            audio = null;
+                            resolve();
+                        });
+
+                        audio.addEventListener('error', function(e) {
+                            console.error('Google TTS Audio error:', e);
+                            audio = null;
+                            // Nie rejectuj, kontynuuj do następnego chunka
+                            resolve();
+                        });
+
+                        audio.play().catch(err => {
+                            console.error('Google TTS Play error:', err);
+                            audio = null;
+                            resolve();
+                        });
+                    });
+                }
+            }
+
             // Funkcja do odtwarzania pojedynczej wiadomości TTS
             async function playTTSSingle(text, volumeLevel, speedValue) {
                 const cleanText = text.replace(/%/g, 'percent');
                 
                 try {
-                    if (selectedVoice.type === 'webspeech') {
+                    if (selectedVoice.type === 'google') {
+                        // Use Google Translate TTS (no speed option)
+                        console.log('Playing with Google Translate TTS');
+                        await playGoogleTTS(cleanText, volumeLevel);
+                        console.log('TTS ended (Google)');
+                        
+                    } else if (selectedVoice.type === 'webspeech') {
                         // Use Web Speech API for Microsoft voices
                         console.log('Playing with Web Speech API');
                         
