@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -420,6 +421,11 @@
             color: #0078d4;
         }
 
+        .voice-badge.streamelements {
+            background: rgba(138, 43, 226, 0.15);
+            color: #8a2be2;
+        }
+
         @media (max-width: 768px) {
             h1 {
                 font-size: 2em;
@@ -458,7 +464,7 @@
         <div class="generator">
             <h2>
                 <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22.7 19L13.6 9.9C14.5 7.6 14 4.9 12.1 3C9.6 0.5 5.6 0.5 3.1 3C0.6 5.5 0.6 9.5 3.1 12C5 13.9 7.7 14.4 10 13.5L13 16.5V19H15V17L17 19L15 21L16.4 22.4L18 20.8L19.6 22.4L21 21L19.4 19.4L21 17.8L19.6 16.4L17.6 18.4L19.7 19ZM5.2 10.9C3.5 9.2 3.5 6.6 5.2 4.9C6.9 3.2 9.5 3.2 11.2 4.9C12.9 6.6 12.9 9.2 11.2 10.9C9.5 12.6 6.9 12.6 5.2 10.9Z" fill="#53fc18"/>
+                    <path d="M22.7 19L13.6 9.9C14.5 7.6 14 4.9 12.1 3C9.6 0.5 5.6 0.5 3.1 3C0.6 5.5 0.6 9.5 3.1 12C5 13.9 7.7 14.4 10 13.5L13 16.5V19H15V17L17 19L15 21L16.4 22.4L18 20.8L19.6 22.4L21 21L19.4 19.4L21 17.8L19.6 16.4L17.6 18.4L17.6 18.4L19.7 19ZM5.2 10.9C3.5 9.2 3.5 6.6 5.2 4.9C6.9 3.2 9.5 3.2 11.2 4.9C12.9 6.6 12.9 9.2 11.2 10.9C9.5 12.6 6.9 12.6 5.2 10.9Z" fill="#53fc18"/>
                 </svg>
                 Generator Linku TTS
             </h2>
@@ -486,6 +492,14 @@
                     </optgroup>
                     <optgroup label="Google Translate TTS">
                         <option value="GooglePL">Google Polish (Mężczyzna - Google)</option>
+                    </optgroup>
+                    <optgroup label="StreamElements TTS">
+                        <option value="SE-WavenetA">Wavenet-A (Kobieta - StreamElements)</option>
+                        <option value="SE-WavenetB">Wavenet-B (Mężczyzna - StreamElements)</option>
+                        <option value="SE-Jacek">Jacek (Mężczyzna - StreamElements)</option>
+                        <option value="SE-Maja">Maja (Kobieta - StreamElements)</option>
+                        <option value="SE-Ewa">Ewa (Kobieta - StreamElements)</option>
+                        <option value="SE-Jan">Jan (Mężczyzna - StreamElements)</option>
                     </optgroup>
                 </select>
             </div>
@@ -594,7 +608,7 @@
                 Funkcje
             </h2>
             <ul>
-                <li>7 polskich głosów (męskich i żeńskich) - Oddcast + Microsoft + Google TTS</li>
+                <li>13 polskich głosów (męskich i żeńskich) - Oddcast + Microsoft + Google + StreamElements TTS</li>
                 <li>Regulacja prędkości mowy od -3 (szybciej) do +3 (wolniej) - dla Oddcast i Microsoft</li>
                 <li>Opcja czytania nicku użytkownika przed wiadomością</li>
                 <li>Opcjonalne czytanie linków i emotek (domyślnie wyłączone)</li>
@@ -651,6 +665,36 @@
                     <div class="voice-type">Mężczyzna</div>
                     <div class="voice-badge google">Google</div>
                 </div>
+                <div class="voice-card">
+                    <div class="voice-name">Wavenet-A</div>
+                    <div class="voice-type">Kobieta</div>
+                    <div class="voice-badge streamelements">StreamElements</div>
+                </div>
+                <div class="voice-card">
+                    <div class="voice-name">Wavenet-B</div>
+                    <div class="voice-type">Mężczyzna</div>
+                    <div class="voice-badge streamelements">StreamElements</div>
+                </div>
+                <div class="voice-card">
+                    <div class="voice-name">Jacek</div>
+                    <div class="voice-type">Mężczyzna</div>
+                    <div class="voice-badge streamelements">StreamElements</div>
+                </div>
+                <div class="voice-card">
+                    <div class="voice-name">Maja</div>
+                    <div class="voice-type">Kobieta</div>
+                    <div class="voice-badge streamelements">StreamElements</div>
+                </div>
+                <div class="voice-card">
+                    <div class="voice-name">Ewa</div>
+                    <div class="voice-type">Kobieta</div>
+                    <div class="voice-badge streamelements">StreamElements</div>
+                </div>
+                <div class="voice-card">
+                    <div class="voice-name">Jan</div>
+                    <div class="voice-type">Mężczyzna</div>
+                    <div class="voice-badge streamelements">StreamElements</div>
+                </div>
             </div>
         </div>
 
@@ -682,14 +726,14 @@
             <p>Nazwa Twojego kanału Kick.com</p>
 
             <h3><code>voice</code> (opcjonalne)</h3>
-            <p>Nazwa głosu: Zosia, Agatka, Danota, Krzysztof, Wojciech, Adam, GooglePL</p>
+            <p>Nazwa głosu: Zosia, Agatka, Danota, Krzysztof, Wojciech, Adam, GooglePL, SE-WavenetA, SE-WavenetB, SE-Jacek, SE-Maja, SE-Ewa, SE-Jan</p>
             <p>Domyślnie: Zosia</p>
 
             <h3><code>speed</code> (opcjonalne)</h3>
             <p>Prędkość mowy od -3 do 3 (tylko dla Oddcast i Microsoft)</p>
             <p>-3 = najszybciej, 0 = normalna prędkość, 3 = najwolniej</p>
             <p>Domyślnie: 0</p>
-            <p><em>Uwaga: Parametr speed jest ignorowany dla głosu Google TTS</em></p>
+            <p><em>Uwaga: Parametr speed jest ignorowany dla głosów Google TTS i StreamElements TTS</em></p>
 
             <h3><code>volume</code> (opcjonalne)</h3>
             <p>Poziom głośności od 0 do 100</p>
@@ -747,9 +791,10 @@
             const voice = document.getElementById('voice').value;
             const speedGroup = document.getElementById('speed-group');
             
-            if (voice === 'GooglePL') {
+            // Hide speed for Google TTS and StreamElements TTS
+            if (voice === 'GooglePL' || voice.startsWith('SE-')) {
                 speedGroup.classList.add('hidden');
-                // Reset speed to 0 when Google is selected
+                // Reset speed to 0 when these voices are selected
                 document.getElementById('speed').value = '0';
                 document.getElementById('speed-value').textContent = '0';
                 document.getElementById('speed-display').textContent = '0';
@@ -809,8 +854,8 @@
             let url = baseUrl + '?channel=' + encodeURIComponent(channel);
             
             if (voice !== 'Zosia') url += '&voice=' + voice;
-            // Only add speed parameter if not Google TTS
-            if (speed !== '0' && voice !== 'GooglePL') url += '&speed=' + speed;
+            // Only add speed parameter if not Google TTS or StreamElements TTS
+            if (speed !== '0' && voice !== 'GooglePL' && !voice.startsWith('SE-')) url += '&speed=' + speed;
             if (volume !== '80') url += '&volume=' + volume;
             if (readnick) url += '&readnick=on';
             if (readlinks) url += '&readlinks=on';
@@ -849,15 +894,21 @@
                 'Wojciech': { EID: '7', LID: '14', VID: '2', type: 'oddcast' },
                 'Zosia': { EID: '2', LID: '14', VID: '1', type: 'oddcast' },
                 'Adam': { name: 'Microsoft Adam - Polish (Poland)', type: 'webspeech' },
-                'GooglePL': { lang: 'pl', type: 'google' }
+                'GooglePL': { lang: 'pl', type: 'google' },
+                'SE-WavenetA': { voice: 'pl-PL-Wavenet-A', type: 'streamelements' },
+                'SE-WavenetB': { voice: 'pl-PL-Wavenet-B', type: 'streamelements' },
+                'SE-Jacek': { voice: 'Jacek', type: 'streamelements' },
+                'SE-Maja': { voice: 'Maja', type: 'streamelements' },
+                'SE-Ewa': { voice: 'Ewa', type: 'streamelements' },
+                'SE-Jan': { voice: 'Jan', type: 'streamelements' }
             };
 
             const voiceName = urlParams.get('voice') || 'Zosia';
             const selectedVoice = voices[voiceName] || voices['Zosia'];
             
             const volume = parseInt(urlParams.get('volume')) || 80;
-            // For Google TTS, always use 0 (ignored anyway)
-            const speed = selectedVoice.type === 'google' ? 0 : (parseInt(urlParams.get('speed')) || 0);
+            // For Google TTS and StreamElements, always use 0 (ignored anyway)
+            const speed = (selectedVoice.type === 'google' || selectedVoice.type === 'streamelements') ? 0 : (parseInt(urlParams.get('speed')) || 0);
             const readnick = urlParams.get('readnick') === 'on';
             const readlinks = urlParams.get('readlinks') === 'on';
             const reademotes = urlParams.get('reademotes') === 'on';
@@ -973,12 +1024,53 @@
                 }
             }
 
+            // Funkcja do odtwarzania StreamElements TTS
+            async function playStreamElementsTTS(text, voice, volumeLevel) {
+                const chunks = splitTextIntoChunks(text, 500); // StreamElements ma większy limit
+                console.log('StreamElements TTS - chunks:', chunks.length);
+                
+                for (const chunk of chunks) {
+                    const encodedText = encodeURIComponent(chunk);
+                    const ttsUrl = `https://api.streamelements.com/kappa/v2/speech?voice=${voice}&text=${encodedText}&key=1fWQVbDjk8esigWnsUOIT41hBM-EDeKlorLbWFy3vGiAmvwh`;
+                    
+                    console.log('Playing StreamElements TTS chunk:', chunk.substring(0, 50) + '...');
+                    
+                    await new Promise((resolve, reject) => {
+                        audio = new Audio(ttsUrl);
+                        audio.volume = volumeLevel / 100;
+                        
+                        audio.addEventListener('ended', function() {
+                            audio = null;
+                            resolve();
+                        });
+
+                        audio.addEventListener('error', function(e) {
+                            console.error('StreamElements TTS Audio error:', e);
+                            audio = null;
+                            resolve();
+                        });
+
+                        audio.play().catch(err => {
+                            console.error('StreamElements TTS Play error:', err);
+                            audio = null;
+                            resolve();
+                        });
+                    });
+                }
+            }
+
             // Funkcja do odtwarzania pojedynczej wiadomości TTS
             async function playTTSSingle(text, volumeLevel, speedValue) {
                 const cleanText = text.replace(/%/g, 'percent');
                 
                 try {
-                    if (selectedVoice.type === 'google') {
+                    if (selectedVoice.type === 'streamelements') {
+                        // Use StreamElements TTS
+                        console.log('Playing with StreamElements TTS');
+                        await playStreamElementsTTS(cleanText, selectedVoice.voice, volumeLevel);
+                        console.log('TTS ended (StreamElements)');
+                        
+                    } else if (selectedVoice.type === 'google') {
                         // Use Google Translate TTS (no speed option)
                         console.log('Playing with Google Translate TTS');
                         await playGoogleTTS(cleanText, volumeLevel);
