@@ -411,11 +411,6 @@
             margin-top: 5px;
         }
 
-        .voice-badge.google {
-            background: rgba(66, 133, 244, 0.15);
-            color: #4285f4;
-        }
-
         .voice-badge.microsoft {
             background: rgba(0, 120, 212, 0.15);
             color: #0078d4;
@@ -424,6 +419,11 @@
         .voice-badge.streamelements {
             background: rgba(138, 43, 226, 0.15);
             color: #8a2be2;
+        }
+
+        .voice-badge.streamlabs {
+            background: rgba(255, 165, 0, 0.15);
+            color: #ffa500;
         }
 
         @media (max-width: 768px) {
@@ -490,8 +490,12 @@
                     <optgroup label="Microsoft TTS">
                         <option value="Adam">Adam (Mężczyzna - Microsoft)</option>
                     </optgroup>
-                    <optgroup label="Google Translate TTS">
-                        <option value="GooglePL">Google Polish (Mężczyzna - Google)</option>
+                    <optgroup label="Streamlabs TTS (Amazon Polly)">
+                        <option value="Ola">Ola (Kobieta - Streamlabs)</option>
+                        <option value="Ewa">Ewa (Kobieta - Streamlabs)</option>
+                        <option value="Maja">Maja (Kobieta - Streamlabs)</option>
+                        <option value="Jacek">Jacek (Mężczyzna - Streamlabs)</option>
+                        <option value="Jan">Jan (Mężczyzna - Streamlabs)</option>
                     </optgroup>
                     <optgroup label="StreamElements TTS">
                         <option value="SE-WavenetA">Wavenet-A (Kobieta - StreamElements)</option>
@@ -574,7 +578,7 @@
                 <label>Format Wiadomości</label>
                 <div class="checkbox-item checked">
                     <input type="checkbox" id="pretext" checked onchange="toggleCheckbox(this)">
-                    <label for="pretext">Wymagaj "tts" przed wiadomością</label>
+                    <label for="pretext">Wymagaj "!tts" przed wiadomością</label>
                 </div>
             </div>
 
@@ -608,12 +612,12 @@
                 Funkcje
             </h2>
             <ul>
-                <li>13 polskich głosów (męskich i żeńskich) - Oddcast + Microsoft + Google + StreamElements TTS</li>
+                <li>17 polskich głosów (męskich i żeńskich) - Oddcast + Microsoft + Streamlabs + StreamElements TTS</li>
                 <li>Regulacja prędkości mowy od -3 (szybciej) do +3 (wolniej) - dla Oddcast i Microsoft</li>
                 <li>Opcja czytania nicku użytkownika przed wiadomością</li>
                 <li>Opcjonalne czytanie linków i emotek (domyślnie wyłączone)</li>
                 <li>Szczegółowa kontrola uprawnień (Każdy, Obserwujący, Moderator, OG, Subskrybent, VIP)</li>
-                <li>Opcjonalne wymaganie przedrostka "tts"</li>
+                <li>Opcjonalne wymaganie przedrostka "!tts"</li>
                 <li>Kontrola głośności 0-100</li>
                 <li>Automatyczne filtrowanie wiadomości botów</li>
                 <li>Perfekcyjne kolejkowanie wiadomości FIFO</li>
@@ -661,9 +665,29 @@
                     <div class="voice-badge microsoft">Microsoft</div>
                 </div>
                 <div class="voice-card">
-                    <div class="voice-name">Google Polish</div>
+                    <div class="voice-name">Ola</div>
+                    <div class="voice-type">Kobieta</div>
+                    <div class="voice-badge streamlabs">Streamlabs</div>
+                </div>
+                <div class="voice-card">
+                    <div class="voice-name">Ewa</div>
+                    <div class="voice-type">Kobieta</div>
+                    <div class="voice-badge streamlabs">Streamlabs</div>
+                </div>
+                <div class="voice-card">
+                    <div class="voice-name">Maja</div>
+                    <div class="voice-type">Kobieta</div>
+                    <div class="voice-badge streamlabs">Streamlabs</div>
+                </div>
+                <div class="voice-card">
+                    <div class="voice-name">Jacek</div>
                     <div class="voice-type">Mężczyzna</div>
-                    <div class="voice-badge google">Google</div>
+                    <div class="voice-badge streamlabs">Streamlabs</div>
+                </div>
+                <div class="voice-card">
+                    <div class="voice-name">Jan</div>
+                    <div class="voice-type">Mężczyzna</div>
+                    <div class="voice-badge streamlabs">Streamlabs</div>
                 </div>
                 <div class="voice-card">
                     <div class="voice-name">Wavenet-A</div>
@@ -726,14 +750,14 @@
             <p>Nazwa Twojego kanału Kick.com</p>
 
             <h3><code>voice</code> (opcjonalne)</h3>
-            <p>Nazwa głosu: Zosia, Agatka, Danota, Krzysztof, Wojciech, Adam, GooglePL, SE-WavenetA, SE-WavenetB, SE-Jacek, SE-Maja, SE-Ewa, SE-Jan</p>
+            <p>Nazwa głosu: Zosia, Agatka, Danota, Krzysztof, Wojciech, Adam, Ola, Ewa, Maja, Jacek, Jan, SE-WavenetA, SE-WavenetB, SE-Jacek, SE-Maja, SE-Ewa, SE-Jan</p>
             <p>Domyślnie: Zosia</p>
 
             <h3><code>speed</code> (opcjonalne)</h3>
             <p>Prędkość mowy od -3 do 3 (tylko dla Oddcast i Microsoft)</p>
             <p>-3 = najszybciej, 0 = normalna prędkość, 3 = najwolniej</p>
             <p>Domyślnie: 0</p>
-            <p><em>Uwaga: Parametr speed jest ignorowany dla głosów Google TTS i StreamElements TTS</em></p>
+            <p><em>Uwaga: Parametr speed jest ignorowany dla głosów Streamlabs TTS i StreamElements TTS</em></p>
 
             <h3><code>volume</code> (opcjonalne)</h3>
             <p>Poziom głośności od 0 do 100</p>
@@ -762,7 +786,7 @@
             </ul>
 
             <h3><code>pretext</code> (opcjonalne)</h3>
-            <p>Wymagaj "tts" na początku wiadomości</p>
+            <p>Wymagaj "!tts" na początku wiadomości</p>
             <p>Wartości: on / off (Domyślnie: on - wymagane)</p>
         </div>
 
@@ -779,7 +803,7 @@
                 <li>Dodaj go jako Browser Source w OBS/Streamlabs</li>
                 <li>Ustaw wymiary na 800x600 (rozmiar nie ma znaczenia, będzie niewidoczne)</li>
                 <li>Zacznij streamować</li>
-                <li>Autoryzowani użytkownicy mogą teraz wysyłać wiadomości rozpoczynające się od "tts", które będą czytane na głos</li>
+                <li>Autoryzowani użytkownicy mogą teraz wysyłać wiadomości rozpoczynające się od "!tts", które będą czytane na głos</li>
                 <li>Używaj <code>!skiptts</code> aby pominąć aktualne TTS</li>
             </ul>
         </div>
@@ -791,8 +815,10 @@
             const voice = document.getElementById('voice').value;
             const speedGroup = document.getElementById('speed-group');
             
-            // Hide speed for Google TTS and StreamElements TTS
-            if (voice === 'GooglePL' || voice.startsWith('SE-')) {
+            const streamlabsVoices = ['Ola', 'Ewa', 'Maja', 'Jacek', 'Jan'];
+            
+            // Hide speed for Streamlabs TTS and StreamElements TTS
+            if (streamlabsVoices.includes(voice) || voice.startsWith('SE-')) {
                 speedGroup.classList.add('hidden');
                 // Reset speed to 0 when these voices are selected
                 document.getElementById('speed').value = '0';
@@ -854,8 +880,10 @@
             let url = baseUrl + '?channel=' + encodeURIComponent(channel);
             
             if (voice !== 'Zosia') url += '&voice=' + voice;
-            // Only add speed parameter if not Google TTS or StreamElements TTS
-            if (speed !== '0' && voice !== 'GooglePL' && !voice.startsWith('SE-')) url += '&speed=' + speed;
+            
+            const streamlabsVoices = ['Ola', 'Ewa', 'Maja', 'Jacek', 'Jan'];
+            // Only add speed parameter if not Streamlabs TTS or StreamElements TTS
+            if (speed !== '0' && !streamlabsVoices.includes(voice) && !voice.startsWith('SE-')) url += '&speed=' + speed;
             if (volume !== '80') url += '&volume=' + volume;
             if (readnick) url += '&readnick=on';
             if (readlinks) url += '&readlinks=on';
@@ -894,7 +922,11 @@
                 'Wojciech': { EID: '7', LID: '14', VID: '2', type: 'oddcast' },
                 'Zosia': { EID: '2', LID: '14', VID: '1', type: 'oddcast' },
                 'Adam': { name: 'Microsoft Adam - Polish (Poland)', type: 'webspeech' },
-                'GooglePL': { lang: 'pl', type: 'google' },
+                'Ola': { voice: 'Ola', type: 'streamlabs' },
+                'Ewa': { voice: 'Ewa', type: 'streamlabs' },
+                'Maja': { voice: 'Maja', type: 'streamlabs' },
+                'Jacek': { voice: 'Jacek', type: 'streamlabs' },
+                'Jan': { voice: 'Jan', type: 'streamlabs' },
                 'SE-WavenetA': { voice: 'pl-PL-Wavenet-A', type: 'streamelements' },
                 'SE-WavenetB': { voice: 'pl-PL-Wavenet-B', type: 'streamelements' },
                 'SE-Jacek': { voice: 'Jacek', type: 'streamelements' },
@@ -907,8 +939,7 @@
             const selectedVoice = voices[voiceName] || voices['Zosia'];
             
             const volume = parseInt(urlParams.get('volume')) || 80;
-            // For Google TTS and StreamElements, always use 0 (ignored anyway)
-            const speed = (selectedVoice.type === 'google' || selectedVoice.type === 'streamelements') ? 0 : (parseInt(urlParams.get('speed')) || 0);
+            const speed = (selectedVoice.type === 'streamlabs' || selectedVoice.type === 'streamelements') ? 0 : (parseInt(urlParams.get('speed')) || 0);
             const readnick = urlParams.get('readnick') === 'on';
             const readlinks = urlParams.get('readlinks') === 'on';
             const reademotes = urlParams.get('reademotes') === 'on';
@@ -945,7 +976,6 @@
             let speechSynthesis = window.speechSynthesis;
             let currentUtterance = null;
 
-            // Funkcja do dzielenia tekstu na fragmenty (dla Google TTS - limit 200 znaków)
             function splitTextIntoChunks(text, maxLength = 200) {
                 const chunks = [];
                 const sentences = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [text];
@@ -960,7 +990,6 @@
                             chunks.push(currentChunk.trim());
                         }
                         
-                        // Jeśli pojedyncze zdanie jest dłuższe niż limit, podziel po słowach
                         if (sentence.length > maxLength) {
                             const words = sentence.split(' ');
                             currentChunk = '';
@@ -988,36 +1017,57 @@
                 return chunks.length > 0 ? chunks : [text];
             }
 
-            // Funkcja do odtwarzania Google TTS (bez opcji prędkości)
-            async function playGoogleTTS(text, volumeLevel) {
-                const chunks = splitTextIntoChunks(text, 200);
-                console.log('Google TTS - chunks:', chunks.length);
+            // Funkcja do obsługi Streamlabs API via proxy z obsługą nagłówka Referer
+            async function playStreamlabsTTS(text, voice, volumeLevel) {
+                const chunks = splitTextIntoChunks(text, 450);
+                console.log('Streamlabs TTS - chunks:', chunks.length);
                 
                 for (const chunk of chunks) {
-                    const encodedText = encodeURIComponent(chunk);
-                    const ttsUrl = `https://corsproxy.io/?url=https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=pl&q=${encodedText}`;
+                    console.log('Requesting Streamlabs Polly voice:', voice);
                     
-                    console.log('Playing Google TTS chunk:', chunk.substring(0, 50) + '...');
-                    
-                    await new Promise((resolve, reject) => {
-                        audio = new Audio(ttsUrl);
-                        audio.volume = volumeLevel / 100;
+                    await new Promise((resolve) => {
+                        const targetUrl = 'https://streamlabs.com/polly/speak';
+                        const proxyUrl = `https://corsproxy.io/?url=${encodeURIComponent(targetUrl)}`;
                         
-                        audio.addEventListener('ended', function() {
-                            audio = null;
-                            resolve();
-                        });
+                        fetch(proxyUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: new URLSearchParams({
+                                'voice': voice,
+                                'text': chunk
+                            })
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data && data.success && data.speak_url) {
+                                audio = new Audio(data.speak_url);
+                                audio.volume = volumeLevel / 100;
+                                
+                                audio.addEventListener('ended', function() {
+                                    audio = null;
+                                    resolve();
+                                });
 
-                        audio.addEventListener('error', function(e) {
-                            console.error('Google TTS Audio error:', e);
-                            audio = null;
-                            // Nie rejectuj, kontynuuj do następnego chunka
-                            resolve();
-                        });
+                                audio.addEventListener('error', function(e) {
+                                    console.error('Streamlabs Audio error:', e);
+                                    audio = null;
+                                    resolve();
+                                });
 
-                        audio.play().catch(err => {
-                            console.error('Google TTS Play error:', err);
-                            audio = null;
+                                audio.play().catch(err => {
+                                    console.error('Streamlabs Play error:', err);
+                                    audio = null;
+                                    resolve();
+                                });
+                            } else {
+                                console.error('Streamlabs API returned error or invalid json:', data);
+                                resolve();
+                            }
+                        })
+                        .catch(err => {
+                            console.error('Streamlabs Fetch fail:', err);
                             resolve();
                         });
                     });
@@ -1026,7 +1076,7 @@
 
             // Funkcja do odtwarzania StreamElements TTS
             async function playStreamElementsTTS(text, voice, volumeLevel) {
-                const chunks = splitTextIntoChunks(text, 500); // StreamElements ma większy limit
+                const chunks = splitTextIntoChunks(text, 500);
                 console.log('StreamElements TTS - chunks:', chunks.length);
                 
                 for (const chunk of chunks) {
@@ -1035,7 +1085,7 @@
                     
                     console.log('Playing StreamElements TTS chunk:', chunk.substring(0, 50) + '...');
                     
-                    await new Promise((resolve, reject) => {
+                    await new Promise((resolve) => {
                         audio = new Audio(ttsUrl);
                         audio.volume = volumeLevel / 100;
                         
@@ -1064,20 +1114,17 @@
                 const cleanText = text.replace(/%/g, 'percent');
                 
                 try {
-                    if (selectedVoice.type === 'streamelements') {
-                        // Use StreamElements TTS
+                    if (selectedVoice.type === 'streamlabs') {
+                        console.log('Playing with Streamlabs TTS');
+                        await playStreamlabsTTS(cleanText, selectedVoice.voice, volumeLevel);
+                        console.log('TTS ended (Streamlabs)');
+                        
+                    } else if (selectedVoice.type === 'streamelements') {
                         console.log('Playing with StreamElements TTS');
                         await playStreamElementsTTS(cleanText, selectedVoice.voice, volumeLevel);
                         console.log('TTS ended (StreamElements)');
                         
-                    } else if (selectedVoice.type === 'google') {
-                        // Use Google Translate TTS (no speed option)
-                        console.log('Playing with Google Translate TTS');
-                        await playGoogleTTS(cleanText, volumeLevel);
-                        console.log('TTS ended (Google)');
-                        
                     } else if (selectedVoice.type === 'webspeech') {
-                        // Use Web Speech API for Microsoft voices
                         console.log('Playing with Web Speech API');
                         
                         return new Promise((resolve) => {
@@ -1156,7 +1203,6 @@
                 }
             }
 
-            // Główna funkcja przetwarzająca kolejkę
             async function processQueue() {
                 if (isProcessingQueue) {
                     console.log('Queue processor already running');
@@ -1169,7 +1215,6 @@
                 while (messageQueue.length > 0) {
                     const message = messageQueue.shift();
                     console.log('Processing message from queue:', message.text.substring(0, 50) + '...');
-                    console.log('Messages remaining in queue:', messageQueue.length);
 
                     try {
                         await playTTSSingle(message.text, message.volume, message.speed);
@@ -1182,7 +1227,6 @@
                 console.log('Queue processor finished');
             }
 
-            // Funkcja dodająca wiadomość do kolejki
             function addToQueue(text, volumeLevel, speedValue) {
                 messageQueue.push({
                     text: text,
@@ -1191,13 +1235,11 @@
                 });
                 console.log('Added to queue. Queue length:', messageQueue.length);
                 
-                // Uruchom procesor kolejki jeśli nie jest aktywny
                 if (!isProcessingQueue) {
                     processQueue();
                 }
             }
 
-            // Funkcja do pomijania aktualnego TTS
             function skipCurrentTTS() {
                 console.log('Skipping current TTS');
                 if (audio) {
@@ -1251,11 +1293,10 @@
                 return false;
             }
 
-            // Load voices for Web Speech API
             if (speechSynthesis.onvoiceschanged !== undefined) {
                 speechSynthesis.onvoiceschanged = () => {
                     const voices = speechSynthesis.getVoices();
-                    console.log('Available voices:', voices.map(v => v.name));
+                    console.log('Available WebSpeech voices:', voices.map(v => v.name));
                 };
             }
 
@@ -1296,14 +1337,12 @@
                     return;
                 }
 
-                // Handle !skiptts command from broadcaster
                 if (isBroadcaster && content.toLowerCase().trim() === '!skiptts') {
                     console.log('Broadcaster skipped TTS');
                     skipCurrentTTS();
                     return;
                 }
 
-                // Process links
                 let cleanContent;
                 if (readlinks) {
                     cleanContent = content.replace(/\b(?:https?|ftp|file):\/\/\S+/gi, 'LINK');
@@ -1311,7 +1350,7 @@
                     cleanContent = content.replace(/\b(?:https?|ftp|file):\/\/\S+/gi, '');
                 }
 
-                if (content.startsWith('!')) {
+                if (content.startsWith('!') && !content.toLowerCase().startsWith('!tts')) {
                     return;
                 }
 
@@ -1323,36 +1362,31 @@
                     let textToSpeak = cleanContent;
                     
                     if (pretext) {
-                        if (!cleanContent.toLowerCase().startsWith('tts')) {
+                        if (!cleanContent.toLowerCase().startsWith('!tts')) {
                             return;
                         }
-                        textToSpeak = cleanContent.replace(/^tts\s?/i, '');
+                        textToSpeak = cleanContent.replace(/^!tts\s?/i, '');
                     }
                     
                     textToSpeak = textToSpeak.trim();
                     
-                    // Process emotes
                     if (reademotes) {
                         textToSpeak = textToSpeak.replace(/\[emote:\d+:(\w+)\]/g, '$1');
                     } else {
                         textToSpeak = textToSpeak.replace(/\[emote:\d+:\w+\]/g, '');
                     }
 
-                    // Clean up extra spaces
                     textToSpeak = textToSpeak.replace(/\s+/g, ' ').trim();
 
-                    // Skip if message is empty after processing
                     if (textToSpeak.length === 0) {
                         console.log('Message empty after processing emotes/links');
                         return;
                     }
 
-                    // Add nickname if readnick is enabled
                     if (readnick) {
                         textToSpeak = username + ' mówi: ' + textToSpeak;
                     }
 
-                    // Dodaj do kolejki zamiast bezpośrednio odtwarzać
                     addToQueue(textToSpeak, volume, speed);
                 } else {
                     console.log('User ' + username + ' has no permission');
