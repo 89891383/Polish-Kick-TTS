@@ -837,15 +837,72 @@
 
     const urlParams = new URLSearchParams(window.location.search);
 
-    /* Amazon Polly (głosy Streamlabs + StreamElements) — 100% GitHub Pages, bez proxy.
-     * Streamlabs POST blokuje CORS z github.io; ten sam Polly przez GET StreamElements + Audio(). */
+    /* Streamlabs Polly — POST streamlabs.com/polly/speak → speak_url. Ola tylko u Streamlabs. */
+    const STREAMLABS_SPEAK_URL = 'https://streamlabs.com/polly/speak';
     const STREAMELEMENTS_SPEECH_KEY = '1fWQVbDjk8esigWnsUOIT41hBM-EDeKlorLbWFy3vGiAmvwh';
 
-    function buildPollySpeechUrl(voice, text) {
+    function buildStreamElementsSpeechUrl(voice, text) {
         return 'https://api.streamelements.com/kappa/v2/speech'
             + '?voice=' + encodeURIComponent(voice)
             + '&text=' + encodeURIComponent(text)
             + '&key=' + STREAMELEMENTS_SPEECH_KEY;
+    }
+
+    function getStreamlabsSpeakEndpoints() {
+        const list = [];
+        const slproxy = urlParams.get('slproxy');
+        if (slproxy) {
+            const base = slproxy.replace(/\/$/, '');
+            list.push(base.includes('.php') || base.endsWith('/streamlabs') ? base : base + '/streamlabs');
+        }
+        list.push(STREAMLABS_SPEAK_URL);
+        list.push('https://corsproxy.io/?' + encodeURIComponent(STREAMLABS_SPEAK_URL));
+        return [...new Set(list)];
+    }
+
+    async function streamlabsFetchSpeak(voice, text) {
+        const bodyStr = new URLSearchParams({ voice: voice, text: text }).toString();
+        for (const endpoint of getStreamlabsSpeakEndpoints()) {
+            try {
+                const res = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: bodyStr
+                });
+                if (!res.ok) continue;
+                const data = await res.json();
+                if (data && data.success && data.speak_url) {
+                    console.log('[TTS] Streamlabs Polly OK via', endpoint);
+                    return data.speak_url;
+                }
+            } catch (e) {
+                console.warn('[TTS] Streamlabs fail:', endpoint, e.message || e);
+            }
+        }
+        try {
+            const res = await fetch('https://api.allorigins.win/post', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    url: STREAMLABS_SPEAK_URL,
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: bodyStr
+                })
+            });
+            if (res.ok) {
+                const wrapper = await res.json();
+                const data = JSON.parse(wrapper.contents);
+                if (data && data.success && data.speak_url) {
+                    console.log('[TTS] Streamlabs Polly OK via allorigins relay');
+                    return data.speak_url;
+                }
+            }
+        } catch (e) {
+            console.warn('[TTS] Streamlabs allorigins fail:', e.message || e);
+        }
+        console.error('[TTS] Streamlabs Polly niedostępny — sprawdź sieć lub dodaj ?slproxy=URL');
+        return null;
     }
 
     const hasChannel = urlParams.has('channel');
@@ -971,19 +1028,28 @@
             return chunks.length > 0 ? chunks : [text];
         }
 
-        async function playPollyTTS(text, voice, volumeLevel, maxChunk) {
-            const chunks = splitTextIntoChunks(text, maxChunk);
+        async function playStreamlabsTTS(text, voice, volumeLevel) {
+            const chunks = splitTextIntoChunks(text, 450);
             for (const chunk of chunks) {
-                await TtsAudioEngine.playUrl(buildPollySpeechUrl(voice, chunk), volumeLevel);
+                const speakUrl = await streamlabsFetchSpeak(voice, chunk);
+                if (speakUrl) await TtsAudioEngine.playUrl(speakUrl, volumeLevel);
+            }
+        }
+
+        async function playStreamElementsTTS(text, voice, volumeLevel) {
+            const chunks = splitTextIntoChunks(text, 500);
+            for (const chunk of chunks) {
+                await TtsAudioEngine.playUrl(buildStreamElementsSpeechUrl(voice, chunk), volumeLevel);
             }
         }
 
         async function playTTSSingle(text, volumeLevel, speedValue) {
             const cleanText = text.replace(/%/g, 'percent');
             try {
-                if (selectedVoice.type === 'streamlabs' || selectedVoice.type === 'streamelements') {
-                    const maxChunk = selectedVoice.type === 'streamlabs' ? 450 : 500;
-                    await playPollyTTS(cleanText, selectedVoice.voice, volumeLevel, maxChunk);
+                if (selectedVoice.type === 'streamlabs') {
+                    await playStreamlabsTTS(cleanText, selectedVoice.voice, volumeLevel);
+                } else if (selectedVoice.type === 'streamelements') {
+                    await playStreamElementsTTS(cleanText, selectedVoice.voice, volumeLevel);
                 } else if (selectedVoice.type === 'webspeech') {
                     return new Promise((resolve) => {
                         const utterance = new SpeechSynthesisUtterance(cleanText);
