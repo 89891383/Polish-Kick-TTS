@@ -108,13 +108,7 @@
         .info-strip strong { color:oklch(0.87 0.28 142); font-weight:700; }
         .warn-strip { padding:14px 16px; border-radius:10px; background:oklch(0.78 0.15 75 / .08); border-left:3px solid oklch(0.78 0.15 75); font-size:.85rem; font-weight:500; color:oklch(0.72 0.02 280); margin:12px 0; }
         .warn-strip strong { color:oklch(0.78 0.15 75); font-weight:700; }
-        #audio-unlock-overlay { position:fixed; inset:0; z-index:99999; display:none; align-items:center; justify-content:center; background:rgba(14,14,16,0.92); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); cursor:pointer; touch-action:manipulation; }
-        #audio-unlock-overlay.visible { display:flex; }
-        .unlock-card { text-align:center; padding:32px 28px; border-radius:16px; background:oklch(0.15 0.01 280 / .95); border:1px solid oklch(0.87 0.28 142 / .35); max-width:320px; pointer-events:none; animation:scaleIn .4s ease; }
-        .unlock-card .unlock-icon { width:56px; height:56px; margin:0 auto 16px; border-radius:50%; background:oklch(0.87 0.28 142 / .15); display:flex; align-items:center; justify-content:center; color:oklch(0.87 0.28 142); font-size:1.6rem; }
-        .unlock-card h3 { font-family:'Poppins',sans-serif; font-weight:800; font-size:1.1rem; margin-bottom:8px; color:oklch(0.93 0.01 280); }
-        .unlock-card p { font-size:.85rem; color:oklch(0.55 0.02 280); font-weight:500; line-height:1.5; }
-        .unlock-pulse { display:inline-block; width:8px; height:8px; border-radius:50%; background:oklch(0.87 0.28 142); animation:glowPulse 1.2s ease infinite; margin-right:6px; vertical-align:middle; }
+
         .feature-li { padding:8px 0 8px 22px; position:relative; font-size:.9rem; color:oklch(0.65 0.02 280); font-weight:500; }
         .feature-li::before { content:''; position:absolute; left:0; top:50%; transform:translateY(-50%); width:7px; height:7px; border-radius:50%; background:oklch(0.87 0.28 142); box-shadow:0 0 8px oklch(0.87 0.28 142 / .5); }
         @media(max-width:768px){ .url-row{flex-direction:column} .btn-kick{width:100%;justify-content:center} }
@@ -358,7 +352,7 @@
                     <i data-lucide="chevron-down" class="faq-chevron" :class="open && 'rotate'"></i>
                 </button>
                 <div class="faq-a" x-show="open" x-collapse>
-                    <p>iOS blokuje autoplay dźwięku w WebView (IRL Pro, Moblin). Przed streamem dotknij ekran raz — pojawi się „Włącz TTS". Po odblokowaniu audio działa automatycznie przez całą sesję. OBS na PC nie ma tego problemu (CEF Chromium). Botrix i StreamElements robią to samo — ich overlay wymaga testowego kliknięcia przy konfiguracji.</p>
+                    <p>Na PC i OBS TTS startuje automatycznie — bez klikania. Na iPhone (IRL Pro, Moblin) iOS może wymagać jednego tapnięcia gdziekolwiek na ekranie przed pierwszym TTS (ograniczenie Apple, nie da się tego w 100% obejść w przeglądarce). Po starcie strony overlay nie blokuje już widoku.</p>
                 </div>
             </div>
             <div class="faq-item" x-data="{ open: false }">
@@ -523,15 +517,14 @@
     const STREAMLABS_VOICES = ['Ola', 'Ewa', 'Maja', 'Jacek', 'Jan'];
     const PLACEHOLDER = 'Wpisz kanał Kick, aby wygenerować link…';
 
-    /* Audio Unlock — wzorowane na Howler.js / PixiJS Sound / overlayach SE (user gesture wymagany na iOS WebView) */
+    /* Audio engine — auto-unlock na PC/OBS, bez blokującego overlay */
     const TtsAudioEngine = (function() {
         let unlocked = false;
         let audioContext = null;
         let keepAliveNode = null;
-        let unlockOverlay = null;
         let currentAudio = null;
         let currentSource = null;
-        const SILENT_WAV = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhEAAAAAA=';
+        const SILENT_MP3 = 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjIwLjEwMAAAAAAAAAAAAAAA//tUxAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV6urq6urq6urq6urq6urq6urq6urq6urq6v////////////////////////////////8AAAAATGF2YzU4LjM1AAAAAAAAAAAAAAAAJAAAAAAAAAAAASDs90hvAAAAAAAAAAAAAAAAAAAA';
 
         function getContext() {
             if (!audioContext) {
@@ -541,21 +534,29 @@
             return audioContext;
         }
 
-        function hideOverlay() {
-            if (unlockOverlay) unlockOverlay.classList.remove('visible');
+        function isIOS() {
+            return /iPad|iPhone|iPod/i.test(navigator.userAgent) ||
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         }
 
-        function showOverlay() {
-            if (!unlockOverlay) {
-                unlockOverlay = document.createElement('div');
-                unlockOverlay.id = 'audio-unlock-overlay';
-                unlockOverlay.innerHTML = '<div class="unlock-card"><div class="unlock-icon">&#9835;</div><h3>Włącz TTS</h3><p><span class="unlock-pulse"></span>Dotknij ekran raz przed streamem IRL.<br>Wymagane przez iOS / Safari (IRL Pro, Moblin).</p></div>';
-                const doUnlock = (e) => { if (e) { e.preventDefault(); e.stopPropagation(); } unlock(); };
-                unlockOverlay.addEventListener('click', doUnlock);
-                unlockOverlay.addEventListener('touchstart', doUnlock, { passive: false });
-                document.body.appendChild(unlockOverlay);
-            }
-            unlockOverlay.classList.add('visible');
+        function markUnlocked() {
+            if (unlocked) return;
+            unlocked = true;
+            const el = document.getElementById('audio-unlock-overlay');
+            if (el) el.remove();
+            console.log('[TTS] Audio unlocked');
+            document.dispatchEvent(new CustomEvent('tts-audio-unlocked'));
+        }
+
+        function playSilentWebAudio(ctx) {
+            const buffer = ctx.createBuffer(1, 2, 22050);
+            const src = ctx.createBufferSource();
+            src.buffer = buffer;
+            const gain = ctx.createGain();
+            gain.gain.value = 0.001;
+            src.connect(gain);
+            gain.connect(ctx.destination);
+            src.start(0);
         }
 
         function startKeepAlive(ctx) {
@@ -568,85 +569,86 @@
                 gain.connect(ctx.destination);
                 osc.start();
                 keepAliveNode = osc;
-            } catch (e) { /* optional */ }
+            } catch (e) {}
         }
 
-        async function unlock() {
-            if (unlocked) { hideOverlay(); return true; }
+        async function unlockFromGesture() {
+            if (unlocked) return true;
             const ctx = getContext();
+            let ok = false;
             try {
-                if (ctx && ctx.state === 'suspended') await ctx.resume();
-            } catch (e) { console.warn('AudioContext resume:', e); }
-
+                if (ctx) {
+                    if (ctx.state === 'suspended') await ctx.resume();
+                    playSilentWebAudio(ctx);
+                    startKeepAlive(ctx);
+                    ok = true;
+                }
+            } catch (e) { console.warn('[TTS] WebAudio unlock:', e); }
             try {
-                const silent = new Audio(SILENT_WAV);
-                silent.setAttribute('playsinline', '');
-                silent.setAttribute('webkit-playsinline', 'true');
-                silent.volume = 0.001;
-                await silent.play();
-                silent.pause();
-                silent.currentTime = 0;
-            } catch (e) {
-                console.warn('Silent unlock failed:', e);
-                return false;
-            }
-
+                const a = new Audio(SILENT_MP3);
+                a.setAttribute('playsinline', 'true');
+                a.volume = 0.01;
+                await a.play();
+                a.pause();
+                ok = true;
+            } catch (e) { console.warn('[TTS] HTMLAudio unlock:', e); }
             try {
                 if (window.speechSynthesis) {
                     window.speechSynthesis.cancel();
-                    const prime = new SpeechSynthesisUtterance('\u200b');
-                    prime.volume = 0.01;
-                    prime.rate = 2;
-                    window.speechSynthesis.speak(prime);
-                    setTimeout(() => window.speechSynthesis.cancel(), 100);
+                    const u = new SpeechSynthesisUtterance(' ');
+                    u.volume = 0.01;
+                    u.rate = 3;
+                    window.speechSynthesis.speak(u);
+                    setTimeout(() => window.speechSynthesis.cancel(), 80);
                 }
-            } catch (e) { /* iOS speech prime */ }
-
-            if (ctx && ctx.state === 'running') startKeepAlive(ctx);
-            unlocked = true;
-            hideOverlay();
-            try { sessionStorage.setItem('pktts_unlocked', '1'); } catch (e) {}
-            console.log('[TTS] Audio unlocked — autoplay policy bypassed');
-            document.dispatchEvent(new CustomEvent('tts-audio-unlocked'));
-            return true;
+            } catch (e) {}
+            if (ok || (ctx && ctx.state === 'running')) { markUnlocked(); return true; }
+            return false;
         }
 
-        async function trySilentUnlock() {
+        async function autoUnlock() {
+            if (unlocked) return true;
+            const ctx = getContext();
             try {
-                const silent = new Audio(SILENT_WAV);
-                silent.volume = 0.001;
-                await silent.play();
-                silent.pause();
-                const ctx = getContext();
-                if (ctx && ctx.state === 'suspended') await ctx.resume();
-                if (ctx && ctx.state === 'running') startKeepAlive(ctx);
-                unlocked = true;
-                hideOverlay();
-                console.log('[TTS] Silent unlock OK (OBS/desktop)');
+                if (ctx) {
+                    if (ctx.state === 'suspended') await ctx.resume();
+                    if (ctx.state === 'running') {
+                        playSilentWebAudio(ctx);
+                        startKeepAlive(ctx);
+                        markUnlocked();
+                        return true;
+                    }
+                }
+            } catch (e) {}
+            try {
+                const a = new Audio(SILENT_MP3);
+                a.volume = 0.01;
+                await a.play();
+                a.pause();
+                if (ctx) startKeepAlive(ctx);
+                markUnlocked();
                 return true;
-            } catch (e) {
-                return false;
-            }
+            } catch (e) {}
+            return false;
         }
 
         function setupUnlockUI() {
+            autoUnlock();
             document.addEventListener('visibilitychange', () => {
                 if (!document.hidden) {
+                    autoUnlock();
                     const ctx = getContext();
                     if (ctx && ctx.state === 'suspended') ctx.resume();
-                    if (!unlocked) showOverlay();
                 }
             });
-            const gestureUnlock = () => { unlock(); };
-            ['click', 'touchstart', 'touchend', 'keydown'].forEach(ev => {
-                document.addEventListener(ev, gestureUnlock, { once: true, passive: false });
-            });
-            trySilentUnlock().then(ok => { if (!ok) showOverlay(); });
+            const onGesture = () => { unlockFromGesture(); };
+            document.addEventListener('pointerdown', onGesture, { capture: true });
+            document.addEventListener('keydown', onGesture, { once: true });
         }
 
         function createAudioElement(url, vol) {
             const a = new Audio(url);
-            a.setAttribute('playsinline', '');
+            a.setAttribute('playsinline', 'true');
             a.setAttribute('webkit-playsinline', 'true');
             a.preload = 'auto';
             a.volume = vol;
@@ -659,79 +661,54 @@
             if (currentAudio) {
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
-                currentAudio.src = '';
+                currentAudio.removeAttribute('src');
+                currentAudio.load();
             }
             currentAudio = null;
             if (window.speechSynthesis) window.speechSynthesis.cancel();
         }
 
         async function playUrl(url, volumeLevel) {
-            if (!unlocked) {
-                showOverlay();
-                const ok = await new Promise(resolve => {
-                    const handler = () => resolve(true);
-                    document.addEventListener('tts-audio-unlocked', handler, { once: true });
-                    setTimeout(() => resolve(unlocked), 30000);
-                });
-                if (!ok) return false;
-            }
-
+            if (!unlocked) await autoUnlock();
             const vol = Math.max(0, Math.min(1, volumeLevel / 100));
             const ctx = getContext();
             stopPlayback();
+            if (ctx && ctx.state === 'suspended') {
+                try { await ctx.resume(); markUnlocked(); } catch (e) {}
+            }
 
-            if (ctx) {
+            const a = createAudioElement(url, vol);
+            currentAudio = a;
+
+            try {
+                await a.play();
+                markUnlocked();
+            } catch (err) {
+                console.warn('[TTS] play blocked:', err.message);
                 try {
-                    if (ctx.state === 'suspended') await ctx.resume();
-                    const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
-                    if (res.ok) {
-                        const buf = await res.arrayBuffer();
-                        const audioBuffer = await ctx.decodeAudioData(buf.slice(0));
-                        return new Promise(resolve => {
-                            const source = ctx.createBufferSource();
-                            const gain = ctx.createGain();
-                            source.buffer = audioBuffer;
-                            gain.gain.value = vol;
-                            source.connect(gain);
-                            gain.connect(ctx.destination);
-                            currentSource = source;
-                            source.onended = () => { currentSource = null; resolve(true); };
-                            source.start(0);
-                        });
-                    }
-                } catch (e) {
-                    console.log('[TTS] WebAudio fetch fallback to HTMLAudio:', e.message || e);
+                    await a.play();
+                    markUnlocked();
+                } catch (e2) {
+                    currentAudio = null;
+                    return false;
                 }
             }
 
             return new Promise(resolve => {
-                const a = createAudioElement(url, vol);
-                currentAudio = a;
                 a.onended = () => { currentAudio = null; resolve(true); };
                 a.onerror = () => { currentAudio = null; resolve(false); };
-                a.play().then(() => {}).catch(err => {
-                    console.warn('[TTS] play() blocked:', err);
-                    showOverlay();
-                    currentAudio = null;
-                    resolve(false);
-                });
             });
         }
 
         async function speakWebSpeech(utterance) {
-            if (!unlocked) {
-                showOverlay();
-                await new Promise(resolve => {
-                    document.addEventListener('tts-audio-unlocked', resolve, { once: true });
-                });
-            }
-            if (window.speechSynthesis) {
-                if (window.speechSynthesis.paused) window.speechSynthesis.resume();
-                window.speechSynthesis.speak(utterance);
-            }
+            if (!unlocked) await autoUnlock();
+            if (!window.speechSynthesis) return;
+            if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+            window.speechSynthesis.speak(utterance);
+            markUnlocked();
         }
 
-        return { setupUnlockUI, unlock, playUrl, speakWebSpeech, stopPlayback, isUnlocked: () => unlocked, showOverlay };
+        return { setupUnlockUI, unlock: unlockFromGesture, playUrl, speakWebSpeech, stopPlayback, isUnlocked: () => unlocked };
     })();
 
     function parseKickChannel(raw) {
