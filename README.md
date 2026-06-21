@@ -1,144 +1,172 @@
-<p align="center">
-  <img src="https://kick.com/img/kick-logo.svg" alt="Kick" width="80" />
-</p>
+<div align="center">
 
-<h1 align="center">🎙️ Polish Kick TTS</h1>
+<img src="https://kick.com/img/kick-logo.svg" width="72" alt="Kick" />
 
-<p align="center">
-  <strong>Najlepszy darmowy Text-to-Speech dla polskich streamerów Kick.com</strong><br>
-  17 głosów · Live URL · OBS Ready · 0 zł
-</p>
+<br><br>
 
-<p align="center">
-  <a href="https://89891383.github.io/Polish-Kick-TTS/tts2.html">
-    <img src="https://img.shields.io/badge/▶_OTWÓRZ_GENERATOR_TTS-53FC18?style=for-the-badge&labelColor=0e0e10&color=53FC18" alt="Otwórz Generator TTS" />
-  </a>
-</p>
+# 🎙️ Polish Kick TTS
 
-<p align="center">
-  <a href="https://89891383.github.io/Polish-Kick-TTS/tts2.html"><strong>https://89891383.github.io/Polish-Kick-TTS/tts2.html</strong></a>
-</p>
+**Najlepszy darmowy Text-to-Speech dla polskich streamerów Kick.com**
+
+<br>
+
+[![Generator TTS](https://img.shields.io/badge/▶_GENERATOR_TTS-53FC18?style=for-the-badge&labelColor=18181b)](https://89891383.github.io/Polish-Kick-TTS/tts.html)
+[![17 Głosów](https://img.shields.io/badge/17_GŁOSÓW-53FC18?style=flat-square&labelColor=18181b)](https://89891383.github.io/Polish-Kick-TTS/tts.html)
+[![Darmowy](https://img.shields.io/badge/0_zł-DARMOWY-53FC18?style=flat-square&labelColor=18181b)](https://89891383.github.io/Polish-Kick-TTS/tts.html)
+[![OBS Ready](https://img.shields.io/badge/OBS-READY-53FC18?style=flat-square&labelColor=18181b)](https://89891383.github.io/Polish-Kick-TTS/tts.html)
+
+<br>
+
+### 👉 [https://89891383.github.io/Polish-Kick-TTS/tts.html](https://89891383.github.io/Polish-Kick-TTS/tts.html)
+
+```
+https://89891383.github.io/Polish-Kick-TTS/tts.html
+```
+
+<sub>Wklej link Kick lub nick → skopiuj URL → dodaj jako Browser Source w OBS</sub>
+
+</div>
 
 ---
 
-## 🚀 Gotowy link
+<br>
 
-```
-https://89891383.github.io/Polish-Kick-TTS/tts2.html
-```
+## 📖 Instrukcja
 
-> Kliknij link → wpisz kanał (lub wklej `https://kick.com/twoj_nick`) → skopiuj URL → wklej do OBS jako Browser Source.
+<table>
+<tr>
+<td width="60" align="center"><h2>1</h2></td>
+<td>
 
----
+### Wygeneruj link
 
-## 📖 Jak używać
+Otwórz **[generator TTS](https://89891383.github.io/Polish-Kick-TTS/tts.html)** → wpisz nick lub wklej `https://kick.com/twoj_nick` → ustaw głos i uprawnienia → **Kopiuj link** (aktualizuje się na żywo)
 
-### ① Wygeneruj link
+</td>
+</tr>
+<tr>
+<td align="center"><h2>2</h2></td>
+<td>
 
-| Krok | Co zrobić |
-|:----:|-----------|
-| 1 | Otwórz **[generator TTS](https://89891383.github.io/Polish-Kick-TTS/tts2.html)** |
-| 2 | Wpisz nick **lub** wklej link Kick, np. `https://kick.com/adamcy` |
-| 3 | Wybierz głos, głośność i uprawnienia |
-| 4 | Skopiuj link z sekcji pod formularzem — aktualizuje się na żywo |
+### Dodaj do OBS
 
-### ② Dodaj do OBS
+**Sources → Browser Source** → wklej link → rozmiar **800×600** → ✅ *Refresh browser when scene becomes active*
 
-| Ustawienie | Wartość |
-|------------|---------|
-| Źródło | **Browser Source** |
-| URL | Skopiowany link z generatora |
-| Rozmiar | `800 × 600` |
-| Opcja | ✅ Refresh browser when scene becomes active |
+</td>
+</tr>
+<tr>
+<td align="center"><h2>3</h2></td>
+<td>
 
-Źródło jest niewidoczne na streamie — odtwarza tylko dźwięk TTS. **Bez klikania w przeglądarce.**
+### Gotowe
 
-### ③ Czat
+Widzowie piszą na czacie:
 
 ```
 !tts Witam na streamie!
 ```
 
-| Komenda | Kto | Co robi |
-|---------|-----|---------|
-| `!tts …` | Widzowie z uprawnieniami | Czyta wiadomość na głos |
-| `!skiptts` | **Broadcaster** | Natychmiast przerywa aktualne TTS |
+Broadcaster: `!skiptts` — natychmiast przerywa TTS
+
+</td>
+</tr>
+</table>
+
+<br>
 
 ---
 
 ## ⚙️ Funkcje
 
-| | |
-|---|---|
-| 🎤 | **17 polskich głosów** — Oddcast, Microsoft, Streamlabs, StreamElements |
-| ⚡ | **Live URL** — link generuje się automatycznie przy każdej zmianie |
-| 🔗 | **Parsowanie Kick** — wklej `kick.com/nick`, dostaniesz gotowy URL |
-| 🔊 | **Auto-start w OBS** — działa od razu, bez tapowania ekranu |
-| 🎚️ | **Prędkość** `-3` → `+3` (Oddcast + Microsoft) |
-| 🔐 | **Uprawnienia** — Każdy, Follower, Mod, VIP, OG, Sub |
-| 📋 | **Kolejka FIFO** — wiadomości czytane po kolei |
-| 🤖 | **Filtr botów** — Botrix, Kickbot i inne ignorowane |
+<div align="center">
+
+| 🎤 Głosy | ⚡ Live URL | 🔗 Kick parser | 🔊 Auto OBS | 📋 FIFO | 🤖 Anti-bot |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| 17 PL | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+</div>
+
+<br>
+
+| Funkcja | Opis |
+|---------|------|
+| **17 polskich głosów** | Oddcast · Microsoft · Streamlabs · StreamElements |
+| **Live URL** | Link generuje się automatycznie przy każdej zmianie |
+| **Parsowanie Kick** | Wklej `kick.com/nick` — dostaniesz gotowy URL |
+| **Auto-start w OBS** | Działa od razu, bez klikania w przeglądarce |
+| **Prędkość mowy** | `-3` szybciej → `+3` wolniej *(Oddcast, Microsoft)* |
+| **Uprawnienia** | Każdy · Follower · Mod · VIP · OG · Sub |
+| **!skiptts** | Broadcaster przerywa aktualne TTS jedną komendą |
+| **Filtr botów** | Botrix, Kickbot i inne boty ignorowane |
+
+<br>
 
 ---
 
 ## 🎤 Głosy
 
-| Głos | Płeć | Silnik |
-|------|:----:|--------|
-| **Zosia** ⭐ | Kobieta | Oddcast |
-| Agatka | Kobieta | Oddcast |
-| Danota | Kobieta | Oddcast |
-| Krzysztof | Mężczyzna | Oddcast |
-| Wojciech | Mężczyzna | Oddcast |
-| Adam | Mężczyzna | Microsoft |
-| Ola | Kobieta | Streamlabs |
-| Ewa | Kobieta | Streamlabs |
-| Maja | Kobieta | Streamlabs |
-| Jacek | Mężczyzna | Streamlabs |
-| Jan | Mężczyzna | Streamlabs |
-| SE-WavenetA | Kobieta | StreamElements |
-| SE-WavenetB | Mężczyzna | StreamElements |
-| SE-Jacek | Mężczyzna | StreamElements |
-| SE-Maja | Kobieta | StreamElements |
-| SE-Ewa | Kobieta | StreamElements |
-| SE-Jan | Mężczyzna | StreamElements |
+<div align="center">
 
----
+| | **Kobiety** | | **Mężczyźni** | |
+|:---:|:---|:---:|:---|:---:|
+| ⭐ | Zosia · Agatka · Danota | | Krzysztof · Wojciech | |
+| | Ola · Ewa · Maja | | Adam · Jacek · Jan | |
+| | SE-WavenetA · SE-Maja · SE-Ewa | | SE-WavenetB · SE-Jacek · SE-Jan | |
 
-## 🔗 Parametry URL
-
-```
-https://89891383.github.io/Polish-Kick-TTS/tts2.html?channel=adamcy&voice=Ola&volume=90&moderator=on&vip=on&og=on&pretext=on
-```
-
-<details>
-<summary><strong>Rozwiń pełną listę parametrów</strong></summary>
+</div>
 
 <br>
 
-**Wymagane:** `channel` — nazwa kanału Kick
+<details>
+<summary><h3>🔗 Parametry URL — kliknij aby rozwinąć</h3></summary>
+
+<br>
+
+**Przykład:**
+
+```
+https://89891383.github.io/Polish-Kick-TTS/tts.html?channel=adamcy&voice=Ola&volume=90&moderator=on&vip=on&og=on&pretext=on
+```
+
+<br>
 
 | Parametr | Domyślnie | Opis |
-|----------|-----------|------|
-| `voice` | `Zosia` | Głos z tabeli powyżej |
-| `speed` | `0` | `-3` szybciej → `+3` wolniej *(Oddcast, Microsoft)* |
+|----------|:---------:|------|
+| `channel` | — | **Wymagane** — nazwa kanału Kick |
+| `voice` | `Zosia` | Głos z listy powyżej |
+| `speed` | `0` | `-3` do `+3` *(tylko Oddcast, Microsoft)* |
 | `volume` | `80` | Głośność `0`–`100` |
-| `readnick` | `off` | Czytaj nick: `on` / `off` |
-| `readlinks` | `off` | Linki jako „LINK": `on` / `off` |
-| `reademotes` | `off` | Czytaj emotki: `on` / `off` |
-| `pretext` | `on` | Wymagaj `!tts`: `on` / `off` |
+| `readnick` | `off` | Czytaj nick przed wiadomością |
+| `readlinks` | `off` | Linki jako słowo „LINK" |
+| `reademotes` | `off` | Czytaj nazwy emotek |
+| `pretext` | `on` | Wymagaj `!tts` na początku |
 
-**Uprawnienia** *(domyślnie: mod + vip + og)*
+<br>
+
+**Uprawnienia** — domyślnie włączone: `moderator` · `vip` · `og`
 
 `anyone=on` · `follower=on` · `moderator=on` · `og=on` · `subscriber=on` · `vip=on`
 
 </details>
 
+<br>
+
 ---
 
-<p align="center">
-  <img src="https://kick.com/img/kick-logo.svg" alt="Kick" width="40" />
-  <br><br>
-  <strong>Zrobione z ❤️ dla polskiej społeczności Kick.com</strong><br>
-  <sub>MIT License · Darmowy · Open Source</sub>
-</p>
+<div align="center">
+
+<img src="https://kick.com/img/kick-logo.svg" width="36" alt="Kick" />
+
+<br><br>
+
+**Zrobione z ❤️ dla polskiej społeczności Kick.com**
+
+<br>
+
+<sub>MIT License · Darmowy · Open Source</sub>
+
+<br><br>
+
+[![Generator TTS](https://img.shields.io/badge/▶_OTWÓRZ_GENERATOR-53FC18?style=for-the-badge&labelColor=0e0e10)](https://89891383.github.io/Polish-Kick-TTS/tts.html)
+
+</div>
