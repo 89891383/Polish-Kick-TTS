@@ -1,332 +1,144 @@
-# NowyBot — Kick Viewer (2026)
+<p align="center">
+  <img src="https://kick.com/img/kick-logo.svg" alt="Kick" width="80" />
+</p>
 
-Lekki bot widzów na Kick.com — terminal dashboard, WebSocket, tryb Stability.  
-Bez przeglądarek, działa na słabszym PC. Obsługa **bez proxy** (test) i skali do **30 000** botów.
+<h1 align="center">🎙️ Polish Kick TTS</h1>
 
-> **Repozytorium prywatne** — nie udostępniaj proxy, tokenów ani danych logowania.
+<p align="center">
+  <strong>Najlepszy darmowy Text-to-Speech dla polskich streamerów Kick.com</strong><br>
+  17 głosów · Live URL · OBS Ready · 0 zł
+</p>
 
----
+<p align="center">
+  <a href="https://89891383.github.io/Polish-Kick-TTS/tts2.html">
+    <img src="https://img.shields.io/badge/▶_OTWÓRZ_GENERATOR_TTS-53FC18?style=for-the-badge&labelColor=0e0e10&color=53FC18" alt="Otwórz Generator TTS" />
+  </a>
+</p>
 
-## Funkcje
-
-- **WebSocket** `websockets.kick.com/viewer/v1` — handshake, ping, Pusher
-- **Stability mode** — `user_event` co ~30s (`tracking.user.watch.livestream`)
-- **Auto-reconnect** + świeży token + **watchdog 95%**
-- **HQ token flow** — symulacja wejścia usera (homepage → kanał → API → playback → token)
-- **Token pool** — pre-warm tokenów przy starcie (gdy Stability Y)
-- **Fast ramp** (`--fast-ramp`) — szybki token bez HQ (duża skala, gorsze retention)
-- **Burst start** — stagger 0 domyślnie (wątki startują naraz)
-- **Bez proxy** — test lokalny (Kick liczy ~1 widza z IP)
-- **Fingerprint Chrome/Firefox** — spójne pary UA + TLS + Client Hints (jak F12)
-- **Dashboard Rich** w terminalu — lite mode przy 5000+ botów
-- **Opcjonalnie HLS** — streamlink (więcej bandwidthu)
-- **Retention HQ** — status pełnego profilu pod utrzymanie średniej widzów
+<p align="center">
+  <a href="https://89891383.github.io/Polish-Kick-TTS/tts2.html"><strong>https://89891383.github.io/Polish-Kick-TTS/tts2.html</strong></a>
+</p>
 
 ---
 
-## Wymagania
-
-- Python 3.10+
-- Windows / Linux
-- Proxy HTTP residential (np. [Webshare](https://www.webshare.io/)) — opcjonalne przy teście bez proxy
-- Stream **LIVE** na Kick
-
----
-
-## Instalacja
-
-```powershell
-git clone https://github.com/TWOJ_USER/TWOJE_REPO.git
-cd TWOJE_REPO
-
-pip install -r requirements.txt
-```
-
-Aktualizacja zależności do najnowszych z PyPI:
-
-```powershell
-py upgrade_requirements.py
-pip install -r requirements.txt --upgrade
-```
-
-Skopiuj przykładowy plik proxy (opcjonalnie):
-
-```powershell
-copy proxies.example.txt proxies.txt
-```
-
-Format proxy: `host:port:user:pass`
-
----
-
-## Uruchomienie
-
-```powershell
-py main.py
-```
-
-### Menu interaktywne
-
-**1. Proxy**
-
-| Wybór | Opis |
-|-------|------|
-| **0** | Bez proxy — lokalne IP, dowolna liczba botów (test) |
-| **1** | Plik lokalny (`proxies.txt`) |
-| **2** | URL (download link Webshare) + liczba botów |
-| **4** | **Bez limitu** — rotacja puli proxy (np. 100 proxy → 5000 connections; Enter = proxy × 50) |
-
-**2. Kanał** — nazwa lub URL `kick.com/nazwa`
-
-**3. Liczba widzów** — dowolna (opcja **4**: connections niezależne od liczby proxy)
-
-**4. Opcje Y/n** (tylko te trzy):
-
-| Pytanie | Domyślnie | Opis |
-|---------|-----------|------|
-| HLS keepalive | N | Więcej bandwidthu — wyłącza Retention HQ |
-| Pusher subscribe | Y | Subskrypcje channel + chatroom |
-| Stability mode | Y | `user_event` + auto-reconnect + token pool |
-
-Po Y/n bot pokazuje blok **Retention HQ** (TAK/NIE + powód).
-
-**Włączone domyślnie** (bez pytań): dashboard, watchdog, **burst stagger 0**, token pool (gdy Stability Y).  
-**Fast ramp domyślnie NIE** — włącz tylko flagą `--fast-ramp` gdy chcesz szybki start kosztem retention.
-
-### Flagi CLI
-
-```powershell
-py main.py --no-proxy
-py main.py --total 500 --channel nazwa
-py main.py --proxy-file proxies.txt
-py main.py --proxy-url "https://..."
-py main.py --max-proxy --proxy-url "https://..." --total 5000
-py main.py --fast-ramp                    # szybki token (Retention HQ = NIE)
-py main.py --token-workers 48             # więcej równoległych requestów tokena
-py main.py --stagger 0.5                  # opóźnienie między startem botów (s)
-py main.py --no-hls --no-pusher
-py main.py --no-watchdog --no-dashboard
-py main.py --slow                         # start wsadami (batch 100, delay 30s)
-```
-
----
-
-## Retention HQ — co to jest?
-
-**Retention HQ** to nie osobna opcja w menu — bot **liczy status** z ustawień:
-
-| Warunek | Wymagane |
-|---------|----------|
-| Stability | Y |
-| Pusher | Y |
-| HLS | N |
-| Fast ramp | NIE (bez `--fast-ramp`) |
-
-### Retention HQ = TAK
-
-- Pełny **HQ token** przy pierwszym połączeniu (symulacja przeglądarki)
-- `channel_handshake` co 15s
-- `tracking.user.watch.livestream` co ~30s
-- `pusher:ping` co 20s + re-subscribe co 3 min
-- Auto-reconnect + watchdog
-- **Wolniejszy start**, lepsze utrzymanie widza / średniej
-
-### Retention HQ = NIE
-
-Dashboard poda powód, np. `NIE (HLS ON)` lub `NIE (Fast ramp)`.
-
-| Powód | Efekt |
-|-------|--------|
-| **HLS ON** | Więcej bandwidthu, gorsze retention |
-| **`--fast-ramp`** | Szybki token od razu, bez HQ flow |
-| **Pusher N** | Brak subskrypcji Pusher na WS |
-| **Stability N** | Brak reconnect i token pool — bot umiera po błędzie |
-
-### HQ token vs fast token
-
-| Tryb | HTTP przed tokenem | Kiedy |
-|------|-------------------|--------|
-| **HQ** | kick.com → kanał → API → playback → token | Pierwszy connect (Retention HQ) |
-| **Fast** | kick.com → token | Reconnect, `--fast-ramp`, token z poola |
-
-> **Uwaga:** przy Stability Y token pool może podać **fast token** z pre-warm zanim bot zdąży zrobić HQ — start szybszy, retention trochę słabsze niż „czysty” HQ.
-
----
-
-## Szybkość startu (Connected na dashboardzie)
-
-**Wątki** odpalają się prawie natychmiast (burst, stagger 0).  
-**Connected** rośnie wolniej — limituje **pobieranie tokena HTTP** (token workers + jakość proxy).
-
-| Boty | Token workers (auto) | Szac. ramp-up (dobre proxy) |
-|------|------------------------|----------------------------|
-| 230 | 16 | ~1–3 min |
-| 500 | 24 | ~2–5 min |
-| 3000 | 48 | ~5–15 min |
-
-Przy starcie bot wypisuje `Szac. ramp-up: ~X min`.
-
-| Profil | Start | Retention |
-|--------|-------|-----------|
-| Domyślny (Retention HQ) | Średni | Lepszy |
-| `--fast-ramp` | **Szybki** | Gorszy |
-| `--token-workers 64` | Szybszy (więcej równoległych tokenów) | — |
-
-Patrz na dashboard: **`Connected X/Y`** — to realna prędkość wejścia.
-
----
-
-## Fingerprint (UA + TLS + Client Hints)
-
-Każdy bot dostaje **spójną parę** UA + `tls_client` (Chrome 149/150, Firefox 151/152 — czerwiec 2026).
-
-Nagłówki jak prawdziwy Chrome z F12 na Kick:
-
-- `sec-ch-ua`: `"Not)A;Brand";v="24"`
-- `sec-ch-ua-full-version` / `sec-ch-ua-full-version-list`
-- `sec-ch-ua-arch`, `sec-ch-ua-bitness`, `sec-ch-ua-platform-version`
-- `x-app-platform: web`
-- `accept-encoding: gzip, deflate, br, zstd`
-
-Bot symuluje widza na `kick.com/kanał` (nie dashboard streamera).
-
----
-
-## Tryb bez proxy
-
-Wybierz **0** lub `--no-proxy`.
-
-- Dowolna liczba botów (test połączeń, dashboardu)
-- Kick **deduplikuje po IP** — ~1 widz na liczniku
-- Do realnych widzów na streamie: proxy residential **1:1**
-
----
-
-## Skala masowa (do 30 000)
-
-| Wymaganie | Uwagi |
-|-----------|-------|
-| Unikalne proxy | 1:1 = max widzów na Kick; rotacja (opcja 4) = więcej WS, nie więcej IP |
-| Stability Y | Utrzymanie średniej |
-| HLS N | Oszczędność bandwidth i RAM |
-| Retention HQ | Domyślnie TAK (bez `--fast-ramp`) |
-| `--fast-ramp` | Tylko gdy liczy się szybkość, nie średnia 30d |
-| Jeden PC | Realnie ~2–8k stabilnych wątków |
-
-```powershell
-# Szybka skala (retention gorsze):
-py main.py --total 3000 --channel NAZWA --proxy-url "LINK" --fast-ramp --no-hls --stagger 0
-
-# Retention (wolniejszy start):
-py main.py --total 500 --channel NAZWA --proxy-file proxies.txt
-```
-
----
-
-## Oszczędzanie bandwidth (Webshare)
-
-| Opcja | Zużycie | Zostaw? |
-|-------|---------|---------|
-| **HLS** | największe | **NIE** przy limicie GB |
-| Stability + WS | minimalne | **TAK** |
-| Pusher | prawie zero | **TAK** |
-
----
-
-## Struktura projektu
+## 🚀 Gotowy link
 
 ```
-.
-├── main.py                  # główny bot (monolit)
-├── bezproxy.py              # fork masowy (opcjonalny)
-├── upgrade_requirements.py  # odświeża requirements.txt z PyPI
-├── requirements.txt
-├── proxies.example.txt
-├── proxies.txt              # gitignore — nie commituj!
-├── bot.log                  # gitignore
-├── .gitignore
-└── README.md
+https://89891383.github.io/Polish-Kick-TTS/tts2.html
 ```
 
+> Kliknij link → wpisz kanał (lub wklej `https://kick.com/twoj_nick`) → skopiuj URL → wklej do OBS jako Browser Source.
+
 ---
 
-## Wgranie na GitHub
+## 📖 Jak używać
 
-### 1. Utwórz repo
+### ① Wygeneruj link
 
-GitHub → **New repository** → np. `kick-nowybot` → **Private** → bez README.
+| Krok | Co zrobić |
+|:----:|-----------|
+| 1 | Otwórz **[generator TTS](https://89891383.github.io/Polish-Kick-TTS/tts2.html)** |
+| 2 | Wpisz nick **lub** wklej link Kick, np. `https://kick.com/adamcy` |
+| 3 | Wybierz głos, głośność i uprawnienia |
+| 4 | Skopiuj link z sekcji pod formularzem — aktualizuje się na żywo |
 
-### 2. Push
+### ② Dodaj do OBS
 
-```powershell
-cd C:\sciezka\do\projektu
+| Ustawienie | Wartość |
+|------------|---------|
+| Źródło | **Browser Source** |
+| URL | Skopiowany link z generatora |
+| Rozmiar | `800 × 600` |
+| Opcja | ✅ Refresh browser when scene becomes active |
 
-git init
-git add .
-git commit -m "NowyBot — Kick viewer 2026"
-git branch -M main
-git remote add origin https://github.com/TWOJ_USER/kick-nowybot.git
-git push -u origin main
+Źródło jest niewidoczne na streamie — odtwarza tylko dźwięk TTS. **Bez klikania w przeglądarce.**
+
+### ③ Czat
+
+```
+!tts Witam na streamie!
 ```
 
-### 3. Czego NIE commitować
-
-- `proxies.txt`, `bot.log`, `__pycache__/`, tokeny, hasła
-
-Są w `.gitignore`.
-
----
-
-## Show Stopper (średnia 50 widzów / 30 dni)
-
-Achievement liczy **średnią z 30 dni**, nie chwilowy spike.
-
-| Przyczyna spadku | Co robić |
-|------------------|----------|
-| Brak `user_event` | **Stability: Y** |
-| Brak Pusher | **Pusher: Y** |
-| HLS włączone | **HLS: N** |
-| `livestream_id` nieaktualne | Auto-refresh co 30s (w kodzie) |
-| WS umiera | Watchdog 95% + auto-reconnect |
-| Bot wyłączony po streamie | Trzymaj bota LIVE podczas streamu |
-| Za mało proxy | 1 proxy = 1 widz na Kick |
-
-**Wskazówki:**
-
-1. **Retention HQ = TAK** (domyślnie przy Y/Y/N bez fast ramp)
-2. **1 proxy = 1 widz** — rotacja nie zwiększa licznika IP
-3. Stream **LIVE**
-4. Dashboard: `Kick Viewers (+X)` i `Connected X/Y`
+| Komenda | Kto | Co robi |
+|---------|-----|---------|
+| `!tts …` | Widzowie z uprawnieniami | Czyta wiadomość na głos |
+| `!skiptts` | **Broadcaster** | Natychmiast przerywa aktualne TTS |
 
 ---
 
-## Zależności (06/2026)
+## ⚙️ Funkcje
 
-| Pakiet | Wersja | Po co |
-|--------|--------|-------|
-| `tls_client` | 1.0.1 | TLS fingerprint (Chrome 149/150) |
-| `websocket-client` | 1.9.0 | połączenie WSS |
-| `requests` | 2.34.2 | pobieranie proxy z URL |
-| `rich` | 15.0.0 | dashboard terminalowy |
-| `streamlink` | 8.4.0 | opcjonalny HLS manifest |
-
----
-
-## Rozwiązywanie problemów
-
-| Problem | Rozwiązanie |
-|---------|-------------|
-| `Nie udało się pobrać tokena WS` | Sprawdź proxy, zmniejsz skalę, `--token-workers`, stagger 0.3–1s |
-| Mało Connected po długim czasie | Rate-limit proxy; 1:1 residential; bez rotacji ×50 na słabe proxy |
-| Średnia spada | Retention HQ TAK, Stability Y, Pusher Y, HLS N |
-| Wolny start | Normalne przy HQ; `--fast-ramp` lub `--token-workers 48` |
-| Wysokie zużycie GB | HLS = N |
-| `botów > proxy` | Mniej botów lub więcej proxy |
-| Bez proxy — licznik nie rośnie | Normalne — 1 widz z IP |
+| | |
+|---|---|
+| 🎤 | **17 polskich głosów** — Oddcast, Microsoft, Streamlabs, StreamElements |
+| ⚡ | **Live URL** — link generuje się automatycznie przy każdej zmianie |
+| 🔗 | **Parsowanie Kick** — wklej `kick.com/nick`, dostaniesz gotowy URL |
+| 🔊 | **Auto-start w OBS** — działa od razu, bez tapowania ekranu |
+| 🎚️ | **Prędkość** `-3` → `+3` (Oddcast + Microsoft) |
+| 🔐 | **Uprawnienia** — Każdy, Follower, Mod, VIP, OG, Sub |
+| 📋 | **Kolejka FIFO** — wiadomości czytane po kolei |
+| 🤖 | **Filtr botów** — Botrix, Kickbot i inne ignorowane |
 
 ---
 
-## Disclaimer
+## 🎤 Głosy
 
-Narzędzie edukacyjne / do testów własnego kanału.  
-Użytkowanie może naruszać regulamin Kick.com — odpowiedzialność po stronie użytkownika.
+| Głos | Płeć | Silnik |
+|------|:----:|--------|
+| **Zosia** ⭐ | Kobieta | Oddcast |
+| Agatka | Kobieta | Oddcast |
+| Danota | Kobieta | Oddcast |
+| Krzysztof | Mężczyzna | Oddcast |
+| Wojciech | Mężczyzna | Oddcast |
+| Adam | Mężczyzna | Microsoft |
+| Ola | Kobieta | Streamlabs |
+| Ewa | Kobieta | Streamlabs |
+| Maja | Kobieta | Streamlabs |
+| Jacek | Mężczyzna | Streamlabs |
+| Jan | Mężczyzna | Streamlabs |
+| SE-WavenetA | Kobieta | StreamElements |
+| SE-WavenetB | Mężczyzna | StreamElements |
+| SE-Jacek | Mężczyzna | StreamElements |
+| SE-Maja | Kobieta | StreamElements |
+| SE-Ewa | Kobieta | StreamElements |
+| SE-Jan | Mężczyzna | StreamElements |
+
+---
+
+## 🔗 Parametry URL
+
+```
+https://89891383.github.io/Polish-Kick-TTS/tts2.html?channel=adamcy&voice=Ola&volume=90&moderator=on&vip=on&og=on&pretext=on
+```
+
+<details>
+<summary><strong>Rozwiń pełną listę parametrów</strong></summary>
+
+<br>
+
+**Wymagane:** `channel` — nazwa kanału Kick
+
+| Parametr | Domyślnie | Opis |
+|----------|-----------|------|
+| `voice` | `Zosia` | Głos z tabeli powyżej |
+| `speed` | `0` | `-3` szybciej → `+3` wolniej *(Oddcast, Microsoft)* |
+| `volume` | `80` | Głośność `0`–`100` |
+| `readnick` | `off` | Czytaj nick: `on` / `off` |
+| `readlinks` | `off` | Linki jako „LINK": `on` / `off` |
+| `reademotes` | `off` | Czytaj emotki: `on` / `off` |
+| `pretext` | `on` | Wymagaj `!tts`: `on` / `off` |
+
+**Uprawnienia** *(domyślnie: mod + vip + og)*
+
+`anyone=on` · `follower=on` · `moderator=on` · `og=on` · `subscriber=on` · `vip=on`
+
+</details>
+
+---
+
+<p align="center">
+  <img src="https://kick.com/img/kick-logo.svg" alt="Kick" width="40" />
+  <br><br>
+  <strong>Zrobione z ❤️ dla polskiej społeczności Kick.com</strong><br>
+  <sub>MIT License · Darmowy · Open Source</sub>
+</p>
