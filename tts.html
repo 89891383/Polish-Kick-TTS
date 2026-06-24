@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Najlepszy polski Text-to-Speech dla Kick.com — 12 głosów, darmowy, gotowy pod OBS.">
+    <meta name="description" content="Najlepszy polski Text-to-Speech dla Kick.com — 13 głosów, darmowy, gotowy pod OBS.">
     <title>Polish Kick TTS — Najlepszy Polski TTS na Kicku</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -119,8 +119,8 @@
 <div id="ui-chrome">
     <div class="ticker-wrap overflow-hidden bg-kick-surface border-b border-white/5 h-9 flex items-center">
         <div class="ticker-track flex whitespace-nowrap" style="animation:ticker 30s linear infinite">
-            <span class="font-display font-bold text-xs uppercase tracking-widest text-kick-muted px-8"><em class="text-kick-green not-italic">★ Najlepszy Polski TTS na Kicku</em> · 12 głosów · OBS Ready · Darmowy · Live URL · FIFO Queue · !skiptts ·</span>
-            <span class="font-display font-bold text-xs uppercase tracking-widest text-kick-muted px-8"><em class="text-kick-green not-italic">★ Najlepszy Polski TTS na Kicku</em> · 12 głosów · OBS Ready · Darmowy · Live URL · FIFO Queue · !skiptts ·</span>
+            <span class="font-display font-bold text-xs uppercase tracking-widest text-kick-muted px-8"><em class="text-kick-green not-italic">★ Najlepszy Polski TTS na Kicku</em> · 13 głosów · OBS Ready · Darmowy · Live URL · FIFO Queue · !skiptts ·</span>
+            <span class="font-display font-bold text-xs uppercase tracking-widest text-kick-muted px-8"><em class="text-kick-green not-italic">★ Najlepszy Polski TTS na Kicku</em> · 13 głosów · OBS Ready · Darmowy · Live URL · FIFO Queue · !skiptts ·</span>
         </div>
     </div>
     <style>@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}</style>
@@ -154,7 +154,7 @@
                 Najlepszy darmowy Text-to-Speech dla polskich streamerów. Czat czytany na głos — skonfiguruj w 30 sekund i wklej do OBS.
             </p>
             <div class="flex flex-wrap gap-3 justify-center">
-                <span class="glass px-4 py-2 rounded-full text-sm font-bold text-kick-muted"><strong class="text-kick-green">17</strong> głosów</span>
+                <span class="glass px-4 py-2 rounded-full text-sm font-bold text-kick-muted"><strong class="text-kick-green">13</strong> głosów</span>
                 <span class="glass px-4 py-2 rounded-full text-sm font-bold text-kick-muted"><strong class="text-kick-green">4</strong> silniki TTS</span>
                 <span class="glass px-4 py-2 rounded-full text-sm font-bold text-kick-muted"><strong class="text-kick-green">0 zł</strong></span>
                 <span class="glass px-4 py-2 rounded-full text-sm font-bold text-kick-muted">Live <strong class="text-kick-green">URL</strong></span>
@@ -191,6 +191,7 @@
                         </optgroup>
                         <optgroup label="Microsoft TTS">
                             <option value="Adam">Adam (Mężczyzna — Microsoft)</option>
+                            <option value="Paulina">Paulina (Kobieta — Microsoft)</option>
                         </optgroup>
                         <optgroup label="StreamElements TTS">
                             <option value="SE-WavenetA">Wavenet-A (Kobieta — SE)</option>
@@ -215,6 +216,15 @@
                         <div class="range-val" id="speed-display">0</div>
                     </div>
                     <p class="text-kick-muted text-xs font-medium mt-2">Ujemne = szybciej, dodatnie = wolniej. Tylko Oddcast i Microsoft.</p>
+                </div>
+
+                <div class="md:col-span-2" id="pitch-group">
+                    <label class="form-label">Ton głosu: <span id="pitch-value" class="text-kick-green">0</span></label>
+                    <div class="flex items-center gap-4">
+                        <input type="range" id="pitch" class="flex-1 h-1 rounded" min="-10" max="10" value="0" step="1">
+                        <div class="range-val" id="pitch-display">0</div>
+                    </div>
+                    <p class="text-kick-muted text-xs font-medium mt-2">Zakres -10 do +10. Ujemne = niższy ton, dodatnie = wyższy. Microsoft: natywnie. Oddcast/SE: emulacja Web Audio.</p>
                 </div>
 
                 <div>
@@ -272,9 +282,9 @@
             <div class="engine-card reveal">
                 <div class="engine-top">
                     <span class="badge badge-microsoft">Microsoft</span>
-                    <span class="engine-count">1 głos PL</span>
+                    <span class="engine-count">2 głosy PL</span>
                 </div>
-                <p class="engine-desc">Adam — Web Speech API w przeglądarce. Szybki, bez zewnętrznego API, z regulacją speed.</p>
+                <p class="engine-desc">Adam i Paulina — Web Speech API (Windows/Edge). Szybkie, bez zewnętrznego API, z regulacją speed i tonu.</p>
             </div>
             <div class="engine-card reveal">
                 <div class="engine-top">
@@ -287,7 +297,7 @@
         </section>
 
         <section class="glass rounded-2xl p-7 md:p-9 mb-12 relative z-10">
-            <h2 class="section-title"><span class="section-icon"><i data-lucide="mic"></i></span> 12 polskich głosów</h2>
+            <h2 class="section-title"><span class="section-icon"><i data-lucide="mic"></i></span> 13 polskich głosów</h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                 <div class="voice-card reveal"><div class="voice-name">Zosia</div><div class="voice-type">Kobieta</div><span class="badge badge-oddcast">Oddcast</span></div>
                 <div class="voice-card reveal"><div class="voice-name">Agatka</div><div class="voice-type">Kobieta</div><span class="badge badge-oddcast">Oddcast</span></div>
@@ -295,6 +305,7 @@
                 <div class="voice-card reveal"><div class="voice-name">Krzysztof</div><div class="voice-type">Mężczyzna</div><span class="badge badge-oddcast">Oddcast</span></div>
                 <div class="voice-card reveal"><div class="voice-name">Wojciech</div><div class="voice-type">Mężczyzna</div><span class="badge badge-oddcast">Oddcast</span></div>
                 <div class="voice-card reveal"><div class="voice-name">Adam</div><div class="voice-type">Mężczyzna</div><span class="badge badge-microsoft">Microsoft</span></div>
+                <div class="voice-card reveal"><div class="voice-name">Paulina</div><div class="voice-type">Kobieta</div><span class="badge badge-microsoft">Microsoft</span></div>
 
                 <div class="voice-card reveal"><div class="voice-name">Wavenet-A</div><div class="voice-type">Kobieta</div><span class="badge badge-streamelements">StreamElements</span></div>
                 <div class="voice-card reveal"><div class="voice-name">Wavenet-B</div><div class="voice-type">Mężczyzna</div><span class="badge badge-streamelements">StreamElements</span></div>
@@ -381,7 +392,17 @@
                     <i data-lucide="chevron-down" class="faq-chevron" :class="open && 'rotate'"></i>
                 </button>
                 <div class="faq-a" x-show="open" x-collapse>
-                    <p>Parametr speed (-3 do +3) działa dla głosów Oddcast i Microsoft Adam. Głosy StreamElements nie obsługują zmiany prędkości.</p>
+                    <p>Parametr speed (-3 do +3) działa dla głosów Oddcast i Microsoft (Adam, Paulina). Głosy StreamElements nie obsługują zmiany prędkości.</p>
+                </div>
+            </div>
+
+            <div class="faq-item" x-data="{ open: false }">
+                <button @click="open = !open" class="faq-q" :aria-expanded="open">
+                    <span>Czy mogę zmienić ton głosu?</span>
+                    <i data-lucide="chevron-down" class="faq-chevron" :class="open && 'rotate'"></i>
+                </button>
+                <div class="faq-a" x-show="open" x-collapse>
+                    <p>Tak — parametr pitch (-10 do +10) działa dla wszystkich silników. Microsoft Adam/Paulina używają natywnego <code>SpeechSynthesisUtterance.pitch</code> z Web Speech API. Oddcast i StreamElements nie mają tonu w API, więc ton jest emulowany przez Web Audio (detune) po stronie przeglądarki.</p>
                 </div>
             </div>
 
@@ -422,8 +443,9 @@
                 <thead><tr><th>Parametr</th><th>Typ</th><th>Opis</th><th>Domyślnie</th></tr></thead>
                 <tbody>
                     <tr><td><code>channel</code></td><td><span class="param-type">wymagane</span></td><td>Nazwa kanału Kick.com</td><td class="param-default">twoj_nick</td></tr>
-                    <tr><td><code>voice</code></td><td><span class="param-type">opcjonalne</span></td><td>Zosia, Adam, SE-WavenetA…</td><td class="param-default">Zosia</td></tr>
+                    <tr><td><code>voice</code></td><td><span class="param-type">opcjonalne</span></td><td>Zosia, Adam, Paulina, SE-WavenetA…</td><td class="param-default">Zosia</td></tr>
                     <tr><td><code>speed</code></td><td><span class="param-type">opcjonalne</span></td><td>Od -3 (szybciej) do +3 (wolniej). Tylko Oddcast/Microsoft</td><td class="param-default">0</td></tr>
+                    <tr><td><code>pitch</code></td><td><span class="param-type">opcjonalne</span></td><td>Od -10 (niższy) do +10 (wyższy). Wszystkie silniki</td><td class="param-default">0</td></tr>
                     <tr><td><code>volume</code></td><td><span class="param-type">opcjonalne</span></td><td>Głośność 0–100</td><td class="param-default">80</td></tr>
                     <tr><td><code>readnick</code></td><td><span class="param-type">opcjonalne</span></td><td>Czytaj nick przed wiadomością: on/off</td><td class="param-default">off</td></tr>
                     <tr><td><code>readlinks</code></td><td><span class="param-type">opcjonalne</span></td><td>Czytaj linki jako LINK: on/off</td><td class="param-default">off</td></tr>
@@ -442,8 +464,9 @@
         <section class="glass rounded-2xl p-7 md:p-9 mb-12 relative z-10">
             <h2 class="section-title"><span class="section-icon"><i data-lucide="zap"></i></span> Funkcje</h2>
             <ul>
-                <li class="feature-li">12 polskich głosów — Oddcast, Microsoft, StreamElements</li>
+                <li class="feature-li">13 polskich głosów — Oddcast, Microsoft, StreamElements</li>
                 <li class="feature-li">Regulacja prędkości -3 do +3 dla Oddcast i Microsoft</li>
+                <li class="feature-li">Regulacja tonu -10 do +10 dla wszystkich silników</li>
                 <li class="feature-li">Czytanie nicku, linków i emotek — opcjonalne</li>
                 <li class="feature-li">Kontrola uprawnień: Każdy, Follower, Mod, OG, Sub, VIP</li>
                 <li class="feature-li">Wymaganie prefiksu !tts — konfigurowalne</li>
@@ -465,7 +488,7 @@
                 <div>
                     <h3 class="font-display font-bold text-sm text-kick-green mb-3 uppercase tracking-wider">Konfiguracja generatora</h3>
                     <p class="text-kick-muted text-sm font-medium leading-relaxed mb-3">W polu kanału wklej pełny adres swojego profilu Kick, np. <code>https://kick.com/adamcy</code> — system automatycznie rozpozna nick <code>adamcy</code> i wyświetli podgląd <code>kick.com/adamcy</code>. Możesz też wpisać sam nick lub adres z prefiksem @.</p>
-                    <p class="text-kick-muted text-sm font-medium leading-relaxed">Wybierz głos z listy 12 polskich opcji. Dostosuj głośność (0–100) i prędkość mowy (-3 szybciej do +3 wolniej) dla silników Oddcast i Microsoft. Ustaw uprawnienia — domyślnie TTS mogą używać moderatorzy, OG i VIP.</p>
+                    <p class="text-kick-muted text-sm font-medium leading-relaxed">Wybierz głos z listy 13 polskich opcji. Dostosuj głośność (0–100), prędkość mowy (-3 szybciej do +3 wolniej) i ton (-10 niższy do +10 wyższy). Ustaw uprawnienia — domyślnie TTS mogą używać moderatorzy, OG i VIP.</p>
                 </div>
                 <div>
                     <h3 class="font-display font-bold text-sm text-kick-green mb-3 uppercase tracking-wider">Integracja z OBS</h3>
@@ -497,12 +520,156 @@
     const PLACEHOLDER = 'Wpisz kanał Kick, aby wygenerować link…';
 
     /* Audio engine — auto-unlock na PC/OBS, bez blokującego overlay */
+    const PUSHER_URL = 'wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=8.4.0&flash=false';
+    const PUSHER_HEARTBEAT_MS = 30000;
+    const PUSHER_MAX_BACKOFF_MS = 60000;
+
+    function clampPitch(pitchValue) {
+        return Math.max(-10, Math.min(10, pitchValue || 0));
+    }
+
+    function mapPitchToWebSpeech(pitchValue) {
+        return Math.max(0.1, Math.min(2, 1 + (clampPitch(pitchValue) * 0.1)));
+    }
+
+    function mapPitchToDetuneCents(pitchValue) {
+        return clampPitch(pitchValue) * 100;
+    }
+
+    const WebSpeechVoiceManager = (function() {
+        let voicesReady = null;
+        let warmedUp = false;
+        const POLISH_MS_VOICES = {
+            adam: {
+                names: ['microsoft adam', 'adam - polish', 'adam polish'],
+                exclude: ['paulina'],
+                fallbackLang: 'pl-PL',
+                gender: 'male'
+            },
+            paulina: {
+                names: ['microsoft paulina', 'paulina - polish', 'paulina polish'],
+                exclude: ['adam'],
+                fallbackLang: 'pl-PL',
+                gender: 'female'
+            }
+        };
+
+        function normalizeLang(lang) {
+            return (lang || '').replace(/_/g, '-').toLowerCase();
+        }
+
+        function normalizeName(name) {
+            return (name || '').toLowerCase();
+        }
+
+        function isPolishVoice(voice) {
+            const lang = normalizeLang(voice.lang);
+            const name = normalizeName(voice.name);
+            return lang.startsWith('pl') || name.includes('polish') || name.includes('polski');
+        }
+
+        function scoreVoice(voice, profile) {
+            const name = normalizeName(voice.name);
+            const lang = normalizeLang(voice.lang);
+            let score = 0;
+            if (!isPolishVoice(voice)) return -1;
+            for (const pattern of profile.exclude) {
+                if (name.includes(pattern)) return -1;
+            }
+            for (const pattern of profile.names) {
+                if (name.includes(pattern)) score += 100;
+            }
+            if (profile.gender === 'male' && (name.includes('adam') || name.includes('male'))) score += 20;
+            if (profile.gender === 'female' && (name.includes('paulina') || name.includes('female') || name.includes('zosia'))) score += 20;
+            if (lang === profile.fallbackLang.toLowerCase()) score += 10;
+            if (name.includes('microsoft')) score += 5;
+            if (name.includes('google polski') && profile.gender === 'female') score += 40;
+            if (name.includes('google polski') && profile.gender === 'male') score += 15;
+            if (name === 'zosia' && profile.gender === 'female') score += 35;
+            if (voice.localService) score += 2;
+            return score;
+        }
+
+        function resolveVoice(voiceKey) {
+            const profile = POLISH_MS_VOICES[voiceKey];
+            if (!profile) return null;
+            const voices = window.speechSynthesis.getVoices();
+            let best = null;
+            let bestScore = -1;
+            for (const voice of voices) {
+                const score = scoreVoice(voice, profile);
+                if (score > bestScore) {
+                    bestScore = score;
+                    best = voice;
+                }
+            }
+            return best;
+        }
+
+        function waitForVoices(timeoutMs) {
+            if (voicesReady) return voicesReady;
+            voicesReady = new Promise(resolve => {
+                const finish = () => resolve(window.speechSynthesis.getVoices());
+                const voices = window.speechSynthesis.getVoices();
+                if (voices.length > 0) return finish();
+                const onChange = () => {
+                    if (window.speechSynthesis.getVoices().length > 0) {
+                        window.speechSynthesis.onvoiceschanged = null;
+                        finish();
+                    }
+                };
+                window.speechSynthesis.onvoiceschanged = onChange;
+                let attempts = 0;
+                const poll = setInterval(() => {
+                    attempts++;
+                    window.speechSynthesis.getVoices();
+                    if (window.speechSynthesis.getVoices().length > 0 || attempts > 20) {
+                        clearInterval(poll);
+                        if (window.speechSynthesis.getVoices().length > 0) onChange();
+                    }
+                }, 100);
+                setTimeout(() => {
+                    clearInterval(poll);
+                    finish();
+                }, timeoutMs || 5000);
+            });
+            return voicesReady;
+        }
+
+        async function warmup() {
+            if (warmedUp || !window.speechSynthesis) return;
+            await waitForVoices();
+            const voice = resolveVoice('adam') || resolveVoice('paulina');
+            return new Promise(resolve => {
+                const utterance = new SpeechSynthesisUtterance('.');
+                utterance.volume = 0.01;
+                utterance.rate = 2;
+                if (voice) {
+                    utterance.voice = voice;
+                    utterance.lang = voice.lang;
+                } else {
+                    utterance.lang = 'pl-PL';
+                }
+                utterance.onend = () => { warmedUp = true; resolve(); };
+                utterance.onerror = () => { warmedUp = true; resolve(); };
+                setTimeout(() => {
+                    window.speechSynthesis.resume();
+                    window.speechSynthesis.speak(utterance);
+                }, 50);
+                setTimeout(() => { warmedUp = true; resolve(); }, 1200);
+            });
+        }
+
+        return { waitForVoices, resolveVoice, warmup, getVoices: () => window.speechSynthesis.getVoices() };
+    })();
+
     const TtsAudioEngine = (function() {
         let unlocked = false;
         let audioContext = null;
         let keepAliveNode = null;
         let currentAudio = null;
         let currentSource = null;
+        let currentUtterance = null;
         const SILENT_MP3 = 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjIwLjEwMAAAAAAAAAAAAAAA//tUxAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV6urq6urq6urq6urq6urq6urq6urq6urq6v////////////////////////////////8AAAAATGF2YzU4LjM1AAAAAAAAAAAAAAAAJAAAAAAAAAAAASDs90hvAAAAAAAAAAAAAAAAAAAA';
 
         function getContext() {
@@ -644,16 +811,49 @@
                 currentAudio.load();
             }
             currentAudio = null;
+            currentUtterance = null;
             if (window.speechSynthesis) window.speechSynthesis.cancel();
         }
 
-        async function playUrl(url, volumeLevel) {
+        async function playUrlWithWebAudio(url, vol, pitchValue) {
+            const ctx = getContext();
+            if (!ctx) return false;
+            const response = await fetch(url, { mode: 'cors' });
+            if (!response.ok) throw new Error('fetch failed: ' + response.status);
+            const arrayBuffer = await response.arrayBuffer();
+            const audioBuffer = await ctx.decodeAudioData(arrayBuffer);
+            const source = ctx.createBufferSource();
+            source.buffer = audioBuffer;
+            source.detune.value = mapPitchToDetuneCents(pitchValue);
+            const gain = ctx.createGain();
+            gain.gain.value = vol;
+            source.connect(gain);
+            gain.connect(ctx.destination);
+            currentSource = source;
+            source.start(0);
+            return new Promise(resolve => {
+                source.onended = () => { currentSource = null; resolve(true); };
+            });
+        }
+
+        async function playUrl(url, volumeLevel, pitchValue) {
+            pitchValue = pitchValue || 0;
             if (!unlocked) await autoUnlock();
             const vol = Math.max(0, Math.min(1, volumeLevel / 100));
             const ctx = getContext();
             stopPlayback();
             if (ctx && ctx.state === 'suspended') {
                 try { await ctx.resume(); markUnlocked(); } catch (e) {}
+            }
+
+            if (pitchValue !== 0 && ctx) {
+                try {
+                    await playUrlWithWebAudio(url, vol, pitchValue);
+                    markUnlocked();
+                    return true;
+                } catch (e) {
+                    console.warn('[TTS] WebAudio pitch fallback to HTMLAudio:', e.message);
+                }
             }
 
             const a = createAudioElement(url, vol);
@@ -679,12 +879,55 @@
             });
         }
 
-        async function speakWebSpeech(utterance) {
+        async function speakWebSpeech(utterance, options) {
+            options = options || {};
             if (!unlocked) await autoUnlock();
-            if (!window.speechSynthesis) return;
-            if (window.speechSynthesis.paused) window.speechSynthesis.resume();
-            window.speechSynthesis.speak(utterance);
-            markUnlocked();
+            if (!window.speechSynthesis) return false;
+
+            await WebSpeechVoiceManager.waitForVoices();
+            currentUtterance = utterance;
+
+            return new Promise(resolve => {
+                let settled = false;
+                const finish = (ok) => {
+                    if (settled) return;
+                    settled = true;
+                    if (!ok) currentUtterance = null;
+                    resolve(ok);
+                };
+
+                utterance.onstart = () => { markUnlocked(); };
+                utterance.onend = () => { currentUtterance = null; finish(true); };
+                utterance.onerror = (event) => {
+                    console.warn('[TTS] WebSpeech error:', event.error);
+                    if (options.retry && !options._retried) {
+                        options._retried = true;
+                        setTimeout(() => {
+                            speakWebSpeech(utterance, options).then(finish);
+                        }, 200);
+                        return;
+                    }
+                    currentUtterance = null;
+                    finish(false);
+                };
+
+                const startSpeak = () => {
+                    window.speechSynthesis.resume();
+                    window.speechSynthesis.speak(utterance);
+                    setTimeout(() => {
+                        if (!settled && !window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
+                            if (options.retry && !options._retried) {
+                                options._retried = true;
+                                startSpeak();
+                            } else {
+                                finish(false);
+                            }
+                        }
+                    }, 250);
+                };
+
+                setTimeout(startSpeak, 30);
+            });
         }
 
         return { setupUnlockUI, unlock: unlockFromGesture, playUrl, speakWebSpeech, stopPlayback, isUnlocked: () => unlocked };
@@ -737,6 +980,12 @@
         updateLiveURL();
     });
 
+    document.getElementById('pitch').addEventListener('input', function() {
+        document.getElementById('pitch-value').textContent = this.value;
+        document.getElementById('pitch-display').textContent = this.value;
+        updateLiveURL();
+    });
+
     function toggleCheckbox(checkbox) {
         const wrap = checkbox.closest('.check-item');
         if (wrap) wrap.classList.toggle('on', checkbox.checked);
@@ -749,6 +998,7 @@
             channel,
             voice: document.getElementById('voice').value,
             speed: document.getElementById('speed').value,
+            pitch: document.getElementById('pitch').value,
             volume: document.getElementById('volume').value,
             readnick: document.getElementById('readnick').checked,
             readlinks: document.getElementById('readlinks').checked,
@@ -770,6 +1020,7 @@
         let url = baseUrl + '?channel=' + encodeURIComponent(v.channel);
         if (v.voice !== 'Zosia') url += '&voice=' + v.voice;
         if (v.speed !== '0' && !v.voice.startsWith('SE-')) url += '&speed=' + v.speed;
+        if (v.pitch !== '0') url += '&pitch=' + v.pitch;
         if (v.volume !== '80') url += '&volume=' + v.volume;
         if (v.readnick) url += '&readnick=on';
         if (v.readlinks) url += '&readlinks=on';
@@ -839,7 +1090,7 @@
         ch.addEventListener('input', () => { updateChannelPreview(parseKickChannel(ch.value)); updateLiveURL(); });
         ch.addEventListener('paste', () => setTimeout(normalizeChannelInput, 10));
         ch.addEventListener('blur', normalizeChannelInput);
-        ['volume'].forEach(id => document.getElementById(id).addEventListener('input', updateLiveURL));
+        ['volume', 'pitch'].forEach(id => document.getElementById(id).addEventListener('input', updateLiveURL));
         document.getElementById('voice').addEventListener('change', updateLiveURL);
         document.querySelectorAll('#readme input[type=checkbox]').forEach(cb => cb.addEventListener('change', updateLiveURL));
 
@@ -869,7 +1120,8 @@
             'Krzysztof':   { EID: '2', LID: '14', VID: '2', type: 'oddcast' },
             'Wojciech':    { EID: '7', LID: '14', VID: '2', type: 'oddcast' },
             'Zosia':       { EID: '2', LID: '14', VID: '1', type: 'oddcast' },
-            'Adam':        { name: 'Microsoft Adam - Polish (Poland)', type: 'webspeech' },
+            'Adam':        { voiceKey: 'adam', type: 'webspeech' },
+            'Paulina':     { voiceKey: 'paulina', type: 'webspeech' },
             'SE-WavenetA': { voice: 'pl-PL-Wavenet-A', type: 'streamelements' },
             'SE-WavenetB': { voice: 'pl-PL-Wavenet-B', type: 'streamelements' },
             'SE-Jacek':    { voice: 'Jacek', type: 'streamelements' },
@@ -883,6 +1135,7 @@
 
         const volume = parseInt(urlParams.get('volume')) || 80;
         const speed = selectedVoice.type === 'streamelements' ? 0 : (parseInt(urlParams.get('speed')) || 0);
+        const pitch = clampPitch(parseInt(urlParams.get('pitch')) || 0);
         const readnick = urlParams.get('readnick') === 'on';
         const readlinks = urlParams.get('readlinks') === 'on';
         const reademotes = urlParams.get('reademotes') === 'on';
@@ -894,7 +1147,7 @@
         const vip = urlParams.get('vip') === 'on';
         const pretext = urlParams.get('pretext') === 'on';
 
-        console.log('TTS Config:', { kick, voiceName, speed, volume, readnick, readlinks, reademotes, anyone, follower, moderator, og, subscriber, vip, pretext });
+        console.log('TTS Config:', { kick, voiceName, speed, pitch, volume, readnick, readlinks, reademotes, anyone, follower, moderator, og, subscriber, vip, pretext });
 
         const badgesConfig = {
             'moderator': moderator,
@@ -913,7 +1166,15 @@
         const messageQueue = [];
         let isProcessingQueue = false;
         let speechSynthesis = window.speechSynthesis;
-        let currentUtterance = null;
+
+        if (selectedVoice.type === 'webspeech') {
+            WebSpeechVoiceManager.waitForVoices().then(() => {
+                console.log('Available WebSpeech voices:', WebSpeechVoiceManager.getVoices().map(v => v.name + ' [' + v.lang + ']'));
+                const resolved = WebSpeechVoiceManager.resolveVoice(selectedVoice.voiceKey);
+                console.log('Resolved Microsoft voice:', resolved ? resolved.name : 'fallback pl-PL');
+                return WebSpeechVoiceManager.warmup();
+            });
+        }
 
         function splitTextIntoChunks(text, maxLength = 200) {
             const chunks = [];
@@ -944,36 +1205,37 @@
             return chunks.length > 0 ? chunks : [text];
         }
 
-        async function playStreamElementsTTS(text, voice, volumeLevel) {
+        async function playStreamElementsTTS(text, voice, volumeLevel, pitchValue) {
             const chunks = splitTextIntoChunks(text, 500);
             for (const chunk of chunks) {
-                await TtsAudioEngine.playUrl(buildStreamElementsSpeechUrl(voice, chunk), volumeLevel);
+                await TtsAudioEngine.playUrl(buildStreamElementsSpeechUrl(voice, chunk), volumeLevel, pitchValue);
             }
         }
 
-        async function playTTSSingle(text, volumeLevel, speedValue) {
+        async function playTTSSingle(text, volumeLevel, speedValue, pitchValue) {
             const cleanText = text.replace(/%/g, 'percent');
             try {
                 if (selectedVoice.type === 'streamelements') {
-                    await playStreamElementsTTS(cleanText, selectedVoice.voice, volumeLevel);
+                    await playStreamElementsTTS(cleanText, selectedVoice.voice, volumeLevel, pitchValue);
                 } else if (selectedVoice.type === 'webspeech') {
-                    return new Promise((resolve) => {
-                        const utterance = new SpeechSynthesisUtterance(cleanText);
-                        currentUtterance = utterance;
-                        const availableVoices = speechSynthesis.getVoices();
-                        const voice = availableVoices.find(v => v.name.includes('Adam') || v.name.includes('pl-PL'));
-                        if (voice) utterance.voice = voice;
-                        utterance.volume = volumeLevel / 100;
-                        utterance.rate = Math.pow(2, speedValue / 3);
+                    await WebSpeechVoiceManager.waitForVoices();
+                    const utterance = new SpeechSynthesisUtterance(cleanText);
+                    const voice = WebSpeechVoiceManager.resolveVoice(selectedVoice.voiceKey);
+                    if (voice) {
+                        utterance.voice = voice;
+                        utterance.lang = voice.lang;
+                    } else {
                         utterance.lang = 'pl-PL';
-                        utterance.onend = () => { currentUtterance = null; resolve(); };
-                        utterance.onerror = () => { currentUtterance = null; resolve(); };
-                        TtsAudioEngine.speakWebSpeech(utterance);
-                    });
+                        console.warn('[TTS] Microsoft voice not found, using pl-PL fallback for', selectedVoice.voiceKey);
+                    }
+                    utterance.volume = volumeLevel / 100;
+                    utterance.rate = Math.pow(2, speedValue / 3);
+                    utterance.pitch = mapPitchToWebSpeech(pitchValue);
+                    await TtsAudioEngine.speakWebSpeech(utterance, { retry: true });
                 } else {
                     let ttsUrl = 'https://cache-a.oddcast.com/tts/genC.php?EID=' + selectedVoice.EID + '&LID=' + selectedVoice.LID + '&VID=' + selectedVoice.VID + '&TXT=' + encodeURIComponent(cleanText);
                     if (speedValue !== 0) ttsUrl += '&FX_TYPE=D&FX_LEVEL=' + (-speedValue);
-                    return TtsAudioEngine.playUrl(ttsUrl, volumeLevel);
+                    return TtsAudioEngine.playUrl(ttsUrl, volumeLevel, pitchValue);
                 }
             } catch (error) {
                 console.error('TTS error:', error);
@@ -986,20 +1248,19 @@
             isProcessingQueue = true;
             while (messageQueue.length > 0) {
                 const message = messageQueue.shift();
-                try { await playTTSSingle(message.text, message.volume, message.speed); }
+                try { await playTTSSingle(message.text, message.volume, message.speed, message.pitch); }
                 catch (error) { console.error('Error playing TTS:', error); }
             }
             isProcessingQueue = false;
         }
 
-        function addToQueue(text, volumeLevel, speedValue) {
-            messageQueue.push({ text, volume: volumeLevel, speed: speedValue });
+        function addToQueue(text, volumeLevel, speedValue, pitchValue) {
+            messageQueue.push({ text, volume: volumeLevel, speed: speedValue, pitch: pitchValue });
             if (!isProcessingQueue) processQueue();
         }
 
         function skipCurrentTTS() {
             TtsAudioEngine.stopPlayback();
-            currentUtterance = null;
         }
 
         function hasBroadcasterBadge(badges) {
@@ -1033,29 +1294,129 @@
             return false;
         }
 
-        if (speechSynthesis.onvoiceschanged !== undefined) {
-            speechSynthesis.onvoiceschanged = () => {
-                console.log('Available WebSpeech voices:', speechSynthesis.getVoices().map(v => v.name));
+        function createKickChatClient(channelName, onChatMessage) {
+            let ws = null;
+            let heartbeatTimer = null;
+            let reconnectTimer = null;
+            let backoff = 1000;
+            let chatroomId = null;
+            let disposed = false;
+
+            function stopHeartbeat() {
+                if (heartbeatTimer) {
+                    clearInterval(heartbeatTimer);
+                    heartbeatTimer = null;
+                }
+            }
+
+            function startHeartbeat() {
+                stopHeartbeat();
+                heartbeatTimer = setInterval(() => {
+                    if (ws && ws.readyState === WebSocket.OPEN) {
+                        ws.send(JSON.stringify({ event: 'pusher:ping', data: {} }));
+                    }
+                }, PUSHER_HEARTBEAT_MS);
+            }
+
+            function scheduleReconnect() {
+                if (disposed || reconnectTimer) return;
+                console.log('[Kick] reconnecting in ' + backoff + 'ms...');
+                reconnectTimer = setTimeout(() => {
+                    reconnectTimer = null;
+                    connect();
+                }, backoff);
+            }
+
+            function subscribe() {
+                if (!ws || ws.readyState !== WebSocket.OPEN || !chatroomId) return;
+                ws.send(JSON.stringify({
+                    event: 'pusher:subscribe',
+                    data: { auth: '', channel: 'chatrooms.' + chatroomId + '.v2' }
+                }));
+            }
+
+            async function connect() {
+                if (disposed) return;
+                if (ws) {
+                    try { ws.close(); } catch (e) {}
+                    ws = null;
+                }
+                try {
+                    const userData = await fetchUserData(channelName);
+                    chatroomId = userData.chatroom.id;
+                } catch (error) {
+                    console.error('[Kick] failed to fetch chatroom ID:', error);
+                    backoff = Math.min(backoff * 2, PUSHER_MAX_BACKOFF_MS);
+                    scheduleReconnect();
+                    return;
+                }
+
+                ws = new WebSocket(PUSHER_URL);
+
+                ws.addEventListener('open', () => {
+                    console.log('[Kick] Pusher WebSocket open, waiting for handshake...');
+                });
+
+                ws.addEventListener('message', async (messageEvent) => {
+                    let parsedMessage;
+                    try {
+                        parsedMessage = JSON.parse(messageEvent.data);
+                    } catch (e) {
+                        return;
+                    }
+
+                    if (parsedMessage.event === 'pusher:connection_established') {
+                        subscribe();
+                        startHeartbeat();
+                        backoff = 1000;
+                        console.log('[Kick] Connected to ' + channelName);
+                        return;
+                    }
+
+                    if (parsedMessage.event === 'pusher:ping') {
+                        ws.send(JSON.stringify({ event: 'pusher:pong', data: {} }));
+                        return;
+                    }
+
+                    if (parsedMessage.event !== 'App\\Events\\ChatMessageEvent') return;
+
+                    let messageData;
+                    try {
+                        messageData = typeof parsedMessage.data === 'string'
+                            ? JSON.parse(parsedMessage.data)
+                            : parsedMessage.data;
+                    } catch (e) {
+                        console.error('[Kick] failed to parse chat event:', e);
+                        return;
+                    }
+
+                    await onChatMessage(messageData);
+                });
+
+                ws.addEventListener('error', (error) => {
+                    console.error('[Kick] WebSocket error:', error);
+                });
+
+                ws.addEventListener('close', () => {
+                    stopHeartbeat();
+                    backoff = Math.min(backoff * 2, PUSHER_MAX_BACKOFF_MS);
+                    scheduleReconnect();
+                });
+            }
+
+            connect();
+
+            return {
+                disconnect: () => {
+                    disposed = true;
+                    stopHeartbeat();
+                    if (reconnectTimer) clearTimeout(reconnectTimer);
+                    if (ws) ws.close();
+                }
             };
         }
 
-        const chat = new WebSocket('wss://ws-us2.pusher.com/app/32cbd69e4b950bf97679?protocol=7&client=js&version=7.6.0&flash=false');
-
-        chat.addEventListener('open', async () => {
-            console.log('Connecting to Kick...');
-            const userData = await fetchUserData(kick);
-            chat.send(JSON.stringify({
-                'event': 'pusher:subscribe',
-                'data': { 'auth': '', 'channel': 'chatrooms.' + userData.chatroom.id + '.v2' }
-            }));
-            console.log('Connected to Kick - ' + kick);
-        });
-
-        chat.addEventListener('message', async messageEvent => {
-            let parsedMessage = JSON.parse(messageEvent.data);
-            if (parsedMessage.event !== 'App\\Events\\ChatMessageEvent') return;
-
-            let messageData = JSON.parse(parsedMessage.data);
+        createKickChatClient(kick, async (messageData) => {
             let content = messageData.content;
             let sender = messageData.sender;
             let username = sender.username;
@@ -1095,14 +1456,8 @@
                 if (textToSpeak.length === 0) return;
                 if (readnick) textToSpeak = username + ' mówi: ' + textToSpeak;
 
-                addToQueue(textToSpeak, volume, speed);
+                addToQueue(textToSpeak, volume, speed, pitch);
             }
-        });
-
-        chat.addEventListener('error', (error) => console.error('WebSocket error:', error));
-        chat.addEventListener('close', () => {
-            console.log('WebSocket closed, reconnecting...');
-            setTimeout(() => initTTS(), 5000);
         });
     }
 
