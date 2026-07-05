@@ -639,6 +639,11 @@
 
     const GOOGLE_V2_SPEED_MIN = -1;
     const GOOGLE_V2_SPEED_MAX = 1;
+    // Chromium network_speech_synthesis/tts_extension.js:
+    // utterance.rate 0.1–10 (default 1.0) → URL speed = rate / 2 (0.0–1.0, default 0.5)
+    // Wyższy URL speed = szybciej. UI v2: +1 szybciej, -1 wolniej.
+    const GOOGLE_V2_RATE_DEFAULT = 1.0;
+    const GOOGLE_V2_RATE_STEP = 0.5;
 
     function clampSpeed(speedValue) {
         const parsed = parseInt(speedValue, 10);
@@ -653,9 +658,8 @@
 
     function mapSpeedToGoogleV2(speedValue) {
         const s = clampSpeedForGoogleV2(speedValue);
-        if (s === 0) return 0.5;
-        if (s > 0) return 0.58;
-        return 0.42;
+        const rate = Math.max(0.1, Math.min(10, GOOGLE_V2_RATE_DEFAULT + (s * GOOGLE_V2_RATE_STEP)));
+        return Math.max(0, Math.min(1, rate / 2));
     }
 
     function mapSpeedToGoogleSpeakingRate(speedValue) {
