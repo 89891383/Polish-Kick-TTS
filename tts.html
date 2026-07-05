@@ -202,7 +202,13 @@
                             <option value="SE-Ewa">Ewa (Kobieta — SE)</option>
                             <option value="SE-Jan">Jan (Mężczyzna — SE)</option>
                         </optgroup>
-                        <optgroup label="Google Cloud — Chirp3 HD (Kobiety)">
+                        <optgroup label="Google Cloud — Wavenet / Standard ★ Zalecane (v2)">
+                            <option value="pl-PL-Wavenet-F">Wavenet-F (Kobieta)</option>
+                            <option value="pl-PL-Wavenet-G">Wavenet-G (Mężczyzna)</option>
+                            <option value="pl-PL-Standard-F">Standard-F (Kobieta)</option>
+                            <option value="pl-PL-Standard-G">Standard-G (Mężczyzna)</option>
+                        </optgroup>
+                        <optgroup label="Google Cloud — Chirp3 HD (Kobiety, API v1)">
                             <option value="pl-PL-Chirp3-HD-Sulafat">Sulafat (Kobieta)</option>
                             <option value="pl-PL-Chirp3-HD-Vindemiatrix">Vindemiatrix (Kobieta)</option>
                             <option value="pl-PL-Chirp3-HD-Zephyr">Zephyr (Kobieta)</option>
@@ -218,7 +224,7 @@
                             <option value="pl-PL-Chirp3-HD-Leda">Leda (Kobieta)</option>
                             <option value="pl-PL-Chirp3-HD-Pulcherrima">Pulcherrima (Kobieta)</option>
                         </optgroup>
-                        <optgroup label="Google Cloud — Chirp3 HD (Mężczyźni)">
+                        <optgroup label="Google Cloud — Chirp3 HD (Mężczyźni, API v1)">
                             <option value="pl-PL-Chirp3-HD-Schedar">Schedar (Mężczyzna)</option>
                             <option value="pl-PL-Chirp3-HD-Umbriel">Umbriel (Mężczyzna)</option>
                             <option value="pl-PL-Chirp3-HD-Zubenelgenubi">Zubenelgenubi (Mężczyzna)</option>
@@ -236,13 +242,8 @@
                             <option value="pl-PL-Chirp3-HD-Sadachbia">Sadachbia (Mężczyzna)</option>
                             <option value="pl-PL-Chirp3-HD-Sadaltager">Sadaltager (Mężczyzna)</option>
                         </optgroup>
-                        <optgroup label="Google Cloud — Wavenet / Standard">
-                            <option value="pl-PL-Wavenet-F">Wavenet-F (Kobieta)</option>
-                            <option value="pl-PL-Wavenet-G">Wavenet-G (Mężczyzna)</option>
-                            <option value="pl-PL-Standard-F">Standard-F (Kobieta)</option>
-                            <option value="pl-PL-Standard-G">Standard-G (Mężczyzna)</option>
-                        </optgroup>
                     </select>
+                    <p class="text-kick-muted text-xs font-medium mt-2">★ Zalecane: <strong class="text-kick-green font-semibold">Wavenet / Standard</strong> (Google v2 — szybki prefetch, bez limitów). Chirp3 HD korzysta z API v1 — na dużych streamach może wyczerpać limit zapytań (429).</p>
                 </div>
 
                 <div>
@@ -256,7 +257,7 @@
                         <input type="range" id="speed" class="flex-1 h-1 rounded" min="-3" max="3" value="0" step="1">
                         <div class="range-val" id="speed-display">0</div>
                     </div>
-                    <p class="text-kick-muted text-xs font-medium mt-2">Ujemne = szybciej, dodatnie = wolniej. Oddcast, Microsoft i Google Cloud. StreamElements bez speed.</p>
+                    <p class="text-kick-muted text-xs font-medium mt-2">Ujemne = szybciej, dodatnie = wolniej. Google v2 (Wavenet/Standard): max przyspieszenie -1. Chirp v1, Oddcast i Microsoft: -3 do +3. StreamElements bez speed.</p>
                 </div>
 
                 <div class="md:col-span-2" id="pitch-group">
@@ -358,7 +359,7 @@
                     <span class="badge badge-google">Google Cloud</span>
                     <span class="engine-count">34 głosów PL</span>
                 </div>
-                <p class="engine-desc">Google Speech v2 — szybki prefetch, nielimitowana kolejka. Wybór głosu mapuje na płeć (męski/żeński PL).</p>
+                <p class="engine-desc">Wavenet / Standard przez Speech v2 (zalecane, prefetch, bez limitów). Chirp3 HD przez Cloud TTS v1 — najwyższa jakość, ale limity API na busy streamach.</p>
             </div>
             </div>
         </section>
@@ -380,12 +381,12 @@
                 <div class="voice-card reveal"><div class="voice-name">Maja SE</div><div class="voice-type">Kobieta</div><span class="badge badge-streamelements">StreamElements</span></div>
                 <div class="voice-card reveal"><div class="voice-name">Ewa SE</div><div class="voice-type">Kobieta</div><span class="badge badge-streamelements">StreamElements</span></div>
                 <div class="voice-card reveal"><div class="voice-name">Jan SE</div><div class="voice-type">Mężczyzna</div><span class="badge badge-streamelements">StreamElements</span></div>
-                <div class="voice-card reveal"><div class="voice-name">Schedar</div><div class="voice-type">Mężczyzna</div><span class="badge badge-google">Chirp3 HD</span></div>
-                <div class="voice-card reveal"><div class="voice-name">Sulafat</div><div class="voice-type">Kobieta</div><span class="badge badge-google">Chirp3 HD</span></div>
-                <div class="voice-card reveal"><div class="voice-name">Wavenet-F</div><div class="voice-type">Kobieta</div><span class="badge badge-google">Wavenet</span></div>
-                <div class="voice-card reveal"><div class="voice-name">Standard-G</div><div class="voice-type">Mężczyzna</div><span class="badge badge-google">Standard</span></div>
+                <div class="voice-card reveal"><div class="voice-name">Wavenet-F</div><div class="voice-type">Kobieta</div><span class="badge badge-google">Wavenet v2 ★</span></div>
+                <div class="voice-card reveal"><div class="voice-name">Standard-G</div><div class="voice-type">Mężczyzna</div><span class="badge badge-google">Standard v2 ★</span></div>
+                <div class="voice-card reveal"><div class="voice-name">Schedar</div><div class="voice-type">Mężczyzna</div><span class="badge badge-google">Chirp3 v1</span></div>
+                <div class="voice-card reveal"><div class="voice-name">Sulafat</div><div class="voice-type">Kobieta</div><span class="badge badge-google">Chirp3 v1</span></div>
             </div>
-            <p class="text-kick-muted text-sm font-medium mt-4">+ 30 dodatkowych głosów Google Chirp3 HD w generatorze powyżej.</p>
+            <p class="text-kick-muted text-sm font-medium mt-4">★ Zalecane Wavenet / Standard (v2). + 30 głosów Chirp3 HD (v1, limity API) na dole listy w generatorze.</p>
         </section>
 
         <section class="mb-12 relative z-10">
@@ -464,7 +465,7 @@
                     <i data-lucide="chevron-down" class="faq-chevron" :class="open && 'rotate'"></i>
                 </button>
                 <div class="faq-a" x-show="open" x-collapse>
-                    <p>Parametr speed (-3 do +3) działa dla Oddcast, Microsoft i Google Cloud. StreamElements nie obsługuje zmiany prędkości.</p>
+                    <p>Parametr speed (-3 do +3) działa dla Oddcast, Microsoft i Chirp3 HD (v1). Google v2 (Wavenet/Standard): -1 (szybciej) do +3 (wolniej). StreamElements nie obsługuje zmiany prędkości.</p>
                 </div>
             </div>
 
@@ -474,7 +475,7 @@
                     <i data-lucide="chevron-down" class="faq-chevron" :class="open && 'rotate'"></i>
                 </button>
                 <div class="faq-a" x-show="open" x-collapse>
-                    <p>Dla Oddcast, Microsoft i StreamElements: pitch od -10 do +10. Dla Google: osobny pitch 0.01–0.99 (domyślnie 0.50) przez Speech v2. Oddcast/SE emulują ton przez Web Audio.</p>
+                    <p>Dla Oddcast, Microsoft, StreamElements i Chirp3 HD (v1): pitch od -10 do +10. Dla Wavenet/Standard (v2): osobny pitch 0.01–0.99 (domyślnie 0.50). Oddcast/SE emulują ton przez Web Audio.</p>
                 </div>
             </div>
 
@@ -516,8 +517,8 @@
                 <tbody>
                     <tr><td><code>channel</code></td><td><span class="param-type">wymagane</span></td><td>Nazwa kanału Kick.com</td><td class="param-default">twoj_nick</td></tr>
                     <tr><td><code>voice</code></td><td><span class="param-type">opcjonalne</span></td><td>Zosia, pl-PL-Chirp3-HD-Schedar, SE-WavenetA…</td><td class="param-default">Zosia</td></tr>
-                    <tr><td><code>speed</code></td><td><span class="param-type">opcjonalne</span></td><td>Od -3 (szybciej) do +3 (wolniej). Oddcast, Microsoft, Google Cloud</td><td class="param-default">0</td></tr>
-                    <tr><td><code>pitch</code></td><td><span class="param-type">opcjonalne</span></td><td>Oddcast/MS/SE: -10 do +10. Google Cloud: 0.01–0.99</td><td class="param-default">0 / 0.50</td></tr>
+                    <tr><td><code>speed</code></td><td><span class="param-type">opcjonalne</span></td><td>Od -3 (szybciej) do +3 (wolniej). Google v2: max -1 przyspieszenia</td><td class="param-default">0</td></tr>
+                    <tr><td><code>pitch</code></td><td><span class="param-type">opcjonalne</span></td><td>Oddcast/MS/SE/Chirp v1: -10 do +10. Wavenet/Standard v2: 0.01–0.99</td><td class="param-default">0 / 0.50</td></tr>
                     <tr><td><code>volume</code></td><td><span class="param-type">opcjonalne</span></td><td>Głośność 0–100</td><td class="param-default">80</td></tr>
                     <tr><td><code>readnick</code></td><td><span class="param-type">opcjonalne</span></td><td>Czytaj nick przed wiadomością: on/off</td><td class="param-default">off</td></tr>
                     <tr><td><code>readlinks</code></td><td><span class="param-type">opcjonalne</span></td><td>Czytaj linki jako LINK: on/off</td><td class="param-default">off</td></tr>
@@ -540,9 +541,9 @@
             <h2 class="section-title"><span class="section-icon"><i data-lucide="zap"></i></span> Funkcje</h2>
             <ul>
                 <li class="feature-li">47 polskich głosów — Oddcast, Microsoft, StreamElements, Google Cloud</li>
-                <li class="feature-li">Regulacja prędkości -3 do +3 dla Oddcast, Microsoft i Google Cloud</li>
-                <li class="feature-li">Pitch Google Cloud 0.01–0.99 (domyślnie 0.50)</li>
-                <li class="feature-li">Regulacja tonu -10 do +10 dla Oddcast, Microsoft i StreamElements</li>
+                <li class="feature-li">Google Wavenet/Standard (v2, zalecane) + Chirp3 HD (v1, limity API)</li>
+                <li class="feature-li">Regulacja prędkości: v2 max -1 przyspieszenia; Chirp v1 i reszta -3 do +3</li>
+                <li class="feature-li">Pitch v2: 0.01–0.99; Chirp v1 i reszta: -10 do +10</li>
                 <li class="feature-li">Czytanie nicku i linków — opcjonalne; filtr „Bez emotek” domyślnie włączony</li>
                 <li class="feature-li">Kontrola uprawnień: Każdy, Follower, Mod, OG, Sub, VIP</li>
                 <li class="feature-li">Wymaganie prefiksu !tts — konfigurowalne</li>
@@ -627,14 +628,44 @@
         return clampGooglePitch(pitchValue).toFixed(2);
     }
 
+    const GOOGLE_SPEED_MIN = -1;
+
     function clampSpeed(speedValue) {
         const parsed = parseInt(speedValue, 10);
         if (Number.isNaN(parsed)) return 0;
         return Math.max(-3, Math.min(3, parsed));
     }
 
+    function clampSpeedForGoogle(speedValue) {
+        const clamped = clampSpeed(speedValue);
+        return Math.max(GOOGLE_SPEED_MIN, Math.min(3, clamped));
+    }
+
     function mapSpeedToGoogleV2(speedValue) {
-        return Math.max(0, Math.min(1, 0.5 - (clampSpeed(speedValue) / 6)));
+        const s = clampSpeedForGoogle(speedValue);
+        if (s === 0) return 0.5;
+        if (s < 0) return 0.58;
+        return Math.max(0, 0.5 - (s / 8));
+    }
+
+    function mapSpeedToGoogleSpeakingRate(speedValue) {
+        return Math.max(0.25, Math.min(4.0, Math.pow(2, -clampSpeed(speedValue) / 3)));
+    }
+
+    function mapPitchToGoogleSemitones(pitchValue) {
+        return Math.max(-20, Math.min(20, clampPitch(pitchValue) * 2));
+    }
+
+    function applyGoogleV2SpeedLimits() {
+        const speedEl = document.getElementById('speed');
+        const voice = document.getElementById('voice').value;
+        const isV2 = isGoogleV2Voice(voice);
+        speedEl.min = isV2 ? String(GOOGLE_SPEED_MIN) : '-3';
+        if (!isV2) return;
+        const clamped = clampSpeedForGoogle(speedEl.value);
+        speedEl.value = String(clamped);
+        document.getElementById('speed-value').textContent = String(clamped);
+        document.getElementById('speed-display').textContent = String(clamped);
     }
 
     const GOOGLE_V2_FEMALE_NAMES = [
@@ -657,6 +688,14 @@
         return voiceName && voiceName.startsWith('pl-PL-');
     }
 
+    function isGoogleChirpVoice(voiceName) {
+        return isGoogleVoice(voiceName) && voiceName.includes('Chirp3-HD');
+    }
+
+    function isGoogleV2Voice(voiceName) {
+        return isGoogleVoice(voiceName) && !isGoogleChirpVoice(voiceName);
+    }
+
     function resolveVoiceConfig(voiceName) {
         const voices = {
             'Agatka':      { EID: '4', LID: '14', VID: '1', type: 'oddcast' },
@@ -674,7 +713,8 @@
             'SE-Jan':      { voice: 'Jan', type: 'streamelements' }
         };
         if (voices[voiceName]) return voices[voiceName];
-        if (isGoogleVoice(voiceName)) return { voice: voiceName, type: 'google' };
+        if (isGoogleChirpVoice(voiceName)) return { voice: voiceName, type: 'google-v1' };
+        if (isGoogleV2Voice(voiceName)) return { voice: voiceName, type: 'google-v2' };
         return voices['Zosia'];
     }
 
@@ -1247,7 +1287,8 @@
 
     function handleVoiceChange() {
         const voice = document.getElementById('voice').value;
-        const isGoogle = isGoogleVoice(voice);
+        const isGoogleV2 = isGoogleV2Voice(voice);
+        const isGoogleV1 = isGoogleChirpVoice(voice);
         const hideSpeed = voice.startsWith('SE-');
         const speedGroup = document.getElementById('speed-group');
         const pitchGroup = document.getElementById('pitch-group');
@@ -1260,9 +1301,11 @@
             document.getElementById('speed-display').textContent = '0';
         } else {
             speedGroup.classList.remove('hidden');
+            if (isGoogleV2) applyGoogleV2SpeedLimits();
+            else document.getElementById('speed').min = '-3';
         }
 
-        if (isGoogle) {
+        if (isGoogleV2) {
             pitchGroup.classList.add('hidden');
             pitchGoogleGroup.classList.remove('hidden');
             updatePitchGoogleDisplay(document.getElementById('pitch-google').value);
@@ -1327,7 +1370,7 @@
         const baseUrl = window.location.origin + window.location.pathname;
         let url = baseUrl + '?channel=' + encodeURIComponent(v.channel);
         if (v.voice !== 'Zosia') url += '&voice=' + encodeURIComponent(v.voice);
-        if (isGoogleVoice(v.voice)) {
+        if (isGoogleV2Voice(v.voice)) {
             const gp = formatGooglePitch(v.pitchGoogle);
             if (gp !== formatGooglePitch(GOOGLE_PITCH_DEFAULT)) url += '&pitch=' + gp;
             if (v.speed !== '0') url += '&speed=' + v.speed;
@@ -1389,6 +1432,30 @@
     const STREAMELEMENTS_SPEECH_KEY = '1fWQVbDjk8esigWnsUOIT41hBM-EDeKlorLbWFy3vGiAmvwh';
     const GOOGLE_TTS_KEY = 'AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw';
     const GOOGLE_SPEECH_V2_BASE = 'https://www.google.com/speech-api/v2/synthesize';
+    const GOOGLE_TTS_V1_ENDPOINT = 'https://texttospeech.googleapis.com/v1/text:synthesize?key=' + GOOGLE_TTS_KEY;
+
+    async function synthesizeGoogleCloudV1TTS(text, voiceName, speedValue, pitchValue) {
+        const response = await fetch(GOOGLE_TTS_V1_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                input: { text },
+                voice: { languageCode: 'pl-PL', name: voiceName },
+                audioConfig: {
+                    audioEncoding: 'MP3',
+                    speakingRate: mapSpeedToGoogleSpeakingRate(speedValue),
+                    pitch: mapPitchToGoogleSemitones(pitchValue)
+                }
+            })
+        });
+        if (!response.ok) {
+            const err = await response.json().catch(() => ({}));
+            throw new Error(err.error?.message || ('Google TTS v1 HTTP ' + response.status));
+        }
+        const data = await response.json();
+        if (!data.audioContent) throw new Error('Google TTS v1: brak audioContent');
+        return 'data:audio/mpeg;base64,' + data.audioContent;
+    }
 
     function buildStreamElementsSpeechUrl(voice, text) {
         return 'https://api.streamelements.com/kappa/v2/speech'
@@ -1454,10 +1521,13 @@
         const selectedVoice = resolveVoiceConfig(voiceName);
 
         const volume = parseInt(urlParams.get('volume')) || 80;
-        const isGoogle = selectedVoice.type === 'google';
-        const speed = selectedVoice.type === 'streamelements' ? 0 : clampSpeed(urlParams.get('speed') || 0);
-        const pitch = isGoogle ? 0 : clampPitch(parseInt(urlParams.get('pitch')) || 0);
-        const googlePitch = isGoogle ? clampGooglePitch(urlParams.get('pitch') || GOOGLE_PITCH_DEFAULT) : GOOGLE_PITCH_DEFAULT;
+        const isGoogleV2 = selectedVoice.type === 'google-v2';
+        const isGoogleV1 = selectedVoice.type === 'google-v1';
+        const speed = selectedVoice.type === 'streamelements' ? 0
+            : isGoogleV2 ? clampSpeedForGoogle(urlParams.get('speed') || 0)
+            : clampSpeed(urlParams.get('speed') || 0);
+        const pitch = isGoogleV2 ? 0 : clampPitch(parseInt(urlParams.get('pitch')) || 0);
+        const googlePitch = isGoogleV2 ? clampGooglePitch(urlParams.get('pitch') || GOOGLE_PITCH_DEFAULT) : GOOGLE_PITCH_DEFAULT;
         const readnick = urlParams.get('readnick') === 'on';
         const readlinks = urlParams.get('readlinks') === 'on';
         const noemotes = urlParams.get('noemotes') !== 'off';
@@ -1472,7 +1542,7 @@
         const ignorenumbers = urlParams.get('ignorenumbers') === 'on';
         const ignorerepeat = urlParams.get('ignorerepeat') === 'on';
 
-        console.log('TTS Config:', { kick, voiceName, speed, pitch, googlePitch, googleV2Gender: isGoogle ? getGoogleV2Gender(voiceName) : null, volume, readnick, readlinks, noemotes, anyone, follower, moderator, og, subscriber, vip, pretext, stripspecial, ignorenumbers, ignorerepeat });
+        console.log('TTS Config:', { kick, voiceName, googleApi: isGoogleV2 ? 'v2' : isGoogleV1 ? 'v1' : null, speed, pitch, googlePitch, googleV2Gender: isGoogleV2 ? getGoogleV2Gender(voiceName) : null, volume, readnick, readlinks, noemotes, anyone, follower, moderator, og, subscriber, vip, pretext, stripspecial, ignorenumbers, ignorerepeat });
 
         const badgesConfig = {
             'moderator': moderator,
@@ -1546,7 +1616,7 @@
         }
 
         function scheduleGoogleV2Prefetch(message) {
-            if (selectedVoice.type !== 'google' || message._v2Prefetch) return;
+            if (selectedVoice.type !== 'google-v2' || message._v2Prefetch) return;
             message._v2Urls = buildGoogleV2ChunkUrls(
                 message.text.replace(/%/g, 'percent'),
                 selectedVoice.voice,
@@ -1556,7 +1626,18 @@
             message._v2Prefetch = GoogleV2Prefetch.prefetchAll(message._v2Urls);
         }
 
-        async function playGoogleCloudTTS(text, voice, volumeLevel, pitchGoogleValue, speedValue, prefetchBundle) {
+        async function playGoogleV1TTS(text, voice, volumeLevel, speedValue, pitchValue) {
+            const chunks = splitTextIntoChunks(text, 450);
+            for (const chunk of chunks) {
+                if (skipRequested) return;
+                const audioUrl = await synthesizeGoogleCloudV1TTS(chunk, voice, speedValue, pitchValue);
+                if (skipRequested) return;
+                await TtsAudioEngine.playUrl(audioUrl, volumeLevel, 0);
+                if (skipRequested) return;
+            }
+        }
+
+        async function playGoogleV2TTS(text, voice, volumeLevel, pitchGoogleValue, speedValue, prefetchBundle) {
             const urls = prefetchBundle && prefetchBundle._v2Urls
                 ? prefetchBundle._v2Urls
                 : buildGoogleV2ChunkUrls(text, voice, pitchGoogleValue, speedValue);
@@ -1588,8 +1669,10 @@
         async function playTTSSingle(text, volumeLevel, speedValue, pitchValue, prefetchBundle) {
             const cleanText = text.replace(/%/g, 'percent');
             try {
-                if (selectedVoice.type === 'google') {
-                    await playGoogleCloudTTS(cleanText, selectedVoice.voice, volumeLevel, googlePitch, speedValue, prefetchBundle);
+                if (selectedVoice.type === 'google-v2') {
+                    await playGoogleV2TTS(cleanText, selectedVoice.voice, volumeLevel, googlePitch, speedValue, prefetchBundle);
+                } else if (selectedVoice.type === 'google-v1') {
+                    await playGoogleV1TTS(cleanText, selectedVoice.voice, volumeLevel, speedValue, pitchValue);
                 } else if (selectedVoice.type === 'streamelements') {
                     await playStreamElementsTTS(cleanText, selectedVoice.voice, volumeLevel, pitchValue);
                 } else if (selectedVoice.type === 'webspeech') {
@@ -1625,7 +1708,7 @@
                 while (messageQueue.length > 0) {
                     skipRequested = false;
                     const message = messageQueue.shift();
-                    if (selectedVoice.type === 'google' && messageQueue.length > 0) {
+                    if (selectedVoice.type === 'google-v2' && messageQueue.length > 0) {
                         scheduleGoogleV2Prefetch(messageQueue[0]);
                     }
                     try {
@@ -1641,7 +1724,7 @@
         function addToQueue(text, volumeLevel, speedValue, pitchValue) {
             const message = { text, volume: volumeLevel, speed: speedValue, pitch: pitchValue };
             messageQueue.push(message);
-            if (selectedVoice.type === 'google') {
+            if (selectedVoice.type === 'google-v2') {
                 messageQueue.forEach(scheduleGoogleV2Prefetch);
             }
             processQueue();
