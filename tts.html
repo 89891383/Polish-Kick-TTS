@@ -269,12 +269,12 @@
                 </div>
 
                 <div class="md:col-span-2 hidden" id="pitch-google-group">
-                    <label class="form-label">Pitch Google Cloud: <span id="pitch-google-value" class="text-kick-green">0.50</span></label>
+                    <label class="form-label">Pitch Google v2: <span id="pitch-google-value" class="text-kick-green">0.50</span></label>
                     <div class="flex items-center gap-4">
                         <input type="range" id="pitch-google" class="flex-1 h-1 rounded" min="0.01" max="0.99" value="0.50" step="0.01">
                         <div class="range-val" id="pitch-google-display">0.50</div>
                     </div>
-                    <p class="text-kick-muted text-xs font-medium mt-2">Zakres 0.01–0.99. Domyślnie 0.50 (neutralny). Niższe = niższy ton, wyższe = wyższy. Tylko głosy Google Cloud.</p>
+                    <p class="text-kick-muted text-xs font-medium mt-2">Zakres 0.01–0.99. Domyślnie 0.50 (neutralny). Parametr pitch w Google Speech v2. Tylko głosy Google.</p>
                 </div>
 
                 <div>
@@ -282,7 +282,7 @@
                     <div class="flex flex-col gap-2">
                         <div class="check-item" id="wrap-readnick"><input type="checkbox" id="readnick" onchange="toggleCheckbox(this)"><label for="readnick">Czytaj nick przed wiadomością</label></div>
                         <div class="check-item" id="wrap-readlinks"><input type="checkbox" id="readlinks" onchange="toggleCheckbox(this)"><label for="readlinks">Czytaj linki jako LINK</label></div>
-                        <div class="check-item" id="wrap-reademotes"><input type="checkbox" id="reademotes" onchange="toggleCheckbox(this)"><label for="reademotes">Czytaj emotki</label></div>
+                        <div class="check-item on" id="wrap-reademotes" style="opacity:.7;pointer-events:none" title="Emoji i emotki Kick są zawsze usuwane przed TTS"><input type="checkbox" id="reademotes" checked disabled><label for="reademotes">Bez emotek (emoji + Kick — zawsze)</label></div>
                     </div>
                 </div>
 
@@ -358,7 +358,7 @@
                     <span class="badge badge-google">Google Cloud</span>
                     <span class="engine-count">34 głosów PL</span>
                 </div>
-                <p class="engine-desc">Chirp3 HD, Wavenet i Standard. Najwyższa jakość z regulacją prędkości i pitch 0.01–0.99 (domyślnie 0.50).</p>
+                <p class="engine-desc">Google Speech v2 — szybki prefetch, nielimitowana kolejka. Wybór głosu mapuje na płeć (męski/żeński PL).</p>
             </div>
             </div>
         </section>
@@ -474,7 +474,7 @@
                     <i data-lucide="chevron-down" class="faq-chevron" :class="open && 'rotate'"></i>
                 </button>
                 <div class="faq-a" x-show="open" x-collapse>
-                    <p>Dla Oddcast, Microsoft i StreamElements: pitch od -10 do +10. Dla Google Cloud: osobny pitch 0.01–0.99 (domyślnie 0.50 = neutralny). Microsoft i Google używają natywnego pitch w API; Oddcast/SE emulują ton przez Web Audio.</p>
+                    <p>Dla Oddcast, Microsoft i StreamElements: pitch od -10 do +10. Dla Google: osobny pitch 0.01–0.99 (domyślnie 0.50) przez Speech v2. Oddcast/SE emulują ton przez Web Audio.</p>
                 </div>
             </div>
 
@@ -504,7 +504,7 @@
                     <i data-lucide="chevron-down" class="faq-chevron" :class="open && 'rotate'"></i>
                 </button>
                 <div class="faq-a" x-show="open" x-collapse>
-                    <p>Domyślnie nie — linki są ignorowane, emotki usuwane. Możesz włączyć czytanie linków (jako słowo LINK) i nazw emotek w opcjach generatora.</p>
+                    <p>Linki domyślnie ignorowane (można włączyć czytanie jako LINK). Emoji systemowe i emotki Kick są zawsze usuwane — TTS ich nie czyta.</p>
                 </div>
             </div>
         </section>
@@ -521,7 +521,7 @@
                     <tr><td><code>volume</code></td><td><span class="param-type">opcjonalne</span></td><td>Głośność 0–100</td><td class="param-default">80</td></tr>
                     <tr><td><code>readnick</code></td><td><span class="param-type">opcjonalne</span></td><td>Czytaj nick przed wiadomością: on/off</td><td class="param-default">off</td></tr>
                     <tr><td><code>readlinks</code></td><td><span class="param-type">opcjonalne</span></td><td>Czytaj linki jako LINK: on/off</td><td class="param-default">off</td></tr>
-                    <tr><td><code>reademotes</code></td><td><span class="param-type">opcjonalne</span></td><td>Czytaj nazwy emotek: on/off</td><td class="param-default">off</td></tr>
+                    <tr><td><code>reademotes</code></td><td><span class="param-type">legacy</span></td><td>Nieużywane — emotki zawsze usuwane</td><td class="param-default">—</td></tr>
                     <tr><td><code>anyone</code></td><td><span class="param-type">uprawnienia</span></td><td>Pozwól każdemu: on</td><td class="param-default">off</td></tr>
                     <tr><td><code>follower</code></td><td><span class="param-type">uprawnienia</span></td><td>Pozwól obserwującym: on</td><td class="param-default">off</td></tr>
                     <tr><td><code>moderator</code></td><td><span class="param-type">uprawnienia</span></td><td>Pozwól moderatorom: on</td><td class="param-default">on</td></tr>
@@ -543,7 +543,7 @@
                 <li class="feature-li">Regulacja prędkości -3 do +3 dla Oddcast, Microsoft i Google Cloud</li>
                 <li class="feature-li">Pitch Google Cloud 0.01–0.99 (domyślnie 0.50)</li>
                 <li class="feature-li">Regulacja tonu -10 do +10 dla Oddcast, Microsoft i StreamElements</li>
-                <li class="feature-li">Czytanie nicku, linków i emotek — opcjonalne</li>
+                <li class="feature-li">Czytanie nicku i linków — opcjonalne; emoji i emotki zawsze filtrowane</li>
                 <li class="feature-li">Kontrola uprawnień: Każdy, Follower, Mod, OG, Sub, VIP</li>
                 <li class="feature-li">Wymaganie prefiksu !tts — konfigurowalne</li>
                 <li class="feature-li">Anti-spam: filtry znaków specjalnych, liczb i powtórzeń liter</li>
@@ -627,19 +627,30 @@
         return clampGooglePitch(pitchValue).toFixed(2);
     }
 
-    function mapGooglePitchToSemitones(pitchValue) {
-        const pitch = clampGooglePitch(pitchValue);
-        return ((pitch - GOOGLE_PITCH_DEFAULT) / (GOOGLE_PITCH_MAX - GOOGLE_PITCH_DEFAULT)) * 20;
-    }
-
     function clampSpeed(speedValue) {
         const parsed = parseInt(speedValue, 10);
         if (Number.isNaN(parsed)) return 0;
         return Math.max(-3, Math.min(3, parsed));
     }
 
-    function mapSpeedToGoogleSpeakingRate(speedValue) {
-        return Math.max(0.25, Math.min(4, Math.pow(2, clampSpeed(speedValue) / 3)));
+    function mapSpeedToGoogleV2(speedValue) {
+        return Math.max(0, Math.min(1, 0.5 - (clampSpeed(speedValue) / 6)));
+    }
+
+    const GOOGLE_V2_FEMALE_NAMES = [
+        'Sulafat', 'Vindemiatrix', 'Zephyr', 'Achernar', 'Aoede', 'Autonoe', 'Callirrhoe',
+        'Despina', 'Erinome', 'Gacrux', 'Kore', 'Laomedeia', 'Leda', 'Pulcherrima'
+    ];
+
+    function getGoogleV2Gender(voiceName) {
+        if (!voiceName) return 'female';
+        if (voiceName.endsWith('-F') || voiceName.includes('Wavenet-F') || voiceName.includes('Standard-F')) {
+            return 'female';
+        }
+        if (voiceName.endsWith('-G') || voiceName.includes('Wavenet-G') || voiceName.includes('Standard-G')) {
+            return 'male';
+        }
+        return GOOGLE_V2_FEMALE_NAMES.some(name => voiceName.includes(name)) ? 'female' : 'male';
     }
 
     function isGoogleVoice(voiceName) {
@@ -667,8 +678,26 @@
         return voices['Zosia'];
     }
 
+    function stripUnicodeEmojis(text) {
+        if (!text) return '';
+        try {
+            return text
+                .replace(/(?:\p{Regional_Indicator}\p{Regional_Indicator})/gu, ' ')
+                .replace(/(?:\p{Extended_Pictographic}|\p{Emoji_Presentation})(?:[\uFE0F\uFE0E]|\u200D(?:\p{Extended_Pictographic}|\p{Emoji_Presentation}|[\u2640\u2642]\uFE0F?))*/gu, ' ')
+                .replace(/\p{Extended_Pictographic}/gu, ' ')
+                .replace(/\p{Emoji_Presentation}/gu, ' ')
+                .replace(/[\u{1F3FB}-\u{1F3FF}\u{1F9B0}-\u{1F9B3}]/gu, ' ');
+        } catch (e) {
+            return text.replace(/(?:[\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|\uD83E[\uDD00-\uDDFF])/g, ' ');
+        }
+    }
+
+    function stripKickEmotes(text) {
+        return (text || '').replace(/\[emote:\d+:\w+\]/g, ' ');
+    }
+
     function applyTextFilters(text, options) {
-        let result = text || '';
+        let result = stripUnicodeEmojis(stripKickEmotes(text || ''));
         if (options.stripspecial) {
             result = result.replace(/[*^~`|#@$%&<>{}[\]\\/+=_]+/g, ' ');
         }
@@ -1091,7 +1120,93 @@
             });
         }
 
-        return { setupUnlockUI, unlock: unlockFromGesture, playUrl, speakWebSpeech, stopPlayback, isUnlocked: () => unlocked };
+        async function playReadyAudio(a, volumeLevel) {
+            if (!unlocked) await autoUnlock();
+            const vol = Math.max(0, Math.min(1, volumeLevel / 100));
+            const ctx = getContext();
+            stopPlayback();
+            if (ctx && ctx.state === 'suspended') {
+                try { await ctx.resume(); markUnlocked(); } catch (e) {}
+            }
+
+            a.onended = null;
+            a.onerror = null;
+            a.volume = vol;
+            a.currentTime = 0;
+            currentAudio = a;
+
+            try {
+                await a.play();
+                markUnlocked();
+            } catch (err) {
+                console.warn('[TTS] prefetched play blocked:', err.message);
+                currentAudio = null;
+                return false;
+            }
+
+            return new Promise(resolve => {
+                activePlayback = { resolve };
+                a.onended = () => { currentAudio = null; settlePlayback(true); };
+                a.onerror = () => { currentAudio = null; settlePlayback(false); };
+            });
+        }
+
+        return { setupUnlockUI, unlock: unlockFromGesture, playUrl, playReadyAudio, speakWebSpeech, stopPlayback, isUnlocked: () => unlocked };
+    })();
+
+    const GOOGLE_V2_CHUNK_SIZE = 400;
+
+    const GoogleV2Prefetch = (function() {
+        const cache = new Map();
+
+        function prefetch(url) {
+            if (cache.has(url)) return cache.get(url);
+
+            const promise = new Promise((resolve, reject) => {
+                const audio = new Audio();
+                audio.preload = 'auto';
+                audio.setAttribute('playsinline', 'true');
+                audio.setAttribute('webkit-playsinline', 'true');
+
+                let settled = false;
+                const finish = (ok, value) => {
+                    if (settled) return;
+                    settled = true;
+                    clearTimeout(timer);
+                    audio.oncanplaythrough = null;
+                    audio.onloadeddata = null;
+                    audio.onerror = null;
+                    if (ok) resolve(value);
+                    else {
+                        cache.delete(url);
+                        reject(value);
+                    }
+                };
+
+                audio.oncanplaythrough = () => finish(true, audio);
+                audio.onloadeddata = () => {
+                    if (audio.readyState >= 3) finish(true, audio);
+                };
+                audio.onerror = () => finish(false, new Error('Google v2 prefetch failed'));
+
+                const timer = setTimeout(() => {
+                    if (audio.readyState >= 2) finish(true, audio);
+                    else finish(false, new Error('Google v2 prefetch timeout'));
+                }, 15000);
+
+                audio.src = url;
+                audio.load();
+            });
+
+            cache.set(url, promise);
+            return promise;
+        }
+
+        async function prefetchAll(urls) {
+            return Promise.all(urls.map(url => prefetch(url).catch(() => null)));
+        }
+
+        return { prefetch, prefetchAll };
     })();
 
     function parseKickChannel(raw) {
@@ -1220,7 +1335,7 @@
         if (v.volume !== '80') url += '&volume=' + v.volume;
         if (v.readnick) url += '&readnick=on';
         if (v.readlinks) url += '&readlinks=on';
-        if (v.reademotes) url += '&reademotes=on';
+
         if (v.anyone) url += '&anyone=on';
         if (v.follower) url += '&follower=on';
         if (v.moderator) url += '&moderator=on';
@@ -1269,7 +1384,7 @@
 
     const STREAMELEMENTS_SPEECH_KEY = '1fWQVbDjk8esigWnsUOIT41hBM-EDeKlorLbWFy3vGiAmvwh';
     const GOOGLE_TTS_KEY = 'AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw';
-    const GOOGLE_TTS_ENDPOINT = 'https://texttospeech.googleapis.com/v1/text:synthesize?key=' + GOOGLE_TTS_KEY;
+    const GOOGLE_SPEECH_V2_BASE = 'https://www.google.com/speech-api/v2/synthesize';
 
     function buildStreamElementsSpeechUrl(voice, text) {
         return 'https://api.streamelements.com/kappa/v2/speech'
@@ -1278,30 +1393,19 @@
             + '&key=' + STREAMELEMENTS_SPEECH_KEY;
     }
 
-    async function synthesizeGoogleCloudTTS(text, voiceName, pitchValue, speedValue) {
-        const audioConfig = {
-            audioEncoding: 'MP3',
-            pitch: mapGooglePitchToSemitones(pitchValue)
-        };
-        const speakingRate = mapSpeedToGoogleSpeakingRate(speedValue);
-        if (speakingRate !== 1) audioConfig.speakingRate = speakingRate;
-
-        const response = await fetch(GOOGLE_TTS_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                input: { text },
-                voice: { languageCode: 'pl-PL', name: voiceName },
-                audioConfig
-            })
+    function buildGoogleSpeechV2Url(text, voiceName, pitchValue, speedValue) {
+        const params = new URLSearchParams({
+            key: GOOGLE_TTS_KEY,
+            enc: 'mpeg',
+            client: 'chromium',
+            lang: 'pl-PL',
+            text: text,
+            speed: mapSpeedToGoogleV2(speedValue).toFixed(2),
+            pitch: formatGooglePitch(pitchValue),
+            rate: '48000',
+            gender: getGoogleV2Gender(voiceName)
         });
-        if (!response.ok) {
-            const err = await response.json().catch(() => ({}));
-            throw new Error(err.error?.message || ('Google TTS HTTP ' + response.status));
-        }
-        const data = await response.json();
-        if (!data.audioContent) throw new Error('Google TTS: brak audioContent');
-        return 'data:audio/mpeg;base64,' + data.audioContent;
+        return GOOGLE_SPEECH_V2_BASE + '?' + params.toString();
     }
 
     const hasChannel = urlParams.has('channel');
@@ -1364,7 +1468,7 @@
         const ignorenumbers = urlParams.get('ignorenumbers') === 'on';
         const ignorerepeat = urlParams.get('ignorerepeat') === 'on';
 
-        console.log('TTS Config:', { kick, voiceName, speed, pitch, googlePitch, volume, readnick, readlinks, reademotes, anyone, follower, moderator, og, subscriber, vip, pretext, stripspecial, ignorenumbers, ignorerepeat });
+        console.log('TTS Config:', { kick, voiceName, speed, pitch, googlePitch, googleV2Gender: isGoogle ? getGoogleV2Gender(voiceName) : null, volume, readnick, readlinks, reademotes, anyone, follower, moderator, og, subscriber, vip, pretext, stripspecial, ignorenumbers, ignorerepeat });
 
         const badgesConfig = {
             'moderator': moderator,
@@ -1432,22 +1536,56 @@
             }
         }
 
-        async function playGoogleCloudTTS(text, voice, volumeLevel, pitchGoogleValue, speedValue) {
-            const chunks = splitTextIntoChunks(text, 450);
-            for (const chunk of chunks) {
+        function buildGoogleV2ChunkUrls(text, voice, pitchGoogleValue, speedValue) {
+            return splitTextIntoChunks(text, GOOGLE_V2_CHUNK_SIZE)
+                .map(chunk => buildGoogleSpeechV2Url(chunk, voice, pitchGoogleValue, speedValue));
+        }
+
+        function scheduleGoogleV2Prefetch(message) {
+            if (selectedVoice.type !== 'google' || message._v2Prefetch) return;
+            message._v2Urls = buildGoogleV2ChunkUrls(
+                message.text.replace(/%/g, 'percent'),
+                selectedVoice.voice,
+                googlePitch,
+                message.speed
+            );
+            message._v2Prefetch = GoogleV2Prefetch.prefetchAll(message._v2Urls);
+        }
+
+        async function playGoogleCloudTTS(text, voice, volumeLevel, pitchGoogleValue, speedValue, prefetchBundle) {
+            const urls = prefetchBundle && prefetchBundle._v2Urls
+                ? prefetchBundle._v2Urls
+                : buildGoogleV2ChunkUrls(text, voice, pitchGoogleValue, speedValue);
+
+            let readyAudios = null;
+            if (prefetchBundle && prefetchBundle._v2Prefetch) {
+                try { readyAudios = await prefetchBundle._v2Prefetch; } catch (e) {}
+            }
+            if (!readyAudios || readyAudios.length !== urls.length) {
+                readyAudios = await GoogleV2Prefetch.prefetchAll(urls);
+            }
+
+            for (let i = 0; i < urls.length; i++) {
                 if (skipRequested) return;
-                const audioUrl = await synthesizeGoogleCloudTTS(chunk, voice, pitchGoogleValue, speedValue);
+                const ready = readyAudios[i];
+                if (ready) {
+                    const ok = await TtsAudioEngine.playReadyAudio(ready, volumeLevel);
+                    if (!ok && !skipRequested) {
+                        await TtsAudioEngine.playUrl(urls[i], volumeLevel, 0);
+                    }
+                } else if (!skipRequested) {
+                    await TtsAudioEngine.playUrl(urls[i], volumeLevel, 0);
+                }
                 if (skipRequested) return;
-                await TtsAudioEngine.playUrl(audioUrl, volumeLevel, 0);
-                if (skipRequested) return;
+                if (urls[i + 1]) GoogleV2Prefetch.prefetch(urls[i + 1]);
             }
         }
 
-        async function playTTSSingle(text, volumeLevel, speedValue, pitchValue) {
+        async function playTTSSingle(text, volumeLevel, speedValue, pitchValue, prefetchBundle) {
             const cleanText = text.replace(/%/g, 'percent');
             try {
                 if (selectedVoice.type === 'google') {
-                    await playGoogleCloudTTS(cleanText, selectedVoice.voice, volumeLevel, googlePitch, speedValue);
+                    await playGoogleCloudTTS(cleanText, selectedVoice.voice, volumeLevel, googlePitch, speedValue, prefetchBundle);
                 } else if (selectedVoice.type === 'streamelements') {
                     await playStreamElementsTTS(cleanText, selectedVoice.voice, volumeLevel, pitchValue);
                 } else if (selectedVoice.type === 'webspeech') {
@@ -1483,8 +1621,12 @@
                 while (messageQueue.length > 0) {
                     skipRequested = false;
                     const message = messageQueue.shift();
-                    try { await playTTSSingle(message.text, message.volume, message.speed, message.pitch); }
-                    catch (error) { console.error('Error playing TTS:', error); }
+                    if (selectedVoice.type === 'google' && messageQueue.length > 0) {
+                        scheduleGoogleV2Prefetch(messageQueue[0]);
+                    }
+                    try {
+                        await playTTSSingle(message.text, message.volume, message.speed, message.pitch, message);
+                    } catch (error) { console.error('Error playing TTS:', error); }
                 }
             } finally {
                 isProcessingQueue = false;
@@ -1493,7 +1635,11 @@
         }
 
         function addToQueue(text, volumeLevel, speedValue, pitchValue) {
-            messageQueue.push({ text, volume: volumeLevel, speed: speedValue, pitch: pitchValue });
+            const message = { text, volume: volumeLevel, speed: speedValue, pitch: pitchValue };
+            messageQueue.push(message);
+            if (selectedVoice.type === 'google') {
+                messageQueue.forEach(scheduleGoogleV2Prefetch);
+            }
             processQueue();
         }
 
@@ -1687,10 +1833,6 @@
                 }
 
                 textToSpeak = textToSpeak.trim();
-                textToSpeak = reademotes
-                    ? textToSpeak.replace(/\[emote:\d+:(\w+)\]/g, '$1')
-                    : textToSpeak.replace(/\[emote:\d+:\w+\]/g, '');
-                textToSpeak = textToSpeak.replace(/\s+/g, ' ').trim();
                 textToSpeak = applyTextFilters(textToSpeak, { stripspecial, ignorenumbers, ignorerepeat });
                 textToSpeak = textToSpeak.toLocaleLowerCase('pl-PL');
 
