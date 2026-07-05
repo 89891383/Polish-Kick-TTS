@@ -805,7 +805,15 @@
         let currentAudio = null;
         let currentSource = null;
         let currentUtterance = null;
+        let activePlayback = null;
         const SILENT_MP3 = 'data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4LjIwLjEwMAAAAAAAAAAAAAAA//tUxAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAACAAABIADAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV6urq6urq6urq6urq6urq6urq6urq6urq6v////////////////////////////////8AAAAATGF2YzU4LjM1AAAAAAAAAAAAAAAAJAAAAAAAAAAAASDs90hvAAAAAAAAAAAAAAAAAAAA';
+
+        function settlePlayback(ok) {
+            if (!activePlayback) return;
+            const resolve = activePlayback.resolve;
+            activePlayback = null;
+            resolve(ok);
+        }
 
         function getContext() {
             if (!audioContext) {
@@ -940,6 +948,8 @@
             try { if (currentSource) { currentSource.stop(); currentSource.disconnect(); } } catch (e) {}
             currentSource = null;
             if (currentAudio) {
+                currentAudio.onended = null;
+                currentAudio.onerror = null;
                 currentAudio.pause();
                 currentAudio.currentTime = 0;
                 currentAudio.removeAttribute('src');
@@ -948,6 +958,7 @@
             currentAudio = null;
             currentUtterance = null;
             if (window.speechSynthesis) window.speechSynthesis.cancel();
+            settlePlayback(false);
         }
 
         async function playUrlWithWebAudio(url, vol, pitchValue) {
@@ -967,7 +978,8 @@
             currentSource = source;
             source.start(0);
             return new Promise(resolve => {
-                source.onended = () => { currentSource = null; resolve(true); };
+                activePlayback = { resolve };
+                source.onended = () => { currentSource = null; settlePlayback(true); };
             });
         }
 
@@ -1009,8 +1021,9 @@
             }
 
             return new Promise(resolve => {
-                a.onended = () => { currentAudio = null; resolve(true); };
-                a.onerror = () => { currentAudio = null; resolve(false); };
+                activePlayback = { resolve };
+                a.onended = () => { currentAudio = null; settlePlayback(true); };
+                a.onerror = () => { currentAudio = null; settlePlayback(false); };
             });
         }
 
@@ -1027,9 +1040,12 @@
                 const finish = (ok) => {
                     if (settled) return;
                     settled = true;
+                    activePlayback = null;
                     if (!ok) currentUtterance = null;
                     resolve(ok);
                 };
+
+                activePlayback = { resolve: (ok) => finish(ok) };
 
                 utterance.onstart = () => { markUnlocked(); };
                 utterance.onend = () => { currentUtterance = null; finish(true); };
@@ -1351,6 +1367,7 @@
 
         const messageQueue = [];
         let isProcessingQueue = false;
+        let skipRequested = false;
         let speechSynthesis = window.speechSynthesis;
 
         if (selectedVoice.type === 'webspeech') {
@@ -1394,15 +1411,20 @@
         async function playStreamElementsTTS(text, voice, volumeLevel, pitchValue) {
             const chunks = splitTextIntoChunks(text, 500);
             for (const chunk of chunks) {
+                if (skipRequested) return;
                 await TtsAudioEngine.playUrl(buildStreamElementsSpeechUrl(voice, chunk), volumeLevel, pitchValue);
+                if (skipRequested) return;
             }
         }
 
         async function playGoogleCloudTTS(text, voice, volumeLevel, pitchGoogleValue) {
             const chunks = splitTextIntoChunks(text, 450);
             for (const chunk of chunks) {
+                if (skipRequested) return;
                 const audioUrl = await synthesizeGoogleCloudTTS(chunk, voice, pitchGoogleValue);
+                if (skipRequested) return;
                 await TtsAudioEngine.playUrl(audioUrl, volumeLevel, 0);
+                if (skipRequested) return;
             }
         }
 
@@ -1442,20 +1464,26 @@
         async function processQueue() {
             if (isProcessingQueue) return;
             isProcessingQueue = true;
-            while (messageQueue.length > 0) {
-                const message = messageQueue.shift();
-                try { await playTTSSingle(message.text, message.volume, message.speed, message.pitch); }
-                catch (error) { console.error('Error playing TTS:', error); }
+            try {
+                while (messageQueue.length > 0) {
+                    skipRequested = false;
+                    const message = messageQueue.shift();
+                    try { await playTTSSingle(message.text, message.volume, message.speed, message.pitch); }
+                    catch (error) { console.error('Error playing TTS:', error); }
+                }
+            } finally {
+                isProcessingQueue = false;
+                if (messageQueue.length > 0) processQueue();
             }
-            isProcessingQueue = false;
         }
 
         function addToQueue(text, volumeLevel, speedValue, pitchValue) {
             messageQueue.push({ text, volume: volumeLevel, speed: speedValue, pitch: pitchValue });
-            if (!isProcessingQueue) processQueue();
+            processQueue();
         }
 
         function skipCurrentTTS() {
+            skipRequested = true;
             TtsAudioEngine.stopPlayback();
         }
 
@@ -1649,6 +1677,7 @@
                     : textToSpeak.replace(/\[emote:\d+:\w+\]/g, '');
                 textToSpeak = textToSpeak.replace(/\s+/g, ' ').trim();
                 textToSpeak = applyTextFilters(textToSpeak, { stripspecial, ignorenumbers, ignorerepeat });
+                textToSpeak = textToSpeak.toLocaleLowerCase('pl-PL');
 
                 if (textToSpeak.length === 0) return;
                 if (readnick) textToSpeak = username + ' mówi: ' + textToSpeak;
