@@ -256,7 +256,7 @@
                         <input type="range" id="speed" class="flex-1 h-1 rounded" min="-3" max="3" value="0" step="1">
                         <div class="range-val" id="speed-display">0</div>
                     </div>
-                    <p class="text-kick-muted text-xs font-medium mt-2">Ujemne = szybciej, dodatnie = wolniej. Oddcast i Microsoft. Google Cloud i StreamElements bez speed.</p>
+                    <p class="text-kick-muted text-xs font-medium mt-2">Ujemne = szybciej, dodatnie = wolniej. Oddcast, Microsoft i Google Cloud. StreamElements bez speed.</p>
                 </div>
 
                 <div class="md:col-span-2" id="pitch-group">
@@ -358,7 +358,7 @@
                     <span class="badge badge-google">Google Cloud</span>
                     <span class="engine-count">34 głosów PL</span>
                 </div>
-                <p class="engine-desc">Chirp3 HD, Wavenet i Standard. Najwyższa jakość z natywnym pitch 0.01–0.99 (domyślnie 0.50).</p>
+                <p class="engine-desc">Chirp3 HD, Wavenet i Standard. Najwyższa jakość z regulacją prędkości i pitch 0.01–0.99 (domyślnie 0.50).</p>
             </div>
             </div>
         </section>
@@ -464,7 +464,7 @@
                     <i data-lucide="chevron-down" class="faq-chevron" :class="open && 'rotate'"></i>
                 </button>
                 <div class="faq-a" x-show="open" x-collapse>
-                    <p>Parametr speed (-3 do +3) działa dla Oddcast i Microsoft. Google Cloud i StreamElements nie obsługują zmiany prędkości.</p>
+                    <p>Parametr speed (-3 do +3) działa dla Oddcast, Microsoft i Google Cloud. StreamElements nie obsługuje zmiany prędkości.</p>
                 </div>
             </div>
 
@@ -516,7 +516,7 @@
                 <tbody>
                     <tr><td><code>channel</code></td><td><span class="param-type">wymagane</span></td><td>Nazwa kanału Kick.com</td><td class="param-default">twoj_nick</td></tr>
                     <tr><td><code>voice</code></td><td><span class="param-type">opcjonalne</span></td><td>Zosia, pl-PL-Chirp3-HD-Schedar, SE-WavenetA…</td><td class="param-default">Zosia</td></tr>
-                    <tr><td><code>speed</code></td><td><span class="param-type">opcjonalne</span></td><td>Od -3 (szybciej) do +3 (wolniej). Tylko Oddcast/Microsoft</td><td class="param-default">0</td></tr>
+                    <tr><td><code>speed</code></td><td><span class="param-type">opcjonalne</span></td><td>Od -3 (szybciej) do +3 (wolniej). Oddcast, Microsoft, Google Cloud</td><td class="param-default">0</td></tr>
                     <tr><td><code>pitch</code></td><td><span class="param-type">opcjonalne</span></td><td>Oddcast/MS/SE: -10 do +10. Google Cloud: 0.01–0.99</td><td class="param-default">0 / 0.50</td></tr>
                     <tr><td><code>volume</code></td><td><span class="param-type">opcjonalne</span></td><td>Głośność 0–100</td><td class="param-default">80</td></tr>
                     <tr><td><code>readnick</code></td><td><span class="param-type">opcjonalne</span></td><td>Czytaj nick przed wiadomością: on/off</td><td class="param-default">off</td></tr>
@@ -540,7 +540,7 @@
             <h2 class="section-title"><span class="section-icon"><i data-lucide="zap"></i></span> Funkcje</h2>
             <ul>
                 <li class="feature-li">47 polskich głosów — Oddcast, Microsoft, StreamElements, Google Cloud</li>
-                <li class="feature-li">Regulacja prędkości -3 do +3 dla Oddcast i Microsoft</li>
+                <li class="feature-li">Regulacja prędkości -3 do +3 dla Oddcast, Microsoft i Google Cloud</li>
                 <li class="feature-li">Pitch Google Cloud 0.01–0.99 (domyślnie 0.50)</li>
                 <li class="feature-li">Regulacja tonu -10 do +10 dla Oddcast, Microsoft i StreamElements</li>
                 <li class="feature-li">Czytanie nicku, linków i emotek — opcjonalne</li>
@@ -630,6 +630,16 @@
     function mapGooglePitchToSemitones(pitchValue) {
         const pitch = clampGooglePitch(pitchValue);
         return ((pitch - GOOGLE_PITCH_DEFAULT) / (GOOGLE_PITCH_MAX - GOOGLE_PITCH_DEFAULT)) * 20;
+    }
+
+    function clampSpeed(speedValue) {
+        const parsed = parseInt(speedValue, 10);
+        if (Number.isNaN(parsed)) return 0;
+        return Math.max(-3, Math.min(3, parsed));
+    }
+
+    function mapSpeedToGoogleSpeakingRate(speedValue) {
+        return Math.max(0.25, Math.min(4, Math.pow(2, clampSpeed(speedValue) / 3)));
     }
 
     function isGoogleVoice(voiceName) {
@@ -1120,7 +1130,7 @@
     function handleVoiceChange() {
         const voice = document.getElementById('voice').value;
         const isGoogle = isGoogleVoice(voice);
-        const hideSpeed = voice.startsWith('SE-') || isGoogle;
+        const hideSpeed = voice.startsWith('SE-');
         const speedGroup = document.getElementById('speed-group');
         const pitchGroup = document.getElementById('pitch-group');
         const pitchGoogleGroup = document.getElementById('pitch-google-group');
@@ -1202,6 +1212,7 @@
         if (isGoogleVoice(v.voice)) {
             const gp = formatGooglePitch(v.pitchGoogle);
             if (gp !== formatGooglePitch(GOOGLE_PITCH_DEFAULT)) url += '&pitch=' + gp;
+            if (v.speed !== '0') url += '&speed=' + v.speed;
         } else {
             if (v.speed !== '0' && !v.voice.startsWith('SE-')) url += '&speed=' + v.speed;
             if (v.pitch !== '0') url += '&pitch=' + v.pitch;
@@ -1267,17 +1278,21 @@
             + '&key=' + STREAMELEMENTS_SPEECH_KEY;
     }
 
-    async function synthesizeGoogleCloudTTS(text, voiceName, pitchValue) {
+    async function synthesizeGoogleCloudTTS(text, voiceName, pitchValue, speedValue) {
+        const audioConfig = {
+            audioEncoding: 'MP3',
+            pitch: mapGooglePitchToSemitones(pitchValue)
+        };
+        const speakingRate = mapSpeedToGoogleSpeakingRate(speedValue);
+        if (speakingRate !== 1) audioConfig.speakingRate = speakingRate;
+
         const response = await fetch(GOOGLE_TTS_ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 input: { text },
                 voice: { languageCode: 'pl-PL', name: voiceName },
-                audioConfig: {
-                    audioEncoding: 'MP3',
-                    pitch: mapGooglePitchToSemitones(pitchValue)
-                }
+                audioConfig
             })
         });
         if (!response.ok) {
@@ -1332,7 +1347,7 @@
 
         const volume = parseInt(urlParams.get('volume')) || 80;
         const isGoogle = selectedVoice.type === 'google';
-        const speed = (selectedVoice.type === 'streamelements' || isGoogle) ? 0 : (parseInt(urlParams.get('speed')) || 0);
+        const speed = selectedVoice.type === 'streamelements' ? 0 : clampSpeed(urlParams.get('speed') || 0);
         const pitch = isGoogle ? 0 : clampPitch(parseInt(urlParams.get('pitch')) || 0);
         const googlePitch = isGoogle ? clampGooglePitch(urlParams.get('pitch') || GOOGLE_PITCH_DEFAULT) : GOOGLE_PITCH_DEFAULT;
         const readnick = urlParams.get('readnick') === 'on';
@@ -1417,11 +1432,11 @@
             }
         }
 
-        async function playGoogleCloudTTS(text, voice, volumeLevel, pitchGoogleValue) {
+        async function playGoogleCloudTTS(text, voice, volumeLevel, pitchGoogleValue, speedValue) {
             const chunks = splitTextIntoChunks(text, 450);
             for (const chunk of chunks) {
                 if (skipRequested) return;
-                const audioUrl = await synthesizeGoogleCloudTTS(chunk, voice, pitchGoogleValue);
+                const audioUrl = await synthesizeGoogleCloudTTS(chunk, voice, pitchGoogleValue, speedValue);
                 if (skipRequested) return;
                 await TtsAudioEngine.playUrl(audioUrl, volumeLevel, 0);
                 if (skipRequested) return;
@@ -1432,7 +1447,7 @@
             const cleanText = text.replace(/%/g, 'percent');
             try {
                 if (selectedVoice.type === 'google') {
-                    await playGoogleCloudTTS(cleanText, selectedVoice.voice, volumeLevel, googlePitch);
+                    await playGoogleCloudTTS(cleanText, selectedVoice.voice, volumeLevel, googlePitch, speedValue);
                 } else if (selectedVoice.type === 'streamelements') {
                     await playStreamElementsTTS(cleanText, selectedVoice.voice, volumeLevel, pitchValue);
                 } else if (selectedVoice.type === 'webspeech') {
