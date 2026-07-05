@@ -256,7 +256,7 @@
                         <input type="range" id="speed" class="flex-1 h-1 rounded" min="-3" max="3" value="0" step="1">
                         <div class="range-val" id="speed-display">0</div>
                     </div>
-                    <p class="text-kick-muted text-xs font-medium mt-2">Ujemne = szybciej, dodatnie = wolniej. Google v2 (Wavenet/Standard): tylko -1 do +1. Chirp v1, Oddcast i Microsoft: -3 do +3. StreamElements bez speed.</p>
+                    <p class="text-kick-muted text-xs font-medium mt-2">Oddcast, Chirp v1 i Microsoft: ujemne = szybciej, dodatnie = wolniej (-3 do +3). Google v2 (Wavenet/Standard): +1 szybciej, -1 wolniej (tylko -1 do +1). StreamElements bez speed.</p>
                 </div>
 
                 <div class="md:col-span-2" id="pitch-group">
@@ -474,7 +474,7 @@
                     <i data-lucide="chevron-down" class="faq-chevron" :class="open && 'rotate'"></i>
                 </button>
                 <div class="faq-a" x-show="open" x-collapse>
-                    <p>Parametr speed (-3 do +3) działa dla Oddcast, Microsoft i Chirp3 HD (v1). Google v2 (Wavenet/Standard): tylko -1 do +1. StreamElements nie obsługuje zmiany prędkości.</p>
+                    <p>Parametr speed (-3 do +3) dla Oddcast, Microsoft i Chirp3 HD (v1): ujemne = szybciej. Google v2 (Wavenet/Standard): +1 szybciej, -1 wolniej (zakres -1 do +1). StreamElements bez speed.</p>
                 </div>
             </div>
 
@@ -526,7 +526,7 @@
                 <tbody>
                     <tr><td><code>channel</code></td><td><span class="param-type">wymagane</span></td><td>Nazwa kanału Kick.com</td><td class="param-default">twoj_nick</td></tr>
                     <tr><td><code>voice</code></td><td><span class="param-type">opcjonalne</span></td><td>Zosia, pl-PL-Chirp3-HD-Schedar, SE-WavenetA…</td><td class="param-default">Zosia</td></tr>
-                    <tr><td><code>speed</code></td><td><span class="param-type">opcjonalne</span></td><td>Od -3 (szybciej) do +3 (wolniej). Google v2: tylko -1 do +1</td><td class="param-default">0</td></tr>
+                    <tr><td><code>speed</code></td><td><span class="param-type">opcjonalne</span></td><td>Oddcast/Chirp: -3 szybciej do +3 wolniej. Google v2: -1 wolniej do +1 szybciej</td><td class="param-default">0</td></tr>
                     <tr><td><code>pitch</code></td><td><span class="param-type">opcjonalne</span></td><td>Oddcast/MS/SE/Chirp v1: -10 do +10. Wavenet/Standard v2: 0.01–0.99</td><td class="param-default">0 / 0.50</td></tr>
                     <tr><td><code>volume</code></td><td><span class="param-type">opcjonalne</span></td><td>Głośność 0–100</td><td class="param-default">80</td></tr>
                     <tr><td><code>readnick</code></td><td><span class="param-type">opcjonalne</span></td><td>Czytaj nick przed wiadomością: on/off</td><td class="param-default">off</td></tr>
@@ -551,7 +551,7 @@
             <ul>
                 <li class="feature-li">47 polskich głosów — Oddcast, Microsoft, StreamElements, Google Cloud</li>
                 <li class="feature-li">Google Wavenet/Standard (v2, zalecane) + Chirp3 HD (v1, limity API)</li>
-                <li class="feature-li">Regulacja prędkości: Google v2 tylko -1 do +1; Chirp v1 i reszta -3 do +3</li>
+                <li class="feature-li">Regulacja prędkości: Google v2 (+1 szybciej, -1 wolniej); Chirp i reszta (-3 do +3)</li>
                 <li class="feature-li">Pitch v2: 0.01–0.99; Chirp v1 i reszta: -10 do +10</li>
                 <li class="feature-li">Czytanie nicku i linków — opcjonalne; filtr „Bez emotek” domyślnie włączony</li>
                 <li class="feature-li">Kontrola uprawnień: Każdy, Follower, Mod, OG, Sub, VIP</li>
@@ -654,8 +654,8 @@
     function mapSpeedToGoogleV2(speedValue) {
         const s = clampSpeedForGoogleV2(speedValue);
         if (s === 0) return 0.5;
-        if (s < 0) return 0.58;
-        return Math.max(0, 0.5 - (s / 8));
+        if (s > 0) return 0.58;
+        return 0.42;
     }
 
     function mapSpeedToGoogleSpeakingRate(speedValue) {
