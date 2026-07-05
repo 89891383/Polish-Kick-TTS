@@ -282,7 +282,7 @@
                     <div class="flex flex-col gap-2">
                         <div class="check-item" id="wrap-readnick"><input type="checkbox" id="readnick" onchange="toggleCheckbox(this)"><label for="readnick">Czytaj nick przed wiadomością</label></div>
                         <div class="check-item" id="wrap-readlinks"><input type="checkbox" id="readlinks" onchange="toggleCheckbox(this)"><label for="readlinks">Czytaj linki jako LINK</label></div>
-                        <div class="check-item on" id="wrap-reademotes" style="opacity:.7;pointer-events:none" title="Emoji i emotki Kick są zawsze usuwane przed TTS"><input type="checkbox" id="reademotes" checked disabled><label for="reademotes">Bez emotek (emoji + Kick — zawsze)</label></div>
+                        <div class="check-item on" id="wrap-noemotes"><input type="checkbox" id="noemotes" checked onchange="toggleCheckbox(this)"><label for="noemotes">Bez emotek (emoji + Kick)</label></div>
                     </div>
                 </div>
 
@@ -504,7 +504,7 @@
                     <i data-lucide="chevron-down" class="faq-chevron" :class="open && 'rotate'"></i>
                 </button>
                 <div class="faq-a" x-show="open" x-collapse>
-                    <p>Linki domyślnie ignorowane (można włączyć czytanie jako LINK). Emoji systemowe i emotki Kick są zawsze usuwane — TTS ich nie czyta.</p>
+                    <p>Linki domyślnie ignorowane (można włączyć czytanie jako LINK). Opcja „Bez emotek” domyślnie włączona — usuwa emoji i emotki Kick. Wyłącz ją, jeśli chcesz je czytać.</p>
                 </div>
             </div>
         </section>
@@ -521,7 +521,7 @@
                     <tr><td><code>volume</code></td><td><span class="param-type">opcjonalne</span></td><td>Głośność 0–100</td><td class="param-default">80</td></tr>
                     <tr><td><code>readnick</code></td><td><span class="param-type">opcjonalne</span></td><td>Czytaj nick przed wiadomością: on/off</td><td class="param-default">off</td></tr>
                     <tr><td><code>readlinks</code></td><td><span class="param-type">opcjonalne</span></td><td>Czytaj linki jako LINK: on/off</td><td class="param-default">off</td></tr>
-                    <tr><td><code>reademotes</code></td><td><span class="param-type">legacy</span></td><td>Nieużywane — emotki zawsze usuwane</td><td class="param-default">—</td></tr>
+                    <tr><td><code>noemotes</code></td><td><span class="param-type">opcjonalne</span></td><td>Usuń emoji i emotki Kick przed TTS: on/off</td><td class="param-default">on</td></tr>
                     <tr><td><code>anyone</code></td><td><span class="param-type">uprawnienia</span></td><td>Pozwól każdemu: on</td><td class="param-default">off</td></tr>
                     <tr><td><code>follower</code></td><td><span class="param-type">uprawnienia</span></td><td>Pozwól obserwującym: on</td><td class="param-default">off</td></tr>
                     <tr><td><code>moderator</code></td><td><span class="param-type">uprawnienia</span></td><td>Pozwól moderatorom: on</td><td class="param-default">on</td></tr>
@@ -543,7 +543,7 @@
                 <li class="feature-li">Regulacja prędkości -3 do +3 dla Oddcast, Microsoft i Google Cloud</li>
                 <li class="feature-li">Pitch Google Cloud 0.01–0.99 (domyślnie 0.50)</li>
                 <li class="feature-li">Regulacja tonu -10 do +10 dla Oddcast, Microsoft i StreamElements</li>
-                <li class="feature-li">Czytanie nicku i linków — opcjonalne; emoji i emotki zawsze filtrowane</li>
+                <li class="feature-li">Czytanie nicku i linków — opcjonalne; filtr „Bez emotek” domyślnie włączony</li>
                 <li class="feature-li">Kontrola uprawnień: Każdy, Follower, Mod, OG, Sub, VIP</li>
                 <li class="feature-li">Wymaganie prefiksu !tts — konfigurowalne</li>
                 <li class="feature-li">Anti-spam: filtry znaków specjalnych, liczb i powtórzeń liter</li>
@@ -697,7 +697,10 @@
     }
 
     function applyTextFilters(text, options) {
-        let result = stripUnicodeEmojis(stripKickEmotes(text || ''));
+        let result = text || '';
+        if (options.noemotes) {
+            result = stripUnicodeEmojis(stripKickEmotes(result));
+        }
         if (options.stripspecial) {
             result = result.replace(/[*^~`|#@$%&<>{}[\]\\/+=_]+/g, ' ');
         }
@@ -1304,7 +1307,7 @@
             volume: document.getElementById('volume').value,
             readnick: document.getElementById('readnick').checked,
             readlinks: document.getElementById('readlinks').checked,
-            reademotes: document.getElementById('reademotes').checked,
+            noemotes: document.getElementById('noemotes').checked,
             anyone: document.getElementById('anyone').checked,
             follower: document.getElementById('follower').checked,
             moderator: document.getElementById('moderator').checked,
@@ -1343,6 +1346,7 @@
         if (v.subscriber) url += '&subscriber=on';
         if (v.vip) url += '&vip=on';
         if (v.pretext) url += '&pretext=on';
+        if (!v.noemotes) url += '&noemotes=off';
         if (!v.stripspecial) url += '&stripspecial=off';
         if (v.ignorenumbers) url += '&ignorenumbers=on';
         if (v.ignorerepeat) url += '&ignorerepeat=on';
@@ -1456,7 +1460,7 @@
         const googlePitch = isGoogle ? clampGooglePitch(urlParams.get('pitch') || GOOGLE_PITCH_DEFAULT) : GOOGLE_PITCH_DEFAULT;
         const readnick = urlParams.get('readnick') === 'on';
         const readlinks = urlParams.get('readlinks') === 'on';
-        const reademotes = urlParams.get('reademotes') === 'on';
+        const noemotes = urlParams.get('noemotes') !== 'off';
         const anyone = urlParams.get('anyone') === 'on';
         const follower = urlParams.get('follower') === 'on';
         const moderator = urlParams.get('moderator') === 'on';
@@ -1468,7 +1472,7 @@
         const ignorenumbers = urlParams.get('ignorenumbers') === 'on';
         const ignorerepeat = urlParams.get('ignorerepeat') === 'on';
 
-        console.log('TTS Config:', { kick, voiceName, speed, pitch, googlePitch, googleV2Gender: isGoogle ? getGoogleV2Gender(voiceName) : null, volume, readnick, readlinks, reademotes, anyone, follower, moderator, og, subscriber, vip, pretext, stripspecial, ignorenumbers, ignorerepeat });
+        console.log('TTS Config:', { kick, voiceName, speed, pitch, googlePitch, googleV2Gender: isGoogle ? getGoogleV2Gender(voiceName) : null, volume, readnick, readlinks, noemotes, anyone, follower, moderator, og, subscriber, vip, pretext, stripspecial, ignorenumbers, ignorerepeat });
 
         const badgesConfig = {
             'moderator': moderator,
@@ -1833,7 +1837,10 @@
                 }
 
                 textToSpeak = textToSpeak.trim();
-                textToSpeak = applyTextFilters(textToSpeak, { stripspecial, ignorenumbers, ignorerepeat });
+                if (!noemotes) {
+                    textToSpeak = textToSpeak.replace(/\[emote:\d+:(\w+)\]/g, '$1');
+                }
+                textToSpeak = applyTextFilters(textToSpeak, { noemotes, stripspecial, ignorenumbers, ignorerepeat });
                 textToSpeak = textToSpeak.toLocaleLowerCase('pl-PL');
 
                 if (textToSpeak.length === 0) return;
