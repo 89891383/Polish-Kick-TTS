@@ -358,7 +358,7 @@
                     <span class="badge badge-google">Google Cloud</span>
                     <span class="engine-count">34 głosów PL</span>
                 </div>
-                <p class="engine-desc">Test: speech-api/v2 z równoległym prefetch (do 8 requestów naraz). Kolejka max 8 — starsze wiadomości są dropowane przy spamie.</p>
+                <p class="engine-desc">Test: speech-api/v2 — nielimitowany prefetch i kolejka FIFO bez obcinania wiadomości.</p>
             </div>
             </div>
         </section>
@@ -1137,19 +1137,9 @@
     })();
 
     const GOOGLE_V2_CHUNK_SIZE = 400;
-    const GOOGLE_V2_MAX_QUEUE = 8;
-    const GOOGLE_V2_PREFETCH_PARALLEL = 8;
 
     const GoogleV2Prefetch = (function() {
         const cache = new Map();
-        const MAX_CACHE = 48;
-
-        function prune() {
-            while (cache.size > MAX_CACHE) {
-                const oldest = cache.keys().next().value;
-                cache.delete(oldest);
-            }
-        }
 
         function prefetch(url) {
             if (cache.has(url)) return cache.get(url);
@@ -1184,35 +1174,18 @@
                 const timer = setTimeout(() => {
                     if (audio.readyState >= 2) finish(true, audio);
                     else finish(false, new Error('Google v2 prefetch timeout'));
-                }, 6000);
+                }, 15000);
 
                 audio.src = url;
                 audio.load();
             });
 
             cache.set(url, promise);
-            prune();
             return promise;
         }
 
-        async function prefetchAll(urls, parallel) {
-            const limit = Math.max(1, parallel || GOOGLE_V2_PREFETCH_PARALLEL);
-            const results = new Array(urls.length).fill(null);
-            let cursor = 0;
-
-            async function worker() {
-                while (cursor < urls.length) {
-                    const index = cursor++;
-                    try {
-                        results[index] = await prefetch(urls[index]);
-                    } catch (e) {
-                        results[index] = null;
-                    }
-                }
-            }
-
-            await Promise.all(Array.from({ length: Math.min(limit, urls.length) }, worker));
-            return results;
+        async function prefetchAll(urls) {
+            return Promise.all(urls.map(url => prefetch(url).catch(() => null)));
         }
 
         return { prefetch, prefetchAll };
@@ -1558,7 +1531,7 @@
                 googlePitch,
                 message.speed
             );
-            message._v2Prefetch = GoogleV2Prefetch.prefetchAll(message._v2Urls, GOOGLE_V2_PREFETCH_PARALLEL);
+            message._v2Prefetch = GoogleV2Prefetch.prefetchAll(message._v2Urls);
         }
 
         async function playGoogleCloudTTS(text, voice, volumeLevel, pitchGoogleValue, speedValue, prefetchBundle) {
@@ -1571,7 +1544,7 @@
                 try { readyAudios = await prefetchBundle._v2Prefetch; } catch (e) {}
             }
             if (!readyAudios || readyAudios.length !== urls.length) {
-                readyAudios = await GoogleV2Prefetch.prefetchAll(urls, GOOGLE_V2_PREFETCH_PARALLEL);
+                readyAudios = await GoogleV2Prefetch.prefetchAll(urls);
             }
 
             for (let i = 0; i < urls.length; i++) {
@@ -1647,10 +1620,7 @@
             const message = { text, volume: volumeLevel, speed: speedValue, pitch: pitchValue };
             messageQueue.push(message);
             if (selectedVoice.type === 'google') {
-                while (messageQueue.length > GOOGLE_V2_MAX_QUEUE) {
-                    messageQueue.shift();
-                }
-                scheduleGoogleV2Prefetch(message);
+                messageQueue.forEach(scheduleGoogleV2Prefetch);
             }
             processQueue();
         }
