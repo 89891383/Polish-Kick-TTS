@@ -644,6 +644,7 @@
     // Wyższy URL speed = szybciej. UI v2: +1 szybciej, -1 wolniej.
     const GOOGLE_V2_RATE_DEFAULT = 1.0;
     const GOOGLE_V2_RATE_STEP = 0.5;
+    const GOOGLE_V2_URL_SPEED_MAX = 0.65;
 
     function clampSpeed(speedValue) {
         const parsed = parseInt(speedValue, 10);
@@ -659,7 +660,9 @@
     function mapSpeedToGoogleV2(speedValue) {
         const s = clampSpeedForGoogleV2(speedValue);
         const rate = Math.max(0.1, Math.min(10, GOOGLE_V2_RATE_DEFAULT + (s * GOOGLE_V2_RATE_STEP)));
-        return Math.max(0, Math.min(1, rate / 2));
+        const urlSpeed = rate / 2;
+        if (s > 0) return Math.min(urlSpeed, GOOGLE_V2_URL_SPEED_MAX);
+        return Math.max(0, Math.min(1, urlSpeed));
     }
 
     function mapSpeedToGoogleSpeakingRate(speedValue) {
