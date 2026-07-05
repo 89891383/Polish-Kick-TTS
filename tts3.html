@@ -358,7 +358,7 @@
                     <span class="badge badge-google">Google Cloud</span>
                     <span class="engine-count">34 głosów PL</span>
                 </div>
-                <p class="engine-desc">Wariant testowy: google.com/speech-api/v2 (lang + gender). Nazwy Chirp3 mapują tylko na płeć — jeden głos męski i jeden żeński PL.</p>
+                <p class="engine-desc">Test: speech-api/v2 z równoległym prefetch (do 8 requestów naraz). Kolejka max 8 — starsze wiadomości są dropowane przy spamie.</p>
             </div>
             </div>
         </section>
@@ -1102,7 +1102,120 @@
             });
         }
 
-        return { setupUnlockUI, unlock: unlockFromGesture, playUrl, speakWebSpeech, stopPlayback, isUnlocked: () => unlocked };
+        async function playReadyAudio(a, volumeLevel) {
+            if (!unlocked) await autoUnlock();
+            const vol = Math.max(0, Math.min(1, volumeLevel / 100));
+            const ctx = getContext();
+            stopPlayback();
+            if (ctx && ctx.state === 'suspended') {
+                try { await ctx.resume(); markUnlocked(); } catch (e) {}
+            }
+
+            a.onended = null;
+            a.onerror = null;
+            a.volume = vol;
+            a.currentTime = 0;
+            currentAudio = a;
+
+            try {
+                await a.play();
+                markUnlocked();
+            } catch (err) {
+                console.warn('[TTS] prefetched play blocked:', err.message);
+                currentAudio = null;
+                return false;
+            }
+
+            return new Promise(resolve => {
+                activePlayback = { resolve };
+                a.onended = () => { currentAudio = null; settlePlayback(true); };
+                a.onerror = () => { currentAudio = null; settlePlayback(false); };
+            });
+        }
+
+        return { setupUnlockUI, unlock: unlockFromGesture, playUrl, playReadyAudio, speakWebSpeech, stopPlayback, isUnlocked: () => unlocked };
+    })();
+
+    const GOOGLE_V2_CHUNK_SIZE = 400;
+    const GOOGLE_V2_MAX_QUEUE = 8;
+    const GOOGLE_V2_PREFETCH_PARALLEL = 8;
+
+    const GoogleV2Prefetch = (function() {
+        const cache = new Map();
+        const MAX_CACHE = 48;
+
+        function prune() {
+            while (cache.size > MAX_CACHE) {
+                const oldest = cache.keys().next().value;
+                cache.delete(oldest);
+            }
+        }
+
+        function prefetch(url) {
+            if (cache.has(url)) return cache.get(url);
+
+            const promise = new Promise((resolve, reject) => {
+                const audio = new Audio();
+                audio.preload = 'auto';
+                audio.setAttribute('playsinline', 'true');
+                audio.setAttribute('webkit-playsinline', 'true');
+
+                let settled = false;
+                const finish = (ok, value) => {
+                    if (settled) return;
+                    settled = true;
+                    clearTimeout(timer);
+                    audio.oncanplaythrough = null;
+                    audio.onloadeddata = null;
+                    audio.onerror = null;
+                    if (ok) resolve(value);
+                    else {
+                        cache.delete(url);
+                        reject(value);
+                    }
+                };
+
+                audio.oncanplaythrough = () => finish(true, audio);
+                audio.onloadeddata = () => {
+                    if (audio.readyState >= 3) finish(true, audio);
+                };
+                audio.onerror = () => finish(false, new Error('Google v2 prefetch failed'));
+
+                const timer = setTimeout(() => {
+                    if (audio.readyState >= 2) finish(true, audio);
+                    else finish(false, new Error('Google v2 prefetch timeout'));
+                }, 6000);
+
+                audio.src = url;
+                audio.load();
+            });
+
+            cache.set(url, promise);
+            prune();
+            return promise;
+        }
+
+        async function prefetchAll(urls, parallel) {
+            const limit = Math.max(1, parallel || GOOGLE_V2_PREFETCH_PARALLEL);
+            const results = new Array(urls.length).fill(null);
+            let cursor = 0;
+
+            async function worker() {
+                while (cursor < urls.length) {
+                    const index = cursor++;
+                    try {
+                        results[index] = await prefetch(urls[index]);
+                    } catch (e) {
+                        results[index] = null;
+                    }
+                }
+            }
+
+            await Promise.all(Array.from({ length: Math.min(limit, urls.length) }, worker));
+            return results;
+        }
+
+        return { prefetch, prefetchAll };
     })();
 
     function parseKickChannel(raw) {
@@ -1432,22 +1545,56 @@
             }
         }
 
-        async function playGoogleCloudTTS(text, voice, volumeLevel, pitchGoogleValue, speedValue) {
-            const chunks = splitTextIntoChunks(text, 200);
-            for (const chunk of chunks) {
+        function buildGoogleV2ChunkUrls(text, voice, pitchGoogleValue, speedValue) {
+            return splitTextIntoChunks(text, GOOGLE_V2_CHUNK_SIZE)
+                .map(chunk => buildGoogleSpeechV2Url(chunk, voice, pitchGoogleValue, speedValue));
+        }
+
+        function scheduleGoogleV2Prefetch(message) {
+            if (selectedVoice.type !== 'google' || message._v2Prefetch) return;
+            message._v2Urls = buildGoogleV2ChunkUrls(
+                message.text.replace(/%/g, 'percent'),
+                selectedVoice.voice,
+                googlePitch,
+                message.speed
+            );
+            message._v2Prefetch = GoogleV2Prefetch.prefetchAll(message._v2Urls, GOOGLE_V2_PREFETCH_PARALLEL);
+        }
+
+        async function playGoogleCloudTTS(text, voice, volumeLevel, pitchGoogleValue, speedValue, prefetchBundle) {
+            const urls = prefetchBundle && prefetchBundle._v2Urls
+                ? prefetchBundle._v2Urls
+                : buildGoogleV2ChunkUrls(text, voice, pitchGoogleValue, speedValue);
+
+            let readyAudios = null;
+            if (prefetchBundle && prefetchBundle._v2Prefetch) {
+                try { readyAudios = await prefetchBundle._v2Prefetch; } catch (e) {}
+            }
+            if (!readyAudios || readyAudios.length !== urls.length) {
+                readyAudios = await GoogleV2Prefetch.prefetchAll(urls, GOOGLE_V2_PREFETCH_PARALLEL);
+            }
+
+            for (let i = 0; i < urls.length; i++) {
                 if (skipRequested) return;
-                const audioUrl = buildGoogleSpeechV2Url(chunk, voice, pitchGoogleValue, speedValue);
+                const ready = readyAudios[i];
+                if (ready) {
+                    const ok = await TtsAudioEngine.playReadyAudio(ready, volumeLevel);
+                    if (!ok && !skipRequested) {
+                        await TtsAudioEngine.playUrl(urls[i], volumeLevel, 0);
+                    }
+                } else if (!skipRequested) {
+                    await TtsAudioEngine.playUrl(urls[i], volumeLevel, 0);
+                }
                 if (skipRequested) return;
-                await TtsAudioEngine.playUrl(audioUrl, volumeLevel, 0);
-                if (skipRequested) return;
+                if (urls[i + 1]) GoogleV2Prefetch.prefetch(urls[i + 1]);
             }
         }
 
-        async function playTTSSingle(text, volumeLevel, speedValue, pitchValue) {
+        async function playTTSSingle(text, volumeLevel, speedValue, pitchValue, prefetchBundle) {
             const cleanText = text.replace(/%/g, 'percent');
             try {
                 if (selectedVoice.type === 'google') {
-                    await playGoogleCloudTTS(cleanText, selectedVoice.voice, volumeLevel, googlePitch, speedValue);
+                    await playGoogleCloudTTS(cleanText, selectedVoice.voice, volumeLevel, googlePitch, speedValue, prefetchBundle);
                 } else if (selectedVoice.type === 'streamelements') {
                     await playStreamElementsTTS(cleanText, selectedVoice.voice, volumeLevel, pitchValue);
                 } else if (selectedVoice.type === 'webspeech') {
@@ -1483,8 +1630,12 @@
                 while (messageQueue.length > 0) {
                     skipRequested = false;
                     const message = messageQueue.shift();
-                    try { await playTTSSingle(message.text, message.volume, message.speed, message.pitch); }
-                    catch (error) { console.error('Error playing TTS:', error); }
+                    if (selectedVoice.type === 'google' && messageQueue.length > 0) {
+                        scheduleGoogleV2Prefetch(messageQueue[0]);
+                    }
+                    try {
+                        await playTTSSingle(message.text, message.volume, message.speed, message.pitch, message);
+                    } catch (error) { console.error('Error playing TTS:', error); }
                 }
             } finally {
                 isProcessingQueue = false;
@@ -1493,7 +1644,14 @@
         }
 
         function addToQueue(text, volumeLevel, speedValue, pitchValue) {
-            messageQueue.push({ text, volume: volumeLevel, speed: speedValue, pitch: pitchValue });
+            const message = { text, volume: volumeLevel, speed: speedValue, pitch: pitchValue };
+            messageQueue.push(message);
+            if (selectedVoice.type === 'google') {
+                while (messageQueue.length > GOOGLE_V2_MAX_QUEUE) {
+                    messageQueue.shift();
+                }
+                scheduleGoogleV2Prefetch(message);
+            }
             processQueue();
         }
 
