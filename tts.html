@@ -256,7 +256,7 @@
                         <input type="range" id="speed" class="flex-1 h-1 rounded" min="-3" max="3" value="0" step="1">
                         <div class="range-val" id="speed-display">0</div>
                     </div>
-                    <p class="text-kick-muted text-xs font-medium mt-2">Ujemne = szybciej, dodatnie = wolniej. Google v2 (Wavenet/Standard): max przyspieszenie -1. Chirp v1, Oddcast i Microsoft: -3 do +3. StreamElements bez speed.</p>
+                    <p class="text-kick-muted text-xs font-medium mt-2">Ujemne = szybciej, dodatnie = wolniej. Google v2 (Wavenet/Standard): tylko -1 do +1. Chirp v1, Oddcast i Microsoft: -3 do +3. StreamElements bez speed.</p>
                 </div>
 
                 <div class="md:col-span-2" id="pitch-group">
@@ -474,7 +474,7 @@
                     <i data-lucide="chevron-down" class="faq-chevron" :class="open && 'rotate'"></i>
                 </button>
                 <div class="faq-a" x-show="open" x-collapse>
-                    <p>Parametr speed (-3 do +3) działa dla Oddcast, Microsoft i Chirp3 HD (v1). Google v2 (Wavenet/Standard): -1 (szybciej) do +3 (wolniej). StreamElements nie obsługuje zmiany prędkości.</p>
+                    <p>Parametr speed (-3 do +3) działa dla Oddcast, Microsoft i Chirp3 HD (v1). Google v2 (Wavenet/Standard): tylko -1 do +1. StreamElements nie obsługuje zmiany prędkości.</p>
                 </div>
             </div>
 
@@ -526,7 +526,7 @@
                 <tbody>
                     <tr><td><code>channel</code></td><td><span class="param-type">wymagane</span></td><td>Nazwa kanału Kick.com</td><td class="param-default">twoj_nick</td></tr>
                     <tr><td><code>voice</code></td><td><span class="param-type">opcjonalne</span></td><td>Zosia, pl-PL-Chirp3-HD-Schedar, SE-WavenetA…</td><td class="param-default">Zosia</td></tr>
-                    <tr><td><code>speed</code></td><td><span class="param-type">opcjonalne</span></td><td>Od -3 (szybciej) do +3 (wolniej). Google v2: max -1 przyspieszenia</td><td class="param-default">0</td></tr>
+                    <tr><td><code>speed</code></td><td><span class="param-type">opcjonalne</span></td><td>Od -3 (szybciej) do +3 (wolniej). Google v2: tylko -1 do +1</td><td class="param-default">0</td></tr>
                     <tr><td><code>pitch</code></td><td><span class="param-type">opcjonalne</span></td><td>Oddcast/MS/SE/Chirp v1: -10 do +10. Wavenet/Standard v2: 0.01–0.99</td><td class="param-default">0 / 0.50</td></tr>
                     <tr><td><code>volume</code></td><td><span class="param-type">opcjonalne</span></td><td>Głośność 0–100</td><td class="param-default">80</td></tr>
                     <tr><td><code>readnick</code></td><td><span class="param-type">opcjonalne</span></td><td>Czytaj nick przed wiadomością: on/off</td><td class="param-default">off</td></tr>
@@ -551,7 +551,7 @@
             <ul>
                 <li class="feature-li">47 polskich głosów — Oddcast, Microsoft, StreamElements, Google Cloud</li>
                 <li class="feature-li">Google Wavenet/Standard (v2, zalecane) + Chirp3 HD (v1, limity API)</li>
-                <li class="feature-li">Regulacja prędkości: v2 max -1 przyspieszenia; Chirp v1 i reszta -3 do +3</li>
+                <li class="feature-li">Regulacja prędkości: Google v2 tylko -1 do +1; Chirp v1 i reszta -3 do +3</li>
                 <li class="feature-li">Pitch v2: 0.01–0.99; Chirp v1 i reszta: -10 do +10</li>
                 <li class="feature-li">Czytanie nicku i linków — opcjonalne; filtr „Bez emotek” domyślnie włączony</li>
                 <li class="feature-li">Kontrola uprawnień: Każdy, Follower, Mod, OG, Sub, VIP</li>
@@ -637,7 +637,8 @@
         return clampGooglePitch(pitchValue).toFixed(2);
     }
 
-    const GOOGLE_SPEED_MIN = -1;
+    const GOOGLE_V2_SPEED_MIN = -1;
+    const GOOGLE_V2_SPEED_MAX = 1;
 
     function clampSpeed(speedValue) {
         const parsed = parseInt(speedValue, 10);
@@ -645,13 +646,13 @@
         return Math.max(-3, Math.min(3, parsed));
     }
 
-    function clampSpeedForGoogle(speedValue) {
+    function clampSpeedForGoogleV2(speedValue) {
         const clamped = clampSpeed(speedValue);
-        return Math.max(GOOGLE_SPEED_MIN, Math.min(3, clamped));
+        return Math.max(GOOGLE_V2_SPEED_MIN, Math.min(GOOGLE_V2_SPEED_MAX, clamped));
     }
 
     function mapSpeedToGoogleV2(speedValue) {
-        const s = clampSpeedForGoogle(speedValue);
+        const s = clampSpeedForGoogleV2(speedValue);
         if (s === 0) return 0.5;
         if (s < 0) return 0.58;
         return Math.max(0, 0.5 - (s / 8));
@@ -669,12 +670,17 @@
         const speedEl = document.getElementById('speed');
         const voice = document.getElementById('voice').value;
         const isV2 = isGoogleV2Voice(voice);
-        speedEl.min = isV2 ? String(GOOGLE_SPEED_MIN) : '-3';
-        if (!isV2) return;
-        const clamped = clampSpeedForGoogle(speedEl.value);
-        speedEl.value = String(clamped);
-        document.getElementById('speed-value').textContent = String(clamped);
-        document.getElementById('speed-display').textContent = String(clamped);
+        if (isV2) {
+            speedEl.min = String(GOOGLE_V2_SPEED_MIN);
+            speedEl.max = String(GOOGLE_V2_SPEED_MAX);
+            const clamped = clampSpeedForGoogleV2(speedEl.value);
+            speedEl.value = String(clamped);
+            document.getElementById('speed-value').textContent = String(clamped);
+            document.getElementById('speed-display').textContent = String(clamped);
+        } else {
+            speedEl.min = '-3';
+            speedEl.max = '3';
+        }
     }
 
     const GOOGLE_V2_FEMALE_NAMES = [
@@ -1310,8 +1316,7 @@
             document.getElementById('speed-display').textContent = '0';
         } else {
             speedGroup.classList.remove('hidden');
-            if (isGoogleV2) applyGoogleV2SpeedLimits();
-            else document.getElementById('speed').min = '-3';
+            applyGoogleV2SpeedLimits();
         }
 
         if (isGoogleV2) {
@@ -1326,6 +1331,10 @@
     }
 
     document.getElementById('speed').addEventListener('input', function() {
+        if (isGoogleV2Voice(document.getElementById('voice').value)) {
+            const clamped = clampSpeedForGoogleV2(this.value);
+            this.value = String(clamped);
+        }
         document.getElementById('speed-value').textContent = this.value;
         document.getElementById('speed-display').textContent = this.value;
         updateLiveURL();
@@ -1533,7 +1542,7 @@
         const isGoogleV2 = selectedVoice.type === 'google-v2';
         const isGoogleV1 = selectedVoice.type === 'google-v1';
         const speed = selectedVoice.type === 'streamelements' ? 0
-            : isGoogleV2 ? clampSpeedForGoogle(urlParams.get('speed') || 0)
+            : isGoogleV2 ? clampSpeedForGoogleV2(urlParams.get('speed') || 0)
             : clampSpeed(urlParams.get('speed') || 0);
         const pitch = isGoogleV2 ? 0 : clampPitch(parseInt(urlParams.get('pitch')) || 0);
         const googlePitch = isGoogleV2 ? clampGooglePitch(urlParams.get('pitch') || GOOGLE_PITCH_DEFAULT) : GOOGLE_PITCH_DEFAULT;
