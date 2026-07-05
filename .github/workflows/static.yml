@@ -32,6 +32,7 @@ jobs:
           mkdir -p _site
           cp tts.html README.md _site/
           if [ -f tts2.html ]; then cp tts2.html _site/; fi
+          if [ -f tts3.html ]; then cp tts3.html _site/; fi
           touch _site/.nojekyll
           echo "Files to deploy:"
           ls -la _site/
