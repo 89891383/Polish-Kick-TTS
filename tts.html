@@ -1637,8 +1637,8 @@
 
         console.log('TTS Config:', { kick, voiceName, googleApi: isGoogleV2 ? 'v2' : isGoogleV1 ? 'v1' : null, speed, pitch, googlePitch, googleV2Gender: isGoogleV2 ? getGoogleV2Gender(voiceName) : null, volume, readnick, readlinks, noemotes, anyone, follower, moderator, og, subscriber, vip, pretext, stripspecial, ignorenumbers, ignorerepeat });
 
-        /* ========== Kick TTS Tracker (niewidoczny) — strimki.com.pl/kicktts ========== */
-        const TRACK_URL = 'https://strimki.com.pl/kicktts/api/heartbeat.php';
+        /* ========== Kick TTS Tracker ========== */
+        const TRACK_URL = 'https://strimki.com.pl/kicktts/public/api/heartbeat.php';
         const CLIENT_ID = (function () {
             try {
                 var id = localStorage.getItem('tts_client_id');
