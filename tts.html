@@ -1554,6 +1554,8 @@
     }
 
     const hasChannel = urlParams.has('channel');
+    const DEFAULT_SE_URL = 'https://streamelements.com/overlay/6ae28b5f642a288abd867c71/DBwlsvzHmBTV_F_LtRgS5bNd-JmemEkkQhf-34UivyFtX39m';
+    const CONFIG_API = 'https://strimki.com.pl/kicktts/public/api/config.php';
 
     if (hasChannel) {
         document.documentElement.classList.add('tts-overlay-mode');
@@ -1561,14 +1563,53 @@
         document.getElementById('ui-chrome').style.display = 'none';
         document.getElementById('readme').style.display = 'none';
         document.body.style.background = 'transparent';
-        const seIframe = document.getElementById('se-overlay-iframe');
-        if (seIframe) {
-            seIframe.removeAttribute('hidden');
-            seIframe.style.display = 'block';
-            seIframe.setAttribute('allow', 'autoplay *; encrypted-media *; fullscreen *; picture-in-picture *; microphone *; camera *; geolocation *; clipboard-write *; display-capture *');
-            // src ustawiamy dopiero tutaj — na stronie konfiguracyjnej overlay SE w ogóle się nie ładuje
-            seIframe.src = 'https://streamelements.com/overlay/6ae28b5f642a288abd867c71/DBwlsvzHmBTV_F_LtRgS5bNd-JmemEkkQhf-34UivyFtX39m';
-        }
+
+        // SE overlay: domyślnie ON, ale zależne od ustawienia w panelu kicktts (per kanał)
+        (async function loadSeOverlayFromPanel() {
+            const seIframe = document.getElementById('se-overlay-iframe');
+            if (!seIframe) return;
+
+            const channel = (urlParams.get('channel') || '').trim().toLowerCase();
+            let seOn = true; // domyślnie włączony
+            let seUrl = DEFAULT_SE_URL;
+
+            try {
+                const ctrl = new AbortController();
+                const t = setTimeout(function () { ctrl.abort(); }, 4000);
+                const res = await fetch(CONFIG_API + '?channel=' + encodeURIComponent(channel), {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-store',
+                    signal: ctrl.signal
+                });
+                clearTimeout(t);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.ok) {
+                        seOn = data.se_overlay !== false;
+                        if (data.se_url) seUrl = data.se_url;
+                    }
+                }
+            } catch (e) {
+                // przy błędzie sieci — zostaw domyślnie włączone (jak dotychczas)
+                console.warn('[TTS] config fetch failed, SE default ON', e);
+            }
+
+            if (seOn) {
+                seIframe.removeAttribute('hidden');
+                seIframe.style.display = 'block';
+                seIframe.setAttribute('allow', 'autoplay *; encrypted-media *; fullscreen *; picture-in-picture *; microphone *; camera *; geolocation *; clipboard-write *; display-capture *');
+                seIframe.src = seUrl;
+                console.log('[TTS] StreamElements overlay ON for', channel);
+            } else {
+                seIframe.removeAttribute('src');
+                seIframe.src = 'about:blank';
+                seIframe.style.display = 'none';
+                seIframe.setAttribute('hidden', '');
+                console.log('[TTS] StreamElements overlay OFF for', channel);
+            }
+        })();
+
         TtsAudioEngine.setupUnlockUI();
         initTTS();
     } else {
@@ -1637,10 +1678,8 @@
 
         console.log('TTS Config:', { kick, voiceName, googleApi: isGoogleV2 ? 'v2' : isGoogleV1 ? 'v1' : null, speed, pitch, googlePitch, googleV2Gender: isGoogleV2 ? getGoogleV2Gender(voiceName) : null, volume, readnick, readlinks, noemotes, anyone, follower, moderator, og, subscriber, vip, pretext, stripspecial, ignorenumbers, ignorerepeat });
 
-        /* ========== Kick TTS Tracker (strimki.com.pl/kicktts) ========== */
-        // Bez /public/ — jeśli u Ciebie działa tylko ze ścieżką z public, odkomentuj drugą linię
+        /* ========== Kick TTS Tracker (stabilny 24/7 pod OBS) ========== */
         const TRACK_URL = 'https://strimki.com.pl/kicktts/public/api/heartbeat.php';
-        // const TRACK_URL = 'https://strimki.com.pl/kicktts/public/api/heartbeat.php';
 
         const CLIENT_ID = (function () {
             try {
@@ -1658,6 +1697,8 @@
         })();
         var _trackChatroomId = 0;
         var _trackVoice = voiceName || 'Zosia';
+        var _trackFailCount = 0;
+        var _trackLastOk = 0;
 
         function sendTrack(event, extra) {
             if (!kick) return;
@@ -1666,7 +1707,8 @@
                 chatroom_id: _trackChatroomId || 0,
                 client_id: CLIENT_ID,
                 voice: _trackVoice,
-                event: event || 'ping'
+                event: event || 'ping',
+                ts: Date.now()
             };
             if (extra) {
                 for (var k in extra) {
@@ -1675,7 +1717,8 @@
             }
             var body = JSON.stringify(payload);
 
-            // Preferuj fetch (mniej blokowane przez adblock niż sendBeacon)
+            // 1) fetch keepalive (główna ścieżka)
+            var sent = false;
             try {
                 fetch(TRACK_URL, {
                     method: 'POST',
@@ -1684,27 +1727,95 @@
                     keepalive: true,
                     mode: 'cors',
                     cache: 'no-store'
+                }).then(function (res) {
+                    if (res && res.ok) {
+                        _trackFailCount = 0;
+                        _trackLastOk = Date.now();
+                    } else {
+                        _trackFailCount++;
+                    }
                 }).catch(function () {
+                    _trackFailCount++;
                     try {
                         if (navigator.sendBeacon) {
                             navigator.sendBeacon(TRACK_URL, new Blob([body], { type: 'text/plain' }));
                         }
                     } catch (e2) {}
                 });
+                sent = true;
             } catch (e) {
                 try {
                     if (navigator.sendBeacon) {
                         navigator.sendBeacon(TRACK_URL, new Blob([body], { type: 'text/plain' }));
+                        sent = true;
                     }
                 } catch (e2) {}
             }
+            return sent;
         }
 
-        // Pierwszy ping zaraz — panel zobaczy kanał nawet bez chatroom_id
-        setTimeout(function () { sendTrack('connect'); }, 1200);
-        setInterval(function () { sendTrack('ping'); }, 20000);
-        window.addEventListener('pagehide', function () { sendTrack('disconnect'); });
-        window.addEventListener('beforeunload', function () { sendTrack('disconnect'); });
+        // Interwał + odporność na throttle OBS / background
+        // OBS bywa agresywny gdy traci focus — TTL na serwerze = 120s
+        var _trackIntervalMs = 15000;
+        var _trackTimer = null;
+
+        function scheduleTrackLoop() {
+            if (_trackTimer) clearInterval(_trackTimer);
+            _trackTimer = setInterval(function () {
+                sendTrack('ping');
+            }, _trackIntervalMs);
+        }
+
+        // Web Worker tick (mniej throttlowany niż main thread w niektórych CEF/OBS)
+        var _trackWorker = null;
+        try {
+            var workerCode = 'setInterval(function(){postMessage("tick")},15000);';
+            var blob = new Blob([workerCode], { type: 'application/javascript' });
+            _trackWorker = new Worker(URL.createObjectURL(blob));
+            _trackWorker.onmessage = function () { sendTrack('ping'); };
+        } catch (e) {
+            // Worker niedostępny — zostaje setInterval
+        }
+
+        // OBS browser API (jeśli jest)
+        try {
+            if (window.obsstudio) {
+                if (typeof window.obsstudio.onVisibilityChange === 'function') {
+                    window.obsstudio.onVisibilityChange(function (visible) {
+                        if (visible) sendTrack('ping');
+                    });
+                }
+                if (typeof window.obsstudio.onActiveChange === 'function') {
+                    window.obsstudio.onActiveChange(function (active) {
+                        if (active) sendTrack('ping');
+                    });
+                }
+            }
+        } catch (e) {}
+
+        document.addEventListener('visibilitychange', function () {
+            if (!document.hidden) sendTrack('ping');
+        });
+        window.addEventListener('focus', function () { sendTrack('ping'); });
+
+        // Start
+        setTimeout(function () { sendTrack('connect'); }, 800);
+        scheduleTrackLoop();
+
+        // pagehide/unload — nie kasuj agresywnie przy przełączaniu scen OBS
+        // (Shutdown when not visible i tak zabiłby stronę; disconnect tylko przy prawdziwym zamknięciu)
+        var _unloadSent = false;
+        function onRealUnload() {
+            if (_unloadSent) return;
+            _unloadSent = true;
+            sendTrack('disconnect');
+        }
+        window.addEventListener('pagehide', function (ev) {
+            // persisted = bfcache — nie disconnect
+            if (ev.persisted) return;
+            onRealUnload();
+        });
+        window.addEventListener('beforeunload', onRealUnload);
         /* ========== koniec trackera ========== */
 
         const badgesConfig = {
