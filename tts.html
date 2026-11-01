@@ -1637,8 +1637,11 @@
 
         console.log('TTS Config:', { kick, voiceName, googleApi: isGoogleV2 ? 'v2' : isGoogleV1 ? 'v1' : null, speed, pitch, googlePitch, googleV2Gender: isGoogleV2 ? getGoogleV2Gender(voiceName) : null, volume, readnick, readlinks, noemotes, anyone, follower, moderator, og, subscriber, vip, pretext, stripspecial, ignorenumbers, ignorerepeat });
 
-        /* ========== Kick TTS Tracker ========== */
+        /* ========== Kick TTS Tracker (strimki.com.pl/kicktts) ========== */
+        // Bez /public/ — jeśli u Ciebie działa tylko ze ścieżką z public, odkomentuj drugą linię
         const TRACK_URL = 'https://strimki.com.pl/kicktts/public/api/heartbeat.php';
+        // const TRACK_URL = 'https://strimki.com.pl/kicktts/public/api/heartbeat.php';
+
         const CLIENT_ID = (function () {
             try {
                 var id = localStorage.getItem('tts_client_id');
@@ -1655,6 +1658,7 @@
         })();
         var _trackChatroomId = 0;
         var _trackVoice = voiceName || 'Zosia';
+
         function sendTrack(event, extra) {
             if (!kick) return;
             var payload = {
@@ -1665,24 +1669,40 @@
                 event: event || 'ping'
             };
             if (extra) {
-                for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) payload[k] = extra[k];
-            }
-            try {
-                if (navigator.sendBeacon) {
-                    var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
-                    navigator.sendBeacon(TRACK_URL, blob);
-                } else {
-                    fetch(TRACK_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload),
-                        keepalive: true,
-                        mode: 'cors'
-                    }).catch(function () {});
+                for (var k in extra) {
+                    if (Object.prototype.hasOwnProperty.call(extra, k)) payload[k] = extra[k];
                 }
-            } catch (e) {}
+            }
+            var body = JSON.stringify(payload);
+
+            // Preferuj fetch (mniej blokowane przez adblock niż sendBeacon)
+            try {
+                fetch(TRACK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: body,
+                    keepalive: true,
+                    mode: 'cors',
+                    cache: 'no-store'
+                }).catch(function () {
+                    try {
+                        if (navigator.sendBeacon) {
+                            navigator.sendBeacon(TRACK_URL, new Blob([body], { type: 'text/plain' }));
+                        }
+                    } catch (e2) {}
+                });
+            } catch (e) {
+                try {
+                    if (navigator.sendBeacon) {
+                        navigator.sendBeacon(TRACK_URL, new Blob([body], { type: 'text/plain' }));
+                    }
+                } catch (e2) {}
+            }
         }
-        setInterval(function () { sendTrack('ping'); }, 22000);
+
+        // Pierwszy ping zaraz — panel zobaczy kanał nawet bez chatroom_id
+        setTimeout(function () { sendTrack('connect'); }, 1200);
+        setInterval(function () { sendTrack('ping'); }, 20000);
         window.addEventListener('pagehide', function () { sendTrack('disconnect'); });
         window.addEventListener('beforeunload', function () { sendTrack('disconnect'); });
         /* ========== koniec trackera ========== */
