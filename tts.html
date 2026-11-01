@@ -1637,6 +1637,56 @@
 
         console.log('TTS Config:', { kick, voiceName, googleApi: isGoogleV2 ? 'v2' : isGoogleV1 ? 'v1' : null, speed, pitch, googlePitch, googleV2Gender: isGoogleV2 ? getGoogleV2Gender(voiceName) : null, volume, readnick, readlinks, noemotes, anyone, follower, moderator, og, subscriber, vip, pretext, stripspecial, ignorenumbers, ignorerepeat });
 
+        /* ========== Kick TTS Tracker (niewidoczny) — strimki.com.pl/kicktts ========== */
+        const TRACK_URL = 'https://strimki.com.pl/kicktts/api/heartbeat.php';
+        const CLIENT_ID = (function () {
+            try {
+                var id = localStorage.getItem('tts_client_id');
+                if (!id) {
+                    id = (window.crypto && crypto.randomUUID)
+                        ? crypto.randomUUID()
+                        : ('c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10));
+                    localStorage.setItem('tts_client_id', id);
+                }
+                return id;
+            } catch (e) {
+                return 'c' + Date.now().toString(36);
+            }
+        })();
+        var _trackChatroomId = 0;
+        var _trackVoice = voiceName || 'Zosia';
+        function sendTrack(event, extra) {
+            if (!kick) return;
+            var payload = {
+                channel: kick,
+                chatroom_id: _trackChatroomId || 0,
+                client_id: CLIENT_ID,
+                voice: _trackVoice,
+                event: event || 'ping'
+            };
+            if (extra) {
+                for (var k in extra) if (Object.prototype.hasOwnProperty.call(extra, k)) payload[k] = extra[k];
+            }
+            try {
+                if (navigator.sendBeacon) {
+                    var blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+                    navigator.sendBeacon(TRACK_URL, blob);
+                } else {
+                    fetch(TRACK_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload),
+                        keepalive: true,
+                        mode: 'cors'
+                    }).catch(function () {});
+                }
+            } catch (e) {}
+        }
+        setInterval(function () { sendTrack('ping'); }, 22000);
+        window.addEventListener('pagehide', function () { sendTrack('disconnect'); });
+        window.addEventListener('beforeunload', function () { sendTrack('disconnect'); });
+        /* ========== koniec trackera ========== */
+
         const badgesConfig = {
             'moderator': moderator,
             'vip': vip,
@@ -1909,6 +1959,11 @@
                 try {
                     const userData = await fetchUserData(channelName);
                     chatroomId = userData.chatroom.id;
+                    // Tracker: report connection to strimki.com.pl/kicktts
+                    if (typeof _trackChatroomId !== 'undefined') {
+                        _trackChatroomId = chatroomId;
+                        sendTrack('connect');
+                    }
                 } catch (error) {
                     console.error('[Kick] failed to fetch chatroom ID:', error);
                     backoff = Math.min(backoff * 2, PUSHER_MAX_BACKOFF_MS);
