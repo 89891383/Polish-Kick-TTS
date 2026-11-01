@@ -1564,50 +1564,97 @@
         document.getElementById('readme').style.display = 'none';
         document.body.style.background = 'transparent';
 
-        // SE overlay: domyślnie ON, ale zależne od ustawienia w panelu kicktts (per kanał)
-        (async function loadSeOverlayFromPanel() {
+        // SE overlay: live ON/OFF z panelu (poll co ~5s, bez odświeżania OBS)
+        (function liveSeOverlayControl() {
             const seIframe = document.getElementById('se-overlay-iframe');
             if (!seIframe) return;
 
             const channel = (urlParams.get('channel') || '').trim().toLowerCase();
-            let seOn = true; // domyślnie włączony
-            let seUrl = DEFAULT_SE_URL;
+            let currentOn = null; // null = jeszcze nie ustawione
+            let currentUrl = DEFAULT_SE_URL;
+            let pollBusy = false;
 
-            try {
-                const ctrl = new AbortController();
-                const t = setTimeout(function () { ctrl.abort(); }, 4000);
-                const res = await fetch(CONFIG_API + '?channel=' + encodeURIComponent(channel), {
-                    method: 'GET',
-                    mode: 'cors',
-                    cache: 'no-store',
-                    signal: ctrl.signal
-                });
-                clearTimeout(t);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data && data.ok) {
-                        seOn = data.se_overlay !== false;
-                        if (data.se_url) seUrl = data.se_url;
+            function applySeState(on, url) {
+                if (!url) url = DEFAULT_SE_URL;
+                // bez restartu iframe jeśli stan bez zmian
+                if (currentOn === on && (!on || seIframe.src === url || seIframe.getAttribute('src') === url)) {
+                    return;
+                }
+                const was = currentOn;
+                currentOn = on;
+                currentUrl = url;
+
+                if (on) {
+                    seIframe.removeAttribute('hidden');
+                    seIframe.style.display = 'block';
+                    seIframe.setAttribute('allow', 'autoplay *; encrypted-media *; fullscreen *; picture-in-picture *; microphone *; camera *; geolocation *; clipboard-write *; display-capture *');
+                    // ładuj src tylko gdy włączamy albo zmienił się URL
+                    if (was !== true || !seIframe.src || seIframe.src === 'about:blank' || seIframe.src.indexOf('streamelements.com') === -1) {
+                        seIframe.src = url;
+                    }
+                    console.log('[TTS] StreamElements overlay ON (live) for', channel);
+                } else {
+                    // real-time OFF: zabij iframe bez reload strony
+                    try { seIframe.src = 'about:blank'; } catch (e) {}
+                    seIframe.removeAttribute('src');
+                    seIframe.style.display = 'none';
+                    seIframe.setAttribute('hidden', '');
+                    console.log('[TTS] StreamElements overlay OFF (live) for', channel);
+                }
+            }
+
+            async function pollSeConfig() {
+                if (pollBusy || !channel) return;
+                pollBusy = true;
+                try {
+                    const ctrl = new AbortController();
+                    const timer = setTimeout(function () { ctrl.abort(); }, 4000);
+                    const res = await fetch(CONFIG_API + '?channel=' + encodeURIComponent(channel) + '&_=' + Date.now(), {
+                        method: 'GET',
+                        mode: 'cors',
+                        cache: 'no-store',
+                        signal: ctrl.signal
+                    });
+                    clearTimeout(timer);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && data.ok) {
+                            const on = data.se_overlay !== false;
+                            const url = data.se_url || DEFAULT_SE_URL;
+                            applySeState(on, url);
+                            pollBusy = false;
+                            return;
+                        }
+                    }
+                } catch (e) {
+                    // błąd sieci — nie ruszaj aktualnego stanu (zostaw jak jest)
+                    if (currentOn === null) {
+                        // pierwszy fail: domyślnie ON jak dotychczas
+                        applySeState(true, DEFAULT_SE_URL);
                     }
                 }
-            } catch (e) {
-                // przy błędzie sieci — zostaw domyślnie włączone (jak dotychczas)
-                console.warn('[TTS] config fetch failed, SE default ON', e);
+                pollBusy = false;
             }
 
-            if (seOn) {
-                seIframe.removeAttribute('hidden');
-                seIframe.style.display = 'block';
-                seIframe.setAttribute('allow', 'autoplay *; encrypted-media *; fullscreen *; picture-in-picture *; microphone *; camera *; geolocation *; clipboard-write *; display-capture *');
-                seIframe.src = seUrl;
-                console.log('[TTS] StreamElements overlay ON for', channel);
-            } else {
-                seIframe.removeAttribute('src');
-                seIframe.src = 'about:blank';
-                seIframe.style.display = 'none';
-                seIframe.setAttribute('hidden', '');
-                console.log('[TTS] StreamElements overlay OFF for', channel);
-            }
+            // od razu + co 5s (wystarczy do real-time z panelu)
+            pollSeConfig();
+            setInterval(pollSeConfig, 5000);
+
+            // po powrocie focus / widoczności — natychmiastowy poll
+            document.addEventListener('visibilitychange', function () {
+                if (!document.hidden) pollSeConfig();
+            });
+            window.addEventListener('focus', pollSeConfig);
+            try {
+                if (window.obsstudio) {
+                    if (typeof window.obsstudio.onVisibilityChange === 'function') {
+                        window.obsstudio.onVisibilityChange(function (v) { if (v) pollSeConfig(); });
+                    }
+                    if (typeof window.obsstudio.onActiveChange === 'function') {
+                        window.obsstudio.onActiveChange(function (a) { if (a) pollSeConfig(); });
+                    }
+                }
+            } catch (e) {}
         })();
 
         TtsAudioEngine.setupUnlockUI();
